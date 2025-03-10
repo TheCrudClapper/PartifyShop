@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Contact";
+}
+<div class="container">
+    <div class="row text-center">
+        <div class="col-sm-4 gy-5 fs-4">
+            <i class="fa fa-thumb-tack fa-2x" aria-hidden="true"></i>
+            <h2 class="mt-2">Adress</h2>
+            <p>28 Listopada, Nowy Sącz, Poland</p>
+        </div>
+        <div class="col-sm-4 gy-5 fs-4">
+            <i class="fa fa-envelope fa-2x" aria-hidden="true"></i>
+            <h2 class="mt-2">Email</h2>
+            <a>optiPC@gmail.com</a>
+        </div>
+        <div class="col-sm-4 gy-5 fs-4">
+            <i class="fa fa-phone fa-2x" aria-hidden="true"></i>
+            <h2 class="mt-2">Phone</h2>
+            <a>+ 48 694 202 137</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid custom-gray-background">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mt-5 mb-5">
+                <div class="img-fluid">
+                    <iframe class="google-map"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2585.8836624440687!2d20.689682819050436!3d49.599943288696835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473de527c4c967d1%3A0x4656f90ca24683d9!2sWy%C5%BCsza%20Szko%C5%82a%20Biznesu%20-%20National%20Louis%20University!5e0!3m2!1spl!2spl!4v1713623216283!5m2!1spl!2spl"
+                            loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+            <div class="col-md-6 mt-5 mb-5">
+                <div class="text-center">
+                    <h1 class="display-3">Contact form</h1>
+                    <p>Send us message</p>
+                </div>
+                <form>
+                    <div class="mb-3">
+                        <label htmlFor="formGroupExampleInput" class="form-label">Name and Last Name</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Example: Jan Kowalski">
+                    </div>
+                    <div class="mb-3">
+                        <label htmlFor="formGroupExampleInput2" class="form-label">E-mail adress</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Example: jan@kowalski@gmail.com">
+                    </div>
+                    <div class="mb-3">
+                        <label htmlFor="formGroupExampleInput3" class="form-label">Telephone number</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput3" placeholder="Example: +48 100 200 300">
+                    </div>
+                    <div class="mb-3">
+                        <label htmlFor="exampleFormControlTextarea1" class="form-label">Message:</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows={5}></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-dark">Submit</button>
+                    <button type="button"
+                            class="btn btn-dark ms-2">
+                        Attach Photo
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

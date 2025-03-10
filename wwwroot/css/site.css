@@ -31,6 +31,11 @@ body {
 .navbar {
     background-color: #863cb0;
 }
+form .btn {
+    color: #c1c8dd;
+    background-color: #25262b;
+    border: 1px solid black;
+}
 /*Contact Page Styles*/
 .google-map {
     min-height: 400px;
@@ -55,5 +60,15 @@ body {
 .footer-list li {
     line-height: 35px;
     color: #c1c8dd;
+}
+/*Styles for icon*/
+.icon {
+    height: 25px;
+    width: 25px;
+    color: black;
+    background-color: #c1c8dd;
+    text-align: center;
+    align-content: center;
+    border-radius: 50px;
 }
 

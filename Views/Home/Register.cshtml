@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+<div class="container login-page-container mt-5">
+    <div class="row">
+        <div class="col-sm-6 col-12">
+            <div class="row mt-5">
+                <div class="col">
+                    <h2 class="fw-bold">Register</h2>
+                    <span>You already have an account ? <a asp-controller="Home" asp-action="Login">Log in</a></span>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstNameInput" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastNameInput" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Login</label>
+                        <input type="text" class="form-control" id="loginInput" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                        <select class="form-select">
+                            <option selected>Select Gender</option>
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                            <option value="3">Mental Disorder</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-outline-light">Register</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-6 col-12 mt-5 pt-2">
+            <img src="~/images/register_image.png" class="img-fluid" />
+        </div>
+    </div>
+</div>

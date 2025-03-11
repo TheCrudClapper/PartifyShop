@@ -20,10 +20,10 @@ html {
     position: relative;
     min-height: 100%;
 }
-
 body {
     margin-bottom: 60px;
     font-family: Montserrat;
+    background-color: #D3D3D3;
 }
 /*Navbar styles*/
 .upper-navbar {
@@ -31,16 +31,33 @@ body {
     font-size: 16px;
     background-color: #25262b;
 }
-
+.upper-navbar a{
+    text-decoration: none;
+}
+.navbar .container i, span{
+    color: #25262b;
+}
+.navbar form {
+    width: 50%;
+}
+.navbar select{
+    max-width: 150px;
+    flex-grow: 1;
+    font-size: 12px;
+}
+.navbar form input {
+    flex-grow: 2;
+    min-width: 300px;
+}
 .navbar {
     background-color: #863cb0;
 }
-
 form .btn {
     color: #c1c8dd;
     background-color: #25262b;
     border: 1px solid black;
 }
+
 /*Contact Page Styles*/
 .google-map {
     min-height: 400px;
@@ -49,25 +66,28 @@ form .btn {
     width: 100%;
     height: 100%;
 }
-
+/*Custome background color*/
 .custom-gray-background {
     background-color: rgba(211, 211, 211, 0.5);
 }
 /*Footer Styles*/
+
+/*Creates underline and titles for footer*/
 .underline {
     display: inline-block;
     border-bottom: 2px solid #863cb0;
     width: 60px;
+    color: #c1c8dd;
 }
-
 .footer {
     background-color: #25262b;
-    color: white;
 }
-
+/*Setting styles for memers of ul list*/
+.footer span {
+   color: #c1c8dd;
+}
 .footer-list li {
     line-height: 35px;
-    color: #c1c8dd;
 }
 /*Styles for icon*/
 .icon {
@@ -80,13 +100,23 @@ form .btn {
     border-radius: 50px;
 }
 /*Index page styles*/
+
 .carousel-item {
     height: auto;
 }
+/*Image in carousel props*/
 .carousel-item img {
     width: 100%;
     height: auto;
-    max-height: 600px; /* Ograniczenie wysokoœci, ale bez przycinania */
+    max-height: 600px;
 }
-
+/*Styles for login page*/
+/*Change that later*/
+.login-page-container img{
+    min-width: 500px;
+    min-height: 500px;
+}
+.login-page-container{
+    max-width: 1000px;
+}
     

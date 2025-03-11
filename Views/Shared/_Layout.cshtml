@@ -16,21 +16,54 @@
             <div class="container text-white">
                 <div class="row pt-1">
                     <div class="col-md-2">
-                        <span class="fs-6">14 days return policy</span>
+                        <span class="fs-6 text-white">14 days return policy</span>
                     </div>
                     <div class="col-md-7"></div>
                     <div class="col-md-3 d-flex justify-content-end">
                         <div class="me-3">
-                            <a href="#">Sign in</a> | <a href="#">Join</a>
+                            <a class="text-white" asp-controller="Home" asp-action="Register" >Sign in</a>
+                            | 
+                            <a class="text-white" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
                         </div>
                         <div>
                             EN
+                            <i class="fa-solid fa-flag-usa"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+        <nav class="navbar mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fa-solid fa-store"></i>
+                    <span class="fw-bold fs-4">Marketplace</span>
+                </a>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search phrase" aria-label="Search">
+                    <select class="form-select me-2">
+                        <option selected disabled class="fw-bold">Category</option>
+                        <option value="1">GPU</option>
+                        <option value="2">CPU</option>
+                        <option value="3">RAM</option>
+                        <option value="4">PSU</option>
+                        <option value="5">CASE</option>
+                        <option value="6">Mouse</option>
+                        <option value="7">Keyboard</option>
+                    </select>
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+                </form>
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-heart me-4 fa-2x"></i>
+                    <i class="fa-solid fa-bell me-4 fa-2x"></i>
+                    <i class="fa-solid fa-bag-shopping me-4 fa-2x"></i>
+                    <div>
+                        <span>PLN 0.00</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+       @*  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="fa fa-desktop" aria-hidden="true"></i>
@@ -72,7 +105,7 @@
                 </div>
 
             </div>
-        </nav>
+        </nav> *@
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
@@ -80,24 +113,24 @@
         </main>
     </div>
 
-    <footer class="footer">
+     <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-lg-3 col-6">
                     <span class="fs-6 underline mb-4 fw-bold">Working hours</span>
                     <ul class="list-unstyled footer-list">
                         <li>
-                            <span>Monday to Friday 8:00 - 20:00 CEST</span>
+                            <span>Monday to Friday 8:00 - 20:00</span>
                         </li>
                         <li>
-                            <span>Saturday 10:00 - 15:00 CEST</span>
+                            <span>Saturday 10:00 - 15:00</span>
                         </li>
                         <li>
                             <span>Saturday - Closed</span>
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-3 col-6">
                     <span class="fs-6 underline mb-4 fw-bold">Company</span>
                     <ul class="list-unstyled footer-list">
                         <li>
@@ -111,7 +144,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-3 col-6">
                     <span class="fs-6 underline mb-4 fw-bold">Online Shop</span>
                     <ul class="list-unstyled footer-list">
                         <li>
@@ -125,7 +158,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-3 fw-bold">
+                <div class="col-lg-3 col-6 fw-bold">
                     <span class="fs-6 underline mb-4">Follow Us</span>
                     <ul class="list-unstyled footer-list">
                         <li>
@@ -138,9 +171,15 @@
 
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <span>&copy; OptiPC Poland - All Rights Reserved</span>
+                </div>
+            </div>
         </div>
+        
     </footer> 
-
+ 
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

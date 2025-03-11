@@ -16,12 +16,12 @@ html {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
+/*html {
     position: relative;
     min-height: 100%;
-}
+}*/
 body {
-    margin-bottom: 60px;
+    
     font-family: Montserrat;
     background-color: #D3D3D3;
 }
@@ -81,6 +81,7 @@ form .btn {
 }
 .footer {
     background-color: #25262b;
+    position: relative !important;
 }
 /*Setting styles for memers of ul list*/
 .footer span {
@@ -102,13 +103,13 @@ form .btn {
 /*Index page styles*/
 
 .carousel-item {
-    height: auto;
+    min-height: 300px;
 }
 /*Image in carousel props*/
 .carousel-item img {
     width: 100%;
-    height: auto;
     max-height: 600px;
+    min-height:300px;
 }
 /*Styles for login page*/
 /*Change that later*/

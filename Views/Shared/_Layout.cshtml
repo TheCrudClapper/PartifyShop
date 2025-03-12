@@ -13,17 +13,16 @@
 </head>
 <body>
     <header>
-        <div class="container-fluid upper-navbar">
+      @*   <div class="container-fluid upper-navbar">
             <div class="container text-white">
                 <div class="row pt-1">
-                    <div class="col-md-2">
+                    <div class="col-lg-2">
                         <span class="fs-6 text-white">14 days return policy</span>
                     </div>
-                    <div class="col-md-7"></div>
-                    <div class="col-md-3 d-flex justify-content-end">
+                    <div class="col-lg-3">
                         <div class="me-3">
-                            <a class="text-white" asp-controller="Home" asp-action="Register" >Sign in</a>
-                            | 
+                            <a class="text-white" asp-controller="Home" asp-action="Register">Sign in</a>
+                            |
                             <a class="text-white" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
                         </div>
                         <div>
@@ -33,80 +32,48 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <nav class="navbar">
+        </div> *@
+
+        <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="fa-solid fa-store"></i>
                     <span class="fw-bold fs-4">Marketplace</span>
                 </a>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search phrase" aria-label="Search">
-                    <select class="form-select me-2">
-                        <option selected disabled class="fw-bold">Category</option>
-                        <option value="1">GPU</option>
-                        <option value="2">CPU</option>
-                        <option value="3">RAM</option>
-                        <option value="4">PSU</option>
-                        <option value="5">CASE</option>
-                        <option value="6">Mouse</option>
-                        <option value="7">Keyboard</option>
-                    </select>
-                    <button class="btn btn-outline-light" type="submit">Search</button>
-                </form>
-                <div class="d-flex align-items-center">
-                    <i class="fa-solid fa-heart me-4 fa-2x"></i>
-                    <i class="fa-solid fa-bell me-4 fa-2x"></i>
-                    <i class="fa-solid fa-bag-shopping me-4 fa-2x"></i>
-                    <div>
-                        <span>PLN 0.00</span>
-                    </div>
-                </div>
-            </div>
-        </nav>
-       @*  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="fa fa-desktop" aria-hidden="true"></i>
-                    <span fw-bold>Marketplace</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon text-black"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="NewView">NewView</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-3 d-flex justify-content-end align-items-center">
-                    <div>
-                        <form class="d-flex me-3" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <i class="fa-solid fa-bag-shopping me-2 fa-2x"></i>
+
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <form class="d-flex flex-grow-1 my-2 my-lg-0">
+                        <input class="form-control me-2" type="search" placeholder="Search phrase" aria-label="Search">
+                        <select class="form-select me-2">
+                            <option selected disabled class="fw-bold">Category</option>
+                            <option value="1">GPU</option>
+                            <option value="2">CPU</option>
+                            <option value="3">RAM</option>
+                            <option value="4">PSU</option>
+                            <option value="5">CASE</option>
+                            <option value="6">Mouse</option>
+                            <option value="7">Keyboard</option>
+                        </select>
+                        <button class="btn btn-outline-light me-2" type="submit">Search</button>
+                    </form>
+
+                    <div class="d-flex align-items-center mt-3 mt-lg-0">
+                        <i class="fa-solid fa-heart me-3 fa-lg"></i>
+                        <i class="fa-solid fa-bell me-3 fa-lg"></i>
+                        <i class="fa-solid fa-bag-shopping me-3 fa-lg"></i>
                         <div>
                             <span>PLN 0.00</span>
                         </div>
                     </div>
                 </div>
-
             </div>
-        </nav> *@
+        </nav>
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
@@ -114,7 +81,7 @@
         </main>
     </div>
 
-     <footer class="footer">
+    <footer class="footer">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-6">
@@ -178,11 +145,11 @@
                 </div>
             </div>
         </div>
-    </footer> 
- 
+    </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

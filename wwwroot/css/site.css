@@ -1,25 +1,22 @@
 html {
     font-size: 14px;
 }
+
 .container-fluid {
     padding: 0 !important;
-    margin: 0 !important; 
-    width: 100%; 
+    margin: 0 !important;
+    width: 100%;
 }
+
 @media (min-width: 768px) {
     html {
         font-size: 16px;
     }
 }
-
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-/*html {
-    position: relative;
-    min-height: 100%;
-}*/
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #D3D3D3;
@@ -30,32 +27,57 @@ body {
     font-size: 16px;
     background-color: #25262b;
 }
-.upper-navbar a{
-    text-decoration: none;
-}
-.navbar .container i, span{
+
+    .upper-navbar a {
+        text-decoration: none;
+    }
+
+.navbar .container i, span {
     color: #25262b;
 }
+
 .navbar form {
     width: 50%;
 }
-.navbar select{
-    max-width: 150px;
-    flex-grow: 1;
+
+.navbar select {
+    width: 300px;
     font-size: 12px;
 }
+
 .navbar form input {
     flex-grow: 2;
     min-width: 300px;
 }
+
 .navbar {
     background-color: #863cb0;
 }
+
 form .btn {
     color: #c1c8dd;
     background-color: #25262b;
     border: 1px solid black;
 }
+/*Makes the navbar responsive for smallest to large dispklays*/
+@media (max-width: 991px) {
+    .navbar form {
+        flex-direction: column;
+        width: 100%;
+    }
+
+        .navbar form input,
+        .navbar form select,
+        .navbar form button {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+    .upper-navbar {
+        font-size: 14px;
+    }
+}
+
 
 /*Contact Page Styles*/
 .google-map {
@@ -78,21 +100,24 @@ form .btn {
     width: 60px;
     color: #c1c8dd;
 }
+
 .footer {
     background-color: #25262b;
     position: relative !important;
 }
-/*Setting styles for members of ul list*/
-.footer span, a {
-   color: #c1c8dd;
-   text-decoration: none;
-}
-.footer a:hover {
-   color: #863cb0;
-}
-.footer li {
-    line-height: 35px;
-}
+    /*Setting styles for members of ul list*/
+    .footer span, a {
+        color: #c1c8dd;
+        text-decoration: none;
+    }
+
+    .footer a:hover {
+        color: #863cb0;
+    }
+
+    .footer li {
+        line-height: 35px;
+    }
 /*Styles for icon*/
 .icon {
     height: 25px;
@@ -103,40 +128,45 @@ form .btn {
     align-content: center;
     border-radius: 50px;
 }
-.icon:hover {
-    background-color: #863cb0;
-}
+
+    .icon:hover {
+        background-color: #863cb0;
+    }
 /*Index page styles*/
 .carousel-item {
     max-height: 1000px;
     height: auto;
 }
-/*Image in carousel props*/
-.carousel-item img {
-    object-fit: cover;
-    height: 100%;
-    filter: brightness(0.4);
-}
+    /*Image in carousel props*/
+    .carousel-item img {
+        object-fit: cover;
+        height: 100%;
+        filter: brightness(0.4);
+    }
 /*Setting position of captions*/
 .carousel-caption {
     position: absolute;
     top: 20px;
     text-align: left;
 }
-.carousel-caption h2 {
-    font-size: 100px;
-    font-weight: 500;
-}
-.carousel-caption p{
-    font-size: 25px;
-}
+
+    .carousel-caption h2 {
+        font-size: 100px;
+        font-weight: 500;
+    }
+
+    .carousel-caption p {
+        font-size: 25px;
+    }
+
 .buy-now-button {
     background-color: #25262b;
     color: white;
 }
+
     .buy-now-button:hover {
         background-color: #863cb0;
-        color:white;
+        color: white;
     }
 
 /*STYLES FOR LOGIN PAGE*/
@@ -146,9 +176,9 @@ form .btn {
     min-width: 500px;
     min-height: 500px;
 }
-.login-page-container{
+
+.login-page-container {
     margin-top: 100px;
     max-width: 1000px;
     margin-bottom: 320px;
 }
-    

@@ -1,8 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="container">
+<div class="container-fluid">
     <div id="carouselExampleCaptions" class="carousel slide">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -11,24 +10,24 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="~/images/amd_gpu.png" class=" img-fluid" alt="...">
+                <img src="~/images/nvidia_gpu.jpg" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
-                    <h5>Place for used pc parts</h5>
+                    <h2 class="display-1">Place for used pc parts</h2>
                     <p>Unite with other IT enthusiasts and buy components in decent prices !</p>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="~/images/pc_monitor.jpg" class="d-block w-100 img-fluid" alt="...">
+                <img src="~/images/monitor.jpg" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block ">
-                    <h5>New Monitor ?</h5>
+                    <h2 class="display-1">New Monitor ?</h2>
                     <p>We got a lot of used monitors just for you</p>
                 </div>
             </div>
             <div class="carousel-item">
                 <img src="~/images/rig.jpg" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block img-fluid">
-                    <h5>Third slide label</h5>
-                    <p>Some representative placeholder content for the third slide.</p>
+                <div class="carousel-caption d-none d-md-block">
+                    <h2 class="display-1">Dream PC at your reach !</h2>
+                    <p>Workstation ? Gaming PC ? In our shop you can find those - without going bankrupt !</p>
                 </div>
             </div>
         </div>
@@ -41,4 +40,94 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
+    <div class="container offers-container bg-white rounded">
+        <div class="row mt-3">
+            <div class="col-sm-12 mt-2">
+                <p class="fw-bold fs-4">Top Today's Picks:</p>
+            </div>
+        </div>
+        <div class="row mt-2">
+            @for (int i = 0; i < 6; i++)
+            {
+                <div class="col-md-2 mb-4">
+                    <div class="card">
+                        <img src="~/images/gpu_listing.jpg" class="card-img-top" alt="ram-image">
+                        <div class="card-body text-start">
+                            <h5 class="card-title">RTX 3070</h5>
+                            <h6 class="card-title">899 PLN</h6>
+                            <p>
+                                @for (int j = 0; j < 5; j++)
+                                { 
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                }
+                            </p>
+                            <button class="btn buy-now-button">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="container offers-container bg-white rounded">
+        <div class="row mt-3">
+            <div class="col-sm-12 mt-2">
+                <p class="fw-bold fs-4">Opti Pc Recommends:</p>
+            </div>
+        </div>
+        <div class="row mt-2">
+            @for (int i = 0; i < 6; i++)
+            {
+                <div class="col-md-2 mb-4">
+                    <div class="card">
+                        <img src="~/images/ram.png" class="card-img-top" alt="ram-image">
+                        <div class="card-body text-start">
+                            <h5 class="card-title">RAM DDR4 3200Mhz 16GB</h5>
+                            <h6 class="card-title">150 PLN</h6>
+                            <p>
+                                @for (int j = 0; j < 5; j++)
+                                {
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                }
+                            </p>
+                            <button class="btn buy-now-button">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="container offers-container bg-white rounded">
+        <div class="row mt-3">
+            <div class="col-sm-12 mt-2">
+                <p class="fw-bold fs-4">Best In CASE Cateogory</p>
+            </div>
+        </div>
+        <div class="row mt-2">
+            @for (int i = 0; i < 6; i++)
+            {
+                <div class="col-md-2 mb-4">
+                    <div class="card">
+                        <img src="~/images/pc_case.jpg" class="card-img-top" alt="ram-image">
+                        <div class="card-body text-start">
+                            <h5 class="card-title">Shadow X2 Savio</h5>
+                            <h6 class="card-title">250 PLN</h6>
+                            <p>
+                                @{
+                                    int starsAmount = new Random().Next(1, 6);
+                                    for (int j = 0; j < starsAmount; j++)
+                                    {
+                                    
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                    
+                                    }
+                                }
+                            </p>
+                            <button class="btn buy-now-button">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
+

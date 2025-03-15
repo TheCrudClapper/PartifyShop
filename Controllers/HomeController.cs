@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ComputerServiceOnlineShop.Models;
-
+using ComputerServiceOnlineShop.Models;
 namespace ComputerServiceOnlineShop.Controllers;
 
 public class HomeController : Controller
@@ -15,7 +15,40 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        List<CardItem> items = new List<CardItem>()
+        {
+            new CardItem()
+            {
+                Name = "Rtx 3060",
+                Price = 999,
+            },
+            new CardItem()
+            {
+                Name = "Rtx 3070",
+                Price = 1999,
+            },
+            new CardItem()
+            {
+                Name = "Rtx 3080",
+                Price = 2999,
+            },
+             new CardItem()
+            {
+                Name = "Another card",
+                Price = 2999,
+            },
+            new CardItem()
+            {
+                Name = "Even more cards",
+                Price = 2999,
+            },
+            new CardItem()
+            {
+                Name = "Last Card",
+                Price = 2999,
+            }
+        };
+        return View(items);
     }
 
     public IActionResult Privacy()
@@ -23,18 +56,6 @@ public class HomeController : Controller
         return View();
     }
     public IActionResult NewView()
-    {
-        return View();
-    }
-    public IActionResult Contact()
-    {
-        return View();
-    }
-    public IActionResult Login()
-    {
-        return View();
-    }
-    public IActionResult Register()
     {
         return View();
     }

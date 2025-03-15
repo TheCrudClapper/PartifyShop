@@ -13,27 +13,33 @@
 </head>
 <body>
     <header>
-      @*   <div class="container-fluid upper-navbar">
-            <div class="container text-white">
-                <div class="row pt-1">
-                    <div class="col-lg-2">
-                        <span class="fs-6 text-white">14 days return policy</span>
+        <div class="container-fluid bg-dark">
+            <div class="container bottom-navbar">
+                <div class="row text-white pt-3">
+                    <div class="col-2">
+                        <p>Massive Discounts</p>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="me-3">
-                            <a class="text-white" asp-controller="Home" asp-action="Register">Sign in</a>
-                            |
-                            <a class="text-white" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
-                        </div>
-                        <div>
-                            EN
-                            <i class="fa-solid fa-flag-usa"></i>
-                        </div>
+                    <div class="col-2">
+                        <p>Test Item</p>
+                    </div>
+                    <div class="col-2">
+                        <p>Test item</p>
+                    </div>
+                    <div class="col-2">
+                        <p>Test Item</p>
+                    </div>
+                    <div class="col-2">
+                        <p>Test Item</p>
+                    </div>
+                    <div class="col-2">
+                        <p>Test Item</p>
+                    </div>
+                    <div class="col-2">
+                        <p></p>
                     </div>
                 </div>
             </div>
-        </div> *@
-
+        </div>
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
@@ -74,24 +80,7 @@
                 </div>
             </div>
         </nav>
-        <div class="container-fluid bg-dark h-50">
-            <div class="container">
-                <div class="row pt-1 text-white">
-                    <div class="col-2">
-                        <p>Test Item</p>
-                    </div>
-                    <div class="col-2">
-                        <p>Test Item</p>
-                    </div>
-                    <div class="col-2">
-                        <p>Test item</p>
-                    </div>
-                    <div class="col-2">
-                        <p>Test Item</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
@@ -123,7 +112,7 @@
                             <span>About Us</span>
                         </li>
                         <li>
-                            <span>Our Services</span>
+                            <span><a asp-controller="Login" asp-action="Login">Login</a></span>
                         </li>
                         <li>
                             <span>Privacy Policy</span>
@@ -140,7 +129,7 @@
                             <span>Cart</span>
                         </li>
                         <li>
-                            <span><a asp-controller="Home" asp-action="Contact">Contact</a></span>
+                            <span><a asp-controller="Contact" asp-action="Contact">Contact</a></span>
                         </li>
                     </ul>
                 </div>

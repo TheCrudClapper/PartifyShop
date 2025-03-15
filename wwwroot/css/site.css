@@ -21,23 +21,9 @@ body {
     font-family: 'Montserrat', sans-serif;
     background-color: #D3D3D3;
 }
-/*Navbar styles*/
-.upper-navbar {
-    height: 30px;
-    font-size: 16px;
-    background-color: #25262b;
-}
-
-    .upper-navbar a {
-        text-decoration: none;
-    }
 
 .navbar .container i, span {
     color: #25262b;
-}
-
-.navbar form {
-    width: 50%;
 }
 
 .navbar select {
@@ -73,12 +59,10 @@ form .btn {
             margin-bottom: 5px;
         }
 
-    .upper-navbar {
-        font-size: 14px;
-    }
 }
-
-
+.bottom-navbar{
+    
+}
 /*Contact Page Styles*/
 .google-map {
     min-height: 400px;

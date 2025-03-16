@@ -50,7 +50,10 @@ public class HomeController : Controller
         };
         return View(items);
     }
-
+    public IActionResult AddItem()
+    {
+        return View();
+    }
     public IActionResult Privacy()
     {
         return View();

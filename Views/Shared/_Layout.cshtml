@@ -10,36 +10,11 @@
     <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
-        <div class="container-fluid bg-dark">
-            <div class="container bottom-navbar">
-                <div class="row text-white pt-3">
-                    <div class="col-2">
-                        <p>Massive Discounts</p>
-                    </div>
-                    <div class="col-2">
-                        <p>Test Item</p>
-                    </div>
-                    <div class="col-2">
-                        <p>Test item</p>
-                    </div>
-                    <div class="col-2">
-                        <p>Test Item</p>
-                    </div>
-                    <div class="col-2">
-                        <p>Test Item</p>
-                    </div>
-                    <div class="col-2">
-                        <p>Test Item</p>
-                    </div>
-                    <div class="col-2">
-                        <p></p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
@@ -72,14 +47,42 @@
                     <div class="d-flex align-items-center mt-3 mt-lg-0">
                         <i class="fa-solid fa-heart me-3 fa-lg"></i>
                         <i class="fa-solid fa-bell me-3 fa-lg"></i>
-                        <i class="fa-solid fa-bag-shopping me-3 fa-lg"></i>
+                        <a href="#"> <i class="fa-solid fa-bag-shopping me-3 fa-lg"></i></a>
                         <div>
                             <span>PLN 0.00</span>
                         </div>
                     </div>
                 </div>
             </div>
+
         </nav>
+        <div class="container-fluid bg-dark">
+            <div class="container upper-navbar">
+                <div class="row text-white">
+                    <div class="col-2">
+                        <a asp-controller="Home" asp-action="AddItem">Add Offer</a>
+                    </div>
+                    <div class="col-2">
+                        <span>Your offers</span>
+                    </div>
+                    <div class="col-2">
+                        <span>Test Item</span>
+                    </div>
+                    <div class="col-2">
+                        <span>Test Item</span>
+                    </div>
+                    <div class="col-2">
+                        <span>Test Item</span>
+                    </div>
+                    <div class="col-2 text-end">
+                        <span>
+                            <a asp-controller="Registration" asp-action="Register">Register</a>
+                            <a asp-controller="Login" asp-action="Login">Login</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
         
     </header>
     <div class="container-fluid">

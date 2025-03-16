@@ -1,0 +1,33 @@
+﻿/*Styles for adding, editing existing offer in application*/
+.midesection-style {
+    background-color: white;
+    padding: 13px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+    .midesection-style .btn {
+        width: 300px;
+        background-color: #863cb0;
+        color: white;
+        border: 0;
+    }
+        .midesection-style .btn:hover {
+            background-color: #25262b;
+        }
+@media (max-width: 767px) {
+    .midesection-style .btn {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+}
+/*Style that help distunguish current step in adding new item to marketplace offer*/
+.progress-bar {
+    border-radius: 10px;
+    background-color: #863cb0;
+}
+.next-step{
+    opacity: 0.3;
+}

@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Add Offer";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/offer-styles.css" asp-append-version="true" />
+}
+<div class="container mt-3">
+    <h3 class="fw-bold ps-2">Adding Offer</h3>
+    <div class="midesection-style mb-2">
+        <div class="row">
+            <div class="col-6">
+                <h7 class="fw-bold">
+                    Basic Info
+                </h7>
+                <div class="progress" role="progressbar">
+                    <div class="progress-bar" style="width: 100%"></div>
+                </div>
+            </div>
+            <div class="col-6">
+                <h7>
+                    Delivery Info
+                </h7>
+                <div class="progress" role="progressbar">
+                    <div class="progress-bar next-step" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form>
+        <div class="mb-3 midesection-style">
+            <div class="col-12">
+                <h5 class="fw-bold">Pictures*</h5>
+                <label for="pictures" class="form-label">Add some photos of your product</label>
+                <input class="form-control" type="file" id="pictures" multiple>
+            </div>
+        </div>
+        <div class="mb-3 midesection-style">
+            <div class="col-12 col-lg-7">
+                <h5 class="fw-bold">Title*</h5>
+                <label for="title" class="form-label">Tell buyers, whate are your selling, mark, model or color</label>
+                <input class="form-control" type="text" id="title">
+            </div>
+        </div>
+        <div class="mb-3 midesection-style">
+            <div class="row">
+                <h5 class="fw-bold">Category and Condition*</h5>
+                <label class="form-label">Choose category and condition of your item</label>
+                <div class="col-12 col-lg-6">
+                    <select class="form-select">
+                        <option selected disabled class="fw-bold">Category</option>
+                        <option value="1">GPU</option>
+                        <option value="2">CPU</option>
+                        <option value="3">RAM</option>
+                        <option value="4">PSU</option>
+                        <option value="5">CASE</option>
+                        <option value="6">Mouse</option>
+                        <option value="7">Keyboard</option>
+                    </select>
+                </div>
+                <div class="col-12 col-lg-6 mt-2 mt-lg-0">
+                    <select class="form-select">
+                        <option selected disabled class="fw-bold">Condition</option>
+                        <option value="1">New</option>
+                        <option value="2">Used</option>
+                        <option value="3">Visible use marks</option>
+                    </select>
+                </div>
+            </div>
+            
+        </div>
+        <div class="mb-3 midesection-style">
+            <div class="row">
+                <h5 class="fw-bold">Price and Qunatity*</h5>
+                <div class="col-12 col-lg-6">
+                    <div class="input-group">
+                        <span class="input-group-text">PLN</span>
+                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                        <span class="input-group-text">.00</span>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 mt-2 mt-lg-0">
+                    <div class="input-group"> 
+                        <input type="text" class="form-control">
+                        <span class="input-group-text">PCS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+           
+           
+        <div class="mb-3 midesection-style">
+            <div class="col-12 col-lg-7">
+                <h5 class="fw-bold">Description</h5>
+                <label for="exampleFormControlTextarea1" class="form-label">Give detailed info about item, to evade customers questions</label>
+                <textarea  class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
+            </div>
+        </div>
+        <div class="mb-3 midesection-style text-end">
+            <div class="col-12">
+                <button type="submit" class="btn">Next Step</button>
+            </div>
+        </div>
+    </form>
+</div>

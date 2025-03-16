@@ -13,6 +13,7 @@ html {
         font-size: 16px;
     }
 }
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -58,10 +59,15 @@ form .btn {
             width: 100%;
             margin-bottom: 5px;
         }
-
 }
-.bottom-navbar{
-    
+
+.upper-navbar span {
+    color: white;
+}
+
+.upper-navbar select {
+    margin-top: 4px;
+    font-size: 12px
 }
 /*Contact Page Styles*/
 .google-map {
@@ -166,3 +172,4 @@ form .btn {
     max-width: 1000px;
     margin-bottom: 320px;
 }
+/*Styles for Adding new item*/

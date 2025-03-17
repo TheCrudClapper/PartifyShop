@@ -4,11 +4,11 @@ namespace ComputerServiceOnlineShop.Controllers
 {
     public class AuctionController : Controller
     {
-        public IActionResult Auction()
+        public IActionResult AddAuction()
         {
             return View();
         }
-        public IActionResult Auctions()
+        public IActionResult AllUserAuctions()
         {
             return View();
         }

@@ -2,7 +2,10 @@
     ViewData["Title"] = "Add Offer";
 }
 @section Styles {
-    <link rel="stylesheet" href="~/css/offer-styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script src="~/js/auction-scripts.js"></script>
 }
 <div class="container mt-3">
     <h3 class="fw-bold ps-2">Adding Offer</h3>
@@ -20,10 +23,15 @@
     </div>
     <form>
         <div class="mb-3 midesection-style">
-            <div class="col-12">
+            <div class="row">
                 <h5 class="fw-bold">Pictures*</h5>
                 <label for="pictures" class="form-label">Add some photos of your product</label>
-                <input class="form-control" type="file" id="pictures" multiple>
+                <div class="col-7">
+                    <input class="form-control" type="file" id="pictures" multiple>
+                </div>
+                <div class="col-auto">
+                    <button class="btn custom-button" onclick="clearPictures()">Clear Photos</button>
+                </div>
             </div>
         </div>
         <div class="mb-3 midesection-style">
@@ -99,7 +107,12 @@
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                Small items, hdd drive, cpu, ram
+                                <hr />
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
+                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                    Inpost Parcel Locker
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -111,7 +124,12 @@
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                Bigger items, pc case, cpu cooler
+                                <hr />
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
+                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                    Inpost Parcel Locker
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -123,7 +141,12 @@
                         </h2>
                         <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                PC case, whole PC, monitor
+                                <hr />
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
+                                <label class="form-check-label" for="flexCheckIndeterminate">
+                                    Inpost Parcel Locker
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -144,10 +167,14 @@
             </div>
         </div>
 
+
         <div class="mb-3 midesection-style text-end">
             <div class="col-12">
-                <button type="submit" class="btn">Place offer</button>
+                <button type="submit" class="btn submit-btn">Place offer</button>
             </div>
         </div>
     </form>
+    <script>
+
+    </script>
 </div>

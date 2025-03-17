@@ -1,24 +1,25 @@
-﻿/*Styles for adding, editing existing offer in application*/
+﻿/*Styles for adding, editing, displaying  existing offer in application*/
 .midesection-style {
     background-color: white;
     padding: 13px;
     border-radius: 10px;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
 }
-
-    .midesection-style .btn {
-        width: 300px;
+    .midesection-style .submit-btn,
+    .midesection-style .custom-button {
         background-color: #863cb0;
         color: white;
         border: 0;
     }
-
-        .midesection-style .btn:hover {
+    .midesection-style .submit-btn {
+        width: 300px;
+    }
+        .midesection-style .submit-btn:hover,
+        .midesection-style .custom-button:hover {
             background-color: #25262b;
         }
-
 @media (max-width: 767px) {
-    .midesection-style .btn {
+    .midesection-style .submit-btn {
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -34,3 +35,8 @@
 .next-step {
     opacity: 0.3;
 }
+
+
+/*This section is for displaying all user's listings */
+
+

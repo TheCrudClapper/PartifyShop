@@ -54,16 +54,15 @@
                     </div>
                 </div>
             </div>
-
         </nav>
         <div class="container-fluid bg-dark">
             <div class="container upper-navbar">
                 <div class="row text-white">
                     <div class="col-2">
-                        <a asp-controller="Home" asp-action="AddItem">Add Offer</a>
+                        <a asp-controller="Auction" asp-action="AddAuction">Add Offer</a>
                     </div>
                     <div class="col-2">
-                        <span>Your offers</span>
+                        <a asp-controller="Auction" asp-action="AllUserAuctions">Your Auctions</a>
                     </div>
                     <div class="col-2">
                         <span>Test Item</span>

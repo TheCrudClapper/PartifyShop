@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ComputerServiceOnlineShop.Models;
-using ComputerServiceOnlineShop.Models;
 namespace ComputerServiceOnlineShop.Controllers;
 
 public class HomeController : Controller
@@ -49,10 +48,6 @@ public class HomeController : Controller
             }
         };
         return View(items);
-    }
-    public IActionResult AddItem()
-    {
-        return View();
     }
     public IActionResult Privacy()
     {

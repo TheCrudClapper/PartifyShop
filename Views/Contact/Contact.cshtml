@@ -1,25 +1,28 @@
 ﻿@{
     ViewData["Title"] = "Contact";
 }
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-sm-4 gy-5 fs-4">
-                <i class="fa fa-thumb-tack fa-2x" aria-hidden="true"></i>
-                <h2 class="mt-2">Adress</h2>
-                <p>28 Listopada, Nowy Sącz, Poland</p>
-            </div>
-            <div class="col-sm-4 gy-5 fs-4">
-                <i class="fa fa-envelope fa-2x" aria-hidden="true"></i>
-                <h2 class="mt-2">Email</h2>
-                <a>optiPC@gmail.com</a>
-            </div>
-            <div class="col-sm-4 gy-5 fs-4">
-                <i class="fa fa-phone fa-2x" aria-hidden="true"></i>
-                <h2 class="mt-2">Phone</h2>
-                <a>+ 48 694 202 137</a>
-            </div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/contact-styles.css" asp-append-version="true" />
+}
+<div class="container">
+    <div class="row text-center">
+        <div class="col-sm-4 gy-5 fs-4">
+            <i class="fa fa-thumb-tack fa-2x" aria-hidden="true"></i>
+            <h2 class="mt-2">Adress</h2>
+            <p>28 Listopada, Nowy Sącz, Poland</p>
+        </div>
+        <div class="col-sm-4 gy-5 fs-4">
+            <i class="fa fa-envelope fa-2x" aria-hidden="true"></i>
+            <h2 class="mt-2">Email</h2>
+            <a>optiPC@gmail.com</a>
+        </div>
+        <div class="col-sm-4 gy-5 fs-4">
+            <i class="fa fa-phone fa-2x" aria-hidden="true"></i>
+            <h2 class="mt-2">Phone</h2>
+            <a>+ 48 694 202 137</a>
         </div>
     </div>
+</div>
 
 
 <div class="container-fluid custom-gray-background">

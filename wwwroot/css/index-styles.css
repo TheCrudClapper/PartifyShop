@@ -1,0 +1,36 @@
+﻿/*Index page styles*/
+.carousel-item {
+    max-height: 1000px;
+    height: auto;
+}
+    /*Image in carousel props*/
+    .carousel-item img {
+        object-fit: cover;
+        height: 100%;
+        filter: brightness(0.4);
+    }
+/*Setting position of captions*/
+.carousel-caption {
+    position: absolute;
+    top: 20px;
+    text-align: left;
+}
+
+    .carousel-caption h2 {
+        font-size: 100px;
+        font-weight: 500;
+    }
+
+    .carousel-caption p {
+        font-size: 25px;
+    }
+
+.buy-now-button {
+    background-color: #25262b;
+    color: white;
+}
+
+    .buy-now-button:hover {
+        background-color: #863cb0;
+        color: white;
+    }

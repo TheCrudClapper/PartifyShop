@@ -1,5 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    @model List<ComputerServiceOnlineShop.Models.CardItem>
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/index-styles.css" asp-append-version="true" />
 }
 <div class="container-fluid">
     <div id="carouselExampleCaptions" class="carousel slide">
@@ -47,17 +51,17 @@
             </div>
         </div>
         <div class="row mt-2">
-            @for (int i = 0; i < 6; i++)
+            @foreach (var item in Model)
             {
-                <div class="col-md-2 mb-4">
+                <div class="col-lg-2 mb-4">
                     <div class="card">
                         <img src="~/images/gpu_listing.jpg" class="card-img-top" alt="ram-image">
                         <div class="card-body text-start">
-                            <h5 class="card-title">RTX 3070</h5>
-                            <h6 class="card-title">899 PLN</h6>
+                            <h5 class="card-title">@item.Name</h5>
+                            <h6 class="card-title">@item.Price</h6>
                             <p>
                                 @for (int j = 0; j < 5; j++)
-                                { 
+                                {
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                 }
                             </p>
@@ -77,7 +81,7 @@
         <div class="row mt-2">
             @for (int i = 0; i < 6; i++)
             {
-                <div class="col-md-2 mb-4">
+                <div class="col-lg-2 mb-4">
                     <div class="card">
                         <img src="~/images/ram.png" class="card-img-top" alt="ram-image">
                         <div class="card-body text-start">
@@ -105,7 +109,7 @@
         <div class="row mt-2">
             @for (int i = 0; i < 6; i++)
             {
-                <div class="col-md-2 mb-4">
+                <div class="col-lg-2 mb-4">
                     <div class="card">
                         <img src="~/images/pc_case.jpg" class="card-img-top" alt="ram-image">
                         <div class="card-body text-start">
@@ -116,9 +120,9 @@
                                     int starsAmount = new Random().Next(1, 6);
                                     for (int j = 0; j < starsAmount; j++)
                                     {
-                                    
+
                                         <i class="fa fa-star" aria-hidden="true"></i>
-                                    
+
                                     }
                                 }
                             </p>

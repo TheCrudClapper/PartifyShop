@@ -1,3 +1,7 @@
+/*
+    This file defines styles common for al subpages in this portal
+    There are also styles for layout of application
+*/
 html {
     font-size: 14px;
 }
@@ -69,19 +73,11 @@ form .btn {
     margin-top: 4px;
     font-size: 12px
 }
-/*Contact Page Styles*/
-.google-map {
-    min-height: 400px;
-    min-height: 600px;
-    border: 0;
-    width: 100%;
-    height: 100%;
-}
+
 /*Custome background color*/
 .custom-gray-background {
     background-color: rgba(211, 211, 211, 0.5);
 }
-/*Footer Styles*/
 
 /*Creates underline and titles for footer*/
 .underline {
@@ -108,7 +104,7 @@ form .btn {
     .footer li {
         line-height: 35px;
     }
-/*Styles for icon*/
+/*Styles for icon in footer*/
 .icon {
     height: 25px;
     width: 25px;
@@ -122,54 +118,3 @@ form .btn {
     .icon:hover {
         background-color: #863cb0;
     }
-/*Index page styles*/
-.carousel-item {
-    max-height: 1000px;
-    height: auto;
-}
-    /*Image in carousel props*/
-    .carousel-item img {
-        object-fit: cover;
-        height: 100%;
-        filter: brightness(0.4);
-    }
-/*Setting position of captions*/
-.carousel-caption {
-    position: absolute;
-    top: 20px;
-    text-align: left;
-}
-
-    .carousel-caption h2 {
-        font-size: 100px;
-        font-weight: 500;
-    }
-
-    .carousel-caption p {
-        font-size: 25px;
-    }
-
-.buy-now-button {
-    background-color: #25262b;
-    color: white;
-}
-
-    .buy-now-button:hover {
-        background-color: #863cb0;
-        color: white;
-    }
-
-/*STYLES FOR LOGIN PAGE*/
-
-/*Change that later*/
-.login-page-container img {
-    min-width: 500px;
-    min-height: 500px;
-}
-
-.login-page-container {
-    margin-top: 100px;
-    max-width: 1000px;
-    margin-bottom: 320px;
-}
-/*Styles for Adding new item*/

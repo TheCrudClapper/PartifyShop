@@ -12,9 +12,11 @@
         color: white;
         border: 0;
     }
+
         .midesection-style .btn:hover {
             background-color: #25262b;
         }
+
 @media (max-width: 767px) {
     .midesection-style .btn {
         display: block;
@@ -28,6 +30,7 @@
     border-radius: 10px;
     background-color: #863cb0;
 }
-.next-step{
+
+.next-step {
     opacity: 0.3;
 }

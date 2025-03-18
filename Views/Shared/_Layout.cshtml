@@ -56,27 +56,43 @@
             </div>
         </nav>
         <div class="container-fluid bg-dark">
-            <div class="container upper-navbar">
-                <div class="row text-white">
-                    <div class="col-2">
-                        <a asp-controller="Auction" asp-action="AddAuction">Add Offer</a>
+            <div class="container lower-navbar">
+                <div class="row">
+                    <div class="col-2 fw-bold">
+                        <a asp-controller="Auction" asp-action="AddAuction">
+                            <i class="fa-solid fa-plus d-block d-lg-none fa-2x mt-2 mt-lg-0"></i>
+                            <span class="d-none d-lg-inline">Add Auction</span>
+                        </a>
                     </div>
-                    <div class="col-2">
-                        <a asp-controller="Auction" asp-action="AllUserAuctions">Your Auctions</a>
+                    <div class="col-2 fw-bold">
+                        <a asp-controller="Auction" asp-action="AllUserAuctions">
+                            <i class="fa-solid fa-boxes-stacked fa-2x d-block d-lg-none fa-2x mt-2 mt-lg-0"></i>
+                            <span class="d-none d-lg-inline">Your Auctions</span>
+                        </a>
                     </div>
-                    <div class="col-2">
-                        <span>Test Item</span>
+                    <div class="col-2 fw-bold">
+                        <a asp-controller="Auction" asp-action="ShowAuction" >
+                            <span class="d-none d-lg-inline">Test Item</span>
+                            <i class="fa-solid fa-helmet-safety d-block d-lg-none fa-2x mt-2 mt-lg-0"></i>
+                        </a>
                     </div>
-                    <div class="col-2">
-                        <span>Test Item</span>
+                    <div class="col-2 fw-bold">
+                        <a asp-controller="Auction" asp-action="AddAuction" >
+                            <span class="d-none d-lg-block">Test Item</span>
+                            <i class="fa-solid fa-helmet-safety d-block d-lg-none fa-2x mt-2 mt-lg-0"></i>
+                        </a>
                     </div>
-                    <div class="col-2">
-                        <span>Test Item</span>
+                    <div class="col-2 fw-bold">
+                        <a asp-controller="Auction" asp-action="AddAuction" >
+                            <span class="d-none d-lg-block">Test Item</span>
+                            <i class="fa-solid fa-helmet-safety d-block d-lg-none fa-2x mt-2 mt-lg-0"></i>
+                        </a>
                     </div>
-                    <div class="col-2 text-end">
+                    <div class="col-2 text-center">
                         <span>
-                            <a asp-controller="Registration" asp-action="Register">Register</a>
-                            <a asp-controller="Login" asp-action="Login">Login</a>
+                            <a asp-controller="Registration" asp-action="Register" class="fw-bold">Register</a>
+                            <span class="d-none d-lg-inline-block">|</span>
+                            <a asp-controller="Login" asp-action="Login" class="fw-bold">Login</a>
                         </span>
                     </div>
                 </div>

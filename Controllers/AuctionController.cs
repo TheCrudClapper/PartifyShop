@@ -12,5 +12,9 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             return View();
         }
+        public IActionResult ShowAuction()
+        {
+            return View();
+        }
     }
 }

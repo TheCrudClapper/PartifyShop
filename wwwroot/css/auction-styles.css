@@ -39,4 +39,38 @@
 
 /*This section is for displaying all user's listings */
 
+/*This section is for styles in page ShowAuction*/
+.image-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;  /*Centering a div */
+}
 
+.carousel-inner {
+    width: 100%;
+    height: auto;
+    max-width: 600px;
+    max-height: 400px;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .carousel-inner {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .image-container {
+        max-width: 100%;
+    }
+
+    .carousel-item img {
+        height: 300px; /* Reduce height for smaller screens */
+    }
+}

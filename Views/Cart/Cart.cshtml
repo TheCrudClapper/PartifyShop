@@ -1,9 +1,40 @@
 ﻿@{
     ViewData["Title"] = "Cart";
 }
+
 @section Styles {
-    <link rel="stylesheet" href="~/css/cart-styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
 }
-<div class="container">
-    <h2>This is a view for users cart</h2>
+
+<div class="container mt-3 p-4">
+    <h3 class="fw-bold ps-2">Your Cart Items</h3>
+    <form>
+            <div class="card mb-3 shadow-sm border-0">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="~/images/nvidia_gpu.jpg" class="img-fluid rounded-start" alt="Product Image">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Rtx 3060 Nowa Glanc</h5>
+                        <p class="card-text">
+                            <span class="fw-bold">Condition:</span> New<br>
+                            <span class="fw-bold">Category:</span> GPU<br>
+                            <span class="fw-bold">Quantity:</span> 2<br>
+                            <span class="fw-bold">Price:</span> 999 PLN<br>
+                            <span class="fw-bold">Delivery Type:</span> Inpost Parcel Locker Medium <br>
+                            <span class="fw-bold">Added To Cart:</span> 17.03.2025
+                        </p>
+                        <div class="d-flex justify-content-end">
+                            <a href="#" class="btn btn-primary btn-sm">Show</a>
+                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 midesection-style">
+            <h3 class="fw-bold">Total Cart Value</h3>
+        </div>
+    </form>
 </div>

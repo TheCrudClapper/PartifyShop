@@ -2,7 +2,7 @@
 {
     public class DeliveryType : BaseModel
     {
-        public string Title = null!;
-        public string Price = null!;
+        public string Title { get; set; } = null!;
+        public string Price { get; set; } = null!;
     }
 }

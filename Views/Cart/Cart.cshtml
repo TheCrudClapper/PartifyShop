@@ -8,33 +8,63 @@
 
 <div class="container mt-3 p-4">
     <h3 class="fw-bold ps-2">Your Cart Items</h3>
-    <form>
-            <div class="card mb-3 shadow-sm border-0">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="~/images/nvidia_gpu.jpg" class="img-fluid rounded-start" alt="Product Image">
+    <div class="row g-3">
+        <div class="col-12 col-lg-8 midesection-style">
+            <form>
+                <div class="mb-3 midesection-style shadow">
+                    <h5 class="fw-bold">Sells and sends user: <span class="purple-text">PanJaweł2137</span></h5>
                 </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Rtx 3060 Nowa Glanc</h5>
-                        <p class="card-text">
-                            <span class="fw-bold">Condition:</span> New<br>
-                            <span class="fw-bold">Category:</span> GPU<br>
-                            <span class="fw-bold">Quantity:</span> 2<br>
-                            <span class="fw-bold">Price:</span> 999 PLN<br>
-                            <span class="fw-bold">Delivery Type:</span> Inpost Parcel Locker Medium <br>
-                            <span class="fw-bold">Added To Cart:</span> 17.03.2025
-                        </p>
-                        <div class="d-flex justify-content-end">
-                            <a href="#" class="btn btn-primary btn-sm">Show</a>
-                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                @for (int i = 0; i < 3; i++)
+                {
+                    <div class="card mb-3 shadow">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <img src="~/images/nvidia_gpu.jpg" class="img-fluid rounded-start h-100 w-100 object-fit-cover" alt="Product Image">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card-body">
+                                    <h5 class="card-title">Rtx 3060 Nowa Glanc</h5>
+                                    <p class="card-text">
+                                        <span class="fw-bold">Condition:</span> New<br>
+                                        <span class="fw-bold">Category:</span> GPU<br>
+                                        <span class="fw-bold">Price:</span> 999 PLN<br>
+                                        <span class="fw-bold">Added To Cart:</span> 17.03.2025
+                                    </p>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="w-25">
+                                            <input type="text" value="1" class="form-control text-center">
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn custom-button">Show</button>
+                                            <button type="button" class="btn custom-button ms-2">Delete</button>
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                }
+            </form>
+        </div>
+        <!-- Spacer -->
+        <div class="col-12 col-lg-1"></div>
+        <div class="col-12 col-lg-3 midesection-style h-25 p-4">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-between">
+                    <h5>Total</h5>
+                    <h5 class="fw-bold">999,99 PLN</h5>
                 </div>
             </div>
-        </div>
-        <div class="mb-3 midesection-style">
-            <h3 class="fw-bold">Total Cart Value</h3>
-        </div>
-    </form>
+            <hr />
+            <div class="row">
+                <button class="btn custom-button w-100 fw-bold">Checkout</button>
+            </div>
+        <div/>
+
+
+    </div>
+
+    </div>
 </div>

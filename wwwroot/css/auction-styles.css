@@ -74,3 +74,8 @@
         height: 300px; /* Reduce height for smaller screens */
     }
 }
+
+/*This section is for styles in page Cart*/
+.purple-text {
+    color: #863cb0;
+}

@@ -1,12 +1,10 @@
 ﻿/*Definition of styles used in pages Login.cshtml and Register.cshtml */
 /*Change that later*/
-.login-page-container img {
-    min-width: 500px;
-    min-height: 500px;
-}
-
 .login-page-container {
-    margin-top: 100px;
     max-width: 1000px;
-    margin-bottom: 320px;
+    display: flex;
+    margin-top: 100px;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 100px;
 }

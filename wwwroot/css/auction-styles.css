@@ -7,17 +7,25 @@
 }
     .midesection-style .submit-btn,
     .midesection-style .custom-button {
-        background-color: #863cb0;
+        background-color: #863cb0 !important;
         color: white;
         border: 0;
     }
-    .midesection-style .submit-btn {
-        width: 300px;
+    .submit-btn,
+    .custom-button {
+        background-color: #863cb0 !important;
+        color: white;
+        border: 0;
     }
+.midesection-style .submit-btn {
+    width: 300px;
+}
         .midesection-style .submit-btn:hover,
         .midesection-style .custom-button:hover {
             background-color: #25262b;
+            color: black;
         }
+
 @media (max-width: 767px) {
     .midesection-style .submit-btn {
         display: block;
@@ -78,4 +86,8 @@
 /*This section is for styles in page Cart*/
 .purple-text {
     color: #863cb0;
+}
+.custom-button {
+    background-color: #863cb0;
+
 }

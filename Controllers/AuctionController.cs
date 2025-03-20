@@ -16,5 +16,9 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             return View();
         }
+        public IActionResult AuctionBrowser()
+        {
+            return View();
+        }
     }
 }

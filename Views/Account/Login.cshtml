@@ -1,9 +1,11 @@
-﻿@{
+﻿@model ComputerServiceOnlineShop.ViewModels.LoginViewModel
+@{
     ViewData["Title"] = "Login";
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/registration-style.css" asp-append-version="true" />
 }
+
 <div class="container login-page-container">
     <div class="text-center mb-3 midesection-style ms-1 me-1 shadow">
         <i class="fa-solid fa-store fa-10x"></i> <br />
@@ -11,25 +13,37 @@
         <h6>Place for your electronics</h6>
     </div>
     <h3 class="fw-bold ms-1">Login</h3>
-    <form>
+    <form asp-action="Login" method="post">
         <div class="row midesection-style shadow p-3 mb-3 ms-1 me-1">
             <div class="col-12 col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input type="text" class="form-control">
+                    <input asp-for= "Email" type="text" class="form-control">
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-12 col-md-6">
                 <div class="mb-3">
                     <label class="form-label">Password</label>
-                    <input type="password" class="form-control">
+                    <input asp-for="Password" type="password" class="form-control">
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
             </div>
+            <!-- Displaying errors -->
+            @if (!string.IsNullOrEmpty(ViewData["loginError"]?.ToString()))
+            {
+                <div class="col-12 text-center">
+                    <div class="mb-3">
+                      <span class="text-danger">@ViewData["loginError"]</span>
+                    </div>
+                </div>
+            }
         </div>
         <div class="row mt-3">
             <div class="col-12 text-center">
                 <button type="submit" class="btn btn-outline-light w-50">Login</button>
             </div>
         </div>
+        
     </form>
 </div>

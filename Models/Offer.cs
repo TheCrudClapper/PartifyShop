@@ -13,14 +13,11 @@ namespace ComputerServiceOnlineShop.Models
 
         public int StockQuantity { get; set; }
 
+        public bool OfferStatus { get; set; }
         public int SellerId { get; set; }
         [ForeignKey("SellerId")]
         public User Seller { get; set; } = null!;
-
-        public int DeliveryTypeId { get; set; }
-        [ForeignKey("DeliveryTypeId")]
-        public DeliveryType DeliveryType { get; set; } = null!;
-
-        public bool OfferStatus { get; set; }
+        public ICollection<OfferDeliveryType> OfferDeliveryTypes { get; set; } = new List<OfferDeliveryType>();
+        
      }
 }

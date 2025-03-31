@@ -11,12 +11,18 @@ namespace ComputerServiceOnlineShop.Models.Contexts
         public DbSet<CartItem> CartItems { get; set; } = default!;
         public DbSet<Product> Products { get; set; } = default!;
         public DbSet<Offer> Offers { get; set; } = default!;
-
+        public DbSet<Condition> Conditions { get; set; } = default!;
         public DbSet<ProductCategory> ProductCategories { get; set; } = default!;
         public DbSet<DeliveryType> DeliveryTypes { get; set; } = default!;
+        public DbSet<OfferDeliveryType> OfferDeliveryTypes { get; set; } = default!;
+        public DbSet<ProductImage> ProductImages { get; set; } = default!;
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
 
+        }
+
+        public DatabaseContext()
+        {
         }
     }
 }

@@ -4,6 +4,7 @@ using ComputerServiceOnlineShop.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerServiceOnlineShop.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250331135058_OfferDeliveryTypeMigration")]
+    partial class OfferDeliveryTypeMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,6 +227,9 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("OfferId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10, 2)");
 
@@ -232,6 +238,8 @@ namespace ComputerServiceOnlineShop.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OfferId");
 
                     b.ToTable("DeliveryTypes");
                 });
@@ -312,7 +320,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
                     b.HasIndex("OfferId");
 
-                    b.ToTable("OfferDeliveryTypes");
+                    b.ToTable("OfferDeliveryType");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Models.Product", b =>
@@ -515,6 +523,13 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Navigation("Offer");
                 });
 
+            modelBuilder.Entity("ComputerServiceOnlineShop.Models.DeliveryType", b =>
+                {
+                    b.HasOne("ComputerServiceOnlineShop.Models.Offer", null)
+                        .WithMany("Deliveries")
+                        .HasForeignKey("OfferId");
+                });
+
             modelBuilder.Entity("ComputerServiceOnlineShop.Models.Offer", b =>
                 {
                     b.HasOne("ComputerServiceOnlineShop.Models.Product", "Product")
@@ -614,6 +629,8 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Models.Offer", b =>
                 {
+                    b.Navigation("Deliveries");
+
                     b.Navigation("OfferDeliveryTypes");
                 });
 

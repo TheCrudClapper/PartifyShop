@@ -1,11 +1,12 @@
-﻿@{
+﻿@model ComputerServiceOnlineShop.ViewModels.OfferViewModel;
+@{
     ViewData["Title"] = "Add Offer";
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
 }
 @section Scripts {
-    <script src="~/js/auction-scripts.js"></script>
+<script src="~/js/auction-scripts.js"></script>
 }
 <div class="container mt-3">
     <h3 class="fw-bold ps-2">Adding Offer</h3>
@@ -21,24 +22,28 @@
             </div>
         </div>
     </div>
-    <form>
+    <form asp-action="AddAuction" method="post" enctype="multipart/form-data">
         <div class="mb-3 midesection-style">
             <div class="row">
                 <h5 class="fw-bold">Pictures*</h5>
                 <label for="pictures" class="form-label">Add some photos of your product</label>
                 <div class="col-7">
-                    <input class="form-control" type="file" id="pictures" multiple>
+                    <input class="form-control" type="file" asp-for="UploadedImages" id="pictures" multiple accept="image/*">
                 </div>
                 <div class="col-auto">
                     <button class="btn custom-button" onclick="clearPictures()">Clear Photos</button>
                 </div>
+            </div>
+            <div>
+                <span asp-validation-for="UploadedImages" class="text-danger"></span>
             </div>
         </div>
         <div class="mb-3 midesection-style">
             <div class="col-12 col-lg-7">
                 <h5 class="fw-bold">Title*</h5>
                 <label for="title" class="form-label">Tell buyers, whate are your selling, mark, model or color</label>
-                <input class="form-control" type="text" id="title">
+                <input class="form-control" asp-for="ProductName" type="text" id="title">
+                <span asp-validation-for="ProductName" class="text-danger"></span>
             </div>
         </div>
         <div class="mb-3 midesection-style">
@@ -46,43 +51,42 @@
                 <h5 class="fw-bold">Category and Condition*</h5>
                 <label class="form-label">Choose category and condition of your item</label>
                 <div class="col-12 col-lg-6">
-                    <select class="form-select">
-                        <option selected disabled class="fw-bold">Category</option>
-                        <option value="1">GPU</option>
-                        <option value="2">CPU</option>
-                        <option value="3">RAM</option>
-                        <option value="4">PSU</option>
-                        <option value="5">CASE</option>
-                        <option value="6">Mouse</option>
-                        <option value="7">Keyboard</option>
+                    <select class="form-select" asp-for="SelectedProductCategory" asp-items="Model.ProductCategoriesSelectionList">
+                        <option selected disabled>Select Category</option>
                     </select>
+                    <span asp-validation-for="SelectedProductCategory" class="text-danger"></span>
                 </div>
                 <div class="col-12 col-lg-6 mt-2 mt-lg-0">
-                    <select class="form-select">
-                        <option selected disabled class="fw-bold">Condition</option>
-                        <option value="1">New</option>
-                        <option value="2">Used</option>
-                        <option value="3">Visible use marks</option>
+                    <select class="form-select" asp-for="SelectedProductCondition" asp-items="Model.ProductConditionsSelectList">
+                        <option selected disabled>Select Condition</option>
                     </select>
+                    <span asp-validation-for="SelectedProductCondition" class="text-danger"></span>
                 </div>
             </div>
 
         </div>
         <div class="mb-3 midesection-style">
             <div class="row">
-                <h5 class="fw-bold">Price and Qunatity*</h5>
+                <h5 class="fw-bold">Price and Quantity*</h5>
                 <div class="col-12 col-lg-6">
                     <div class="input-group">
                         <span class="input-group-text">PLN</span>
-                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                        <input type="number" class="form-control" asp-for="Price" step="0.01">
                         <span class="input-group-text">.00</span>
                     </div>
+                    <div>
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
                 </div>
+
                 <div class="col-12 col-lg-6 mt-2 mt-lg-0">
                     <div class="input-group">
-                        <input type="text" class="form-control">
+                        <input type="number" class="form-control" asp-for="StockQuantity">
                         <span class="input-group-text">PCS</span>
                     </div>
+                    <div>
+                        <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,81 +94,47 @@
 
         <div class="mb-3 midesection-style">
             <div class="col-12 col-lg-7">
-                <h5 class="fw-bold">Description</h5>
-                <label for="exampleFormControlTextarea1" class="form-label">Give detailed info about item, to evade customers questions</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
+                <h5 class="fw-bold">Description*</h5>
+                <label class="form-label">Give detailed info about item, to evade customers questions</label>
+                <textarea class="form-control" rows="10"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
         </div>
         <div class="mb-3 midesection-style">
             <div class="col-12 col-lg-7">
-                <h5 class="fw-bold">Delivery Method</h5>
-                <div class="accordion" id="accordionExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Small Package
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                Small items, hdd drive, cpu, ram
-                                <hr />
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
+                <h5 class="fw-bold">Available Delivery Methods*</h5>
+                <h5>Inpost Parcel Lockers</h5>
+                    @if(Model.DeliveryTypes != null)
+                    {
+                        @foreach (var deliveryType in Model.DeliveryTypes)
+                        {
+                            if(deliveryType.Title.Contains("Locker")){
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="parcelLocker" value="@deliveryType.Id">
                                 <label class="form-check-label" for="flexCheckIndeterminate">
-                                    Inpost Parcel Locker
+                                    @deliveryType.Title <span class="text-secondary"> - @deliveryType.Price PLN</span>
                                 </label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Medium Package
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                Bigger items, pc case, cpu cooler
-                                <hr />
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-                                <label class="form-check-label" for="flexCheckIndeterminate">
-                                    Inpost Parcel Locker
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Big Package
-                            </button>
-                        </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                PC case, whole PC, monitor
-                                <hr />
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-                                <label class="form-check-label" for="flexCheckIndeterminate">
-                                    Inpost Parcel Locker
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            }
+                        }
+                    }
             </div>
-            <h5 class="fw-bold mt-3">Other Delivery Method</h5>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-                <label class="form-check-label" for="flexCheckIndeterminate">
-                    Przesyłka kurierska - pobranie
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-                <label class="form-check-label" for="flexCheckIndeterminate">
-                    Przesyłka kurierska - przedpłata
-                </label>
-            </div>
+            <h5 class="mt-3">Other Delivery Method</h5>
+            @if(Model.DeliveryTypes != null)
+            {
+                @foreach(var deliveryType in Model.DeliveryTypes)
+                {
+                    if (!deliveryType.Title.Contains("Locker"))
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
+                            <label class="form-check-label" for="flexCheckIndeterminate">
+                                @deliveryType.Title - <span class="text-secondary">@deliveryType.Price PLN</span>
+                            </label>
+                        </div>
+                    }
+                }
+            }
         </div>
 
 

@@ -4,6 +4,7 @@ using ComputerServiceOnlineShop.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerServiceOnlineShop.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250331112501_ConditionMigrationRepair")]
+    partial class ConditionMigrationRepair
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,21 +220,23 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<DateTime?>("DateEdited")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(10, 2)");
+                    b.Property<int>("OfferId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Price")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OfferId");
 
                     b.ToTable("DeliveryTypes");
                 });
@@ -278,41 +283,6 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.HasIndex("SellerId");
 
                     b.ToTable("Offers");
-                });
-
-            modelBuilder.Entity("ComputerServiceOnlineShop.Models.OfferDeliveryType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateDeleted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateEdited")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DeliveryTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeliveryTypeId");
-
-                    b.HasIndex("OfferId");
-
-                    b.ToTable("OfferDeliveryTypes");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Models.Product", b =>
@@ -515,6 +485,17 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Navigation("Offer");
                 });
 
+            modelBuilder.Entity("ComputerServiceOnlineShop.Models.DeliveryType", b =>
+                {
+                    b.HasOne("ComputerServiceOnlineShop.Models.Offer", "Offer")
+                        .WithMany("Deliveries")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Offer");
+                });
+
             modelBuilder.Entity("ComputerServiceOnlineShop.Models.Offer", b =>
                 {
                     b.HasOne("ComputerServiceOnlineShop.Models.Product", "Product")
@@ -532,25 +513,6 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Seller");
-                });
-
-            modelBuilder.Entity("ComputerServiceOnlineShop.Models.OfferDeliveryType", b =>
-                {
-                    b.HasOne("ComputerServiceOnlineShop.Models.DeliveryType", "DeliveryType")
-                        .WithMany("OfferDeliveryTypes")
-                        .HasForeignKey("DeliveryTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ComputerServiceOnlineShop.Models.Offer", "Offer")
-                        .WithMany("OfferDeliveryTypes")
-                        .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DeliveryType");
-
-                    b.Navigation("Offer");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Models.Product", b =>
@@ -607,14 +569,9 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Navigation("CartItems");
                 });
 
-            modelBuilder.Entity("ComputerServiceOnlineShop.Models.DeliveryType", b =>
-                {
-                    b.Navigation("OfferDeliveryTypes");
-                });
-
             modelBuilder.Entity("ComputerServiceOnlineShop.Models.Offer", b =>
                 {
-                    b.Navigation("OfferDeliveryTypes");
+                    b.Navigation("Deliveries");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Models.Product", b =>

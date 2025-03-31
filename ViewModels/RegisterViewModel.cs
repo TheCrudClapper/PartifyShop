@@ -39,11 +39,10 @@ namespace ComputerServiceOnlineShop.ViewModels
 
         [Required(ErrorMessage = "Postal Code is required")]
         public string PostalCode { get; set; } = null!;
-        //country id = 3 for testing
 
-        [Required(ErrorMessage = "Contry Code is required")]
-        public int CountryId { get; set; }
+        [Required(ErrorMessage = "Country is required")]
+        public string SelectedCountry { get; set; } = null!;
 
-        //public List<SelectListItem>? Countries { get; set; }
+        public List<SelectListItem>? CountriesSelectionList { get; set; }
     }
 }

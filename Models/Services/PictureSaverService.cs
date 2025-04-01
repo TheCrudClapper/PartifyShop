@@ -39,7 +39,7 @@ namespace ComputerServiceOnlineShop.Models.Services
                     {
                         var fileName = Path.GetFileNameWithoutExtension(file.FileName)
                             + "_" + Guid.NewGuid()
-                            + Path.GetExtension(file.FileName);
+                            + Path.GetExtension(file.FileName).ToLower();
 
                         var filePath = Path.Combine("wwwroot/offer-images/", fileName);
 
@@ -47,7 +47,7 @@ namespace ComputerServiceOnlineShop.Models.Services
                         {
                             await file.CopyToAsync(stream);
                         }
-                        imagePaths.Add($"{filePath}");
+                        imagePaths.Add($"/offer-images/{fileName}");
                     }
                 }
             }

@@ -6,6 +6,7 @@ namespace ComputerServiceOnlineShop.Models.Abstractions
     public interface IOfferService
     {
         Task Add(OfferViewModel model);
+        List<UserOffersViewModel> GetUserOffers();
         Task<List<SelectListItem>> GetProductCategories();
         Task<List<SelectListItem>> GetProductConditions();
         Task<List<DeliveryType>> GetDeliveryTypes();

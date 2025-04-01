@@ -49,11 +49,12 @@ namespace ComputerServiceOnlineShop.Controllers
 
             viewModel.UploadedImagesUrls = _pictureHandlerService.SavePicturesToDirectory(viewModel.UploadedImages);
             await _offerService.Add(viewModel);
-            return RedirectToAction("AllUserAuctions");
+            return RedirectToAction("AllUserOffers");
         }
-        public IActionResult AllUserAuctions()
+        public IActionResult AllUserOffers()
         {
-            return View();
+            List<UserOffersViewModel> userOffers = _offerService.GetUserOffers();
+            return View(userOffers);
         }
         public IActionResult ShowAuction()
         {

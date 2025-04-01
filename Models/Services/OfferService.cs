@@ -72,6 +72,24 @@ namespace ComputerServiceOnlineShop.Models.Services
 
             await _databaseContext.SaveChangesAsync();
         }
+        public  List<UserOffersViewModel> GetUserOffers()
+        {
+            return _databaseContext.Offers.Where(item => item.IsActive == true)
+                .Include(item => item.Product)
+                .ThenInclude(item => item.ProductImages)
+                .Select(item => new UserOffersViewModel()
+                {
+                    DateCreated = item.DateCreated,
+                    ProductCondition = item.Product.Condition.ConditionTitle,
+                    DateEdited = item.DateEdited,
+                    Price = item.Price,
+                    ProductCategory = item.Product.ProductCategory.Name,
+                    ProductStatus = item.OfferStatus,
+                    ProductName = item.Product.ProductName,
+                    ImageUrl = item.Product.ProductImages.First().ImagePath
+                })
+                .ToList();
+        }
         public async Task<List<SelectListItem>> GetProductConditions()
         {
             return await _databaseContext.Conditions

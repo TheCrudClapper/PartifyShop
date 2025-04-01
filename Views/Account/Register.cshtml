@@ -101,4 +101,12 @@
             </div>
         </div>
     </form>
+        @if (!string.IsNullOrEmpty(ViewData["userExists"]?.ToString()))
+        {
+            <script type="text/javascript">
+                window.onload = function () {
+                alert("@Html.Raw(ViewData["userExists"]?.ToString())");
+                };
+            </script>
+        }
 </div>

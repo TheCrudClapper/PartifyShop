@@ -1,4 +1,6 @@
+using ComputerServiceOnlineShop.Models.Abstractions;
 using ComputerServiceOnlineShop.Models.Contexts;
+using ComputerServiceOnlineShop.Models.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ComputerServiceOnlineShop")));
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddScoped<IPictureHandlerService, PictureSaverService>();
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();

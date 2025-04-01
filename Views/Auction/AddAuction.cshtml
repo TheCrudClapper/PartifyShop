@@ -96,45 +96,51 @@
             <div class="col-12 col-lg-7">
                 <h5 class="fw-bold">Description*</h5>
                 <label class="form-label">Give detailed info about item, to evade customers questions</label>
-                <textarea class="form-control" rows="10"></textarea>
+                <textarea asp-for = "Description" class="form-control" rows="10"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
         </div>
         <div class="mb-3 midesection-style">
             <div class="col-12 col-lg-7">
-                <h5 class="fw-bold">Available Delivery Methods*</h5>
+                <h5 class="fw-bold mb-2">Available Delivery Methods*</h5>
                 <h5>Inpost Parcel Lockers</h5>
-                    @if(Model.DeliveryTypes != null)
-                    {
-                        @foreach (var deliveryType in Model.DeliveryTypes)
-                        {
-                            if(deliveryType.Title.Contains("Locker")){
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="parcelLocker" value="@deliveryType.Id">
-                                <label class="form-check-label" for="flexCheckIndeterminate">
-                                    @deliveryType.Title <span class="text-secondary"> - @deliveryType.Price PLN</span>
-                                </label>
-                            </div>
-                            }
-                        }
-                    }
-            </div>
-            <h5 class="mt-3">Other Delivery Method</h5>
-            @if(Model.DeliveryTypes != null)
-            {
-                @foreach(var deliveryType in Model.DeliveryTypes)
+                @if (Model.DeliveryTypes != null)
                 {
-                    if (!deliveryType.Title.Contains("Locker"))
+                    @foreach (var deliveryType in Model.DeliveryTypes)
                     {
+
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-                            <label class="form-check-label" for="flexCheckIndeterminate">
-                                @deliveryType.Title - <span class="text-secondary">@deliveryType.Price PLN</span>
+                            <input class="form-check-input"
+                            type="radio"
+                            name="SelectedParcelLocker"
+                            value="@deliveryType.Id"
+                            @(Model.SelectedParcelLocker == deliveryType.Id ? "checked" : "")>
+                            <label class="form-check-label">
+                                @deliveryType.Title <span class="text-secondary"> - @deliveryType.Price PLN</span>
                             </label>
                         </div>
                     }
                 }
+                <span asp-validation-for="SelectedParcelLocker" class="text-danger"></span>
+            </div>
+            <h5 class="mt-3">Other Delivery Methods*</h5>
+            @if (Model.OtherDeliveriesSelectedList != null)
+            {
+                @foreach (var option in Model.OtherDeliveriesSelectedList)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="SelectedOtherDeliveries"
+                               value="@option.Value"
+                        @(Model.SelectedOtherDeliveries.Contains(Convert.ToInt32(option.Value)) ? "checked" : "")>
+                        <label class="form-check-label">
+                            @option.Text
+                        </label>
+                    </div>
+                }
             }
+            <span asp-validation-for="SelectedOtherDeliveries" class="text-danger"></span>
         </div>
 
 

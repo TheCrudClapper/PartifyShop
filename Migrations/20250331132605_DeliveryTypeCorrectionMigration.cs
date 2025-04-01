@@ -12,11 +12,11 @@ namespace ComputerServiceOnlineShop.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_DeliveryTypes_Offers_OfferId",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.AlterColumn<decimal>(
                 name: "Price",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 type: "decimal(10,2)",
                 nullable: false,
                 oldClrType: typeof(string),
@@ -24,7 +24,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
@@ -32,14 +32,14 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.AddColumn<string>(
                 name: "Description",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_DeliveryTypes_Offers_OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 column: "OfferId",
                 principalTable: "Offers",
                 principalColumn: "Id");
@@ -50,15 +50,15 @@ namespace ComputerServiceOnlineShop.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_DeliveryTypes_Offers_OfferId",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.DropColumn(
                 name: "Description",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Price",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(decimal),
@@ -66,7 +66,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 type: "int",
                 nullable: false,
                 defaultValue: 0,
@@ -76,7 +76,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.AddForeignKey(
                 name: "FK_DeliveryTypes_Offers_OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 column: "OfferId",
                 principalTable: "Offers",
                 principalColumn: "Id",

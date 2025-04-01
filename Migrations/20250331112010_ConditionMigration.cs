@@ -29,7 +29,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.AddColumn<int>(
                 name: "OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
@@ -78,7 +78,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryTypes_OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 column: "OfferId");
 
             migrationBuilder.CreateIndex(
@@ -88,7 +88,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.AddForeignKey(
                 name: "FK_DeliveryTypes_Offers_OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 column: "OfferId",
                 principalTable: "Offers",
                 principalColumn: "Id",
@@ -100,7 +100,7 @@ namespace ComputerServiceOnlineShop.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_DeliveryTypes_Offers_OfferId",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.DropTable(
                 name: "Conditions");
@@ -110,11 +110,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.DropIndex(
                 name: "IX_DeliveryTypes_OfferId",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.DropColumn(
                 name: "OfferId",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.AddColumn<string>(
                 name: "ImagePath",
@@ -138,7 +138,7 @@ namespace ComputerServiceOnlineShop.Migrations
                 name: "FK_Offers_DeliveryTypes_DeliveryTypeId",
                 table: "Offers",
                 column: "DeliveryTypeId",
-                principalTable: "DeliveryTypes",
+                principalTable: "ParcelLockerDeliveries",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }

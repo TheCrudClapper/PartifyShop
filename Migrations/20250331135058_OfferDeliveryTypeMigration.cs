@@ -30,7 +30,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     table.ForeignKey(
                         name: "FK_OfferDeliveryType_DeliveryTypes_DeliveryTypeId",
                         column: x => x.DeliveryTypeId,
-                        principalTable: "DeliveryTypes",
+                        principalTable: "ParcelLockerDeliveries",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(

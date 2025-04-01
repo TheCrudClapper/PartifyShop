@@ -12,14 +12,14 @@ namespace ComputerServiceOnlineShop.Migrations
         {
             migrationBuilder.AddColumn<string>(
                 name: "Price",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
 
             migrationBuilder.AddColumn<string>(
                 name: "Title",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
@@ -30,11 +30,11 @@ namespace ComputerServiceOnlineShop.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Price",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.DropColumn(
                 name: "Title",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
         }
     }
 }

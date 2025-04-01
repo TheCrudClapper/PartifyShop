@@ -1,84 +1,55 @@
-﻿using ComputerServiceOnlineShop.Models;
-using ComputerServiceOnlineShop.Models.Contexts;
-using ComputerServiceOnlineShop.Models.Services;
+﻿using ComputerServiceOnlineShop.Models.Abstractions;
 using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ComputerServiceOnlineShop.Controllers
 {
     public class AuctionController : Controller
     {
-        private readonly OfferService _offerService;
-        public AuctionController(DatabaseContext context)
+        private readonly IOfferService _offerService;
+        private readonly IPictureHandlerService _pictureHandlerService;
+        public AuctionController(IOfferService offerService, IPictureHandlerService pictureHandlerService)
         {
-            _offerService = new OfferService(context);
+            _offerService = offerService;
+            _pictureHandlerService = pictureHandlerService;
         }
         public async Task<IActionResult> AddAuction()
         {
             //Initializing list in view
             var viewModel = new OfferViewModel()
             {
-                DeliveryTypes = await _offerService.GetDeliveryTypes(),
+                DeliveryTypes = await _offerService.GetParcelLockerDeliveryTypes(),
                 ProductConditionsSelectList = await _offerService.GetProductConditions(),
                 ProductCategoriesSelectionList = await _offerService.GetProductCategories(),
+                OtherDeliveriesSelectedList = await _offerService.GetOtherDeliveryTypes(),
             };
             return View(viewModel);
         }
         [HttpPost]
         public async Task<IActionResult> AddAuction(OfferViewModel viewModel)
         {
-            viewModel.DeliveryTypes = await _offerService.GetDeliveryTypes();
+            viewModel.DeliveryTypes = await _offerService.GetParcelLockerDeliveryTypes();
             viewModel.ProductConditionsSelectList = await _offerService.GetProductConditions();
             viewModel.ProductCategoriesSelectionList = await _offerService.GetProductCategories();
+            viewModel.OtherDeliveriesSelectedList = await _offerService.GetOtherDeliveryTypes();
 
-            string[] allowedExtensions = new[] { ".jpg", "jpeg", "png" };
+            string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
 
-            if (viewModel.UploadedImages != null)
+            string response = _pictureHandlerService.CheckFileExtensions(viewModel.UploadedImages);
+
+            if (response != "OK")
             {
-                foreach (var image in viewModel.UploadedImages)
-                {
-                    var extension = Path.GetExtension(image.FileName).ToLower();
-                    if (!allowedExtensions.Contains(extension))
-                    {
-                        ModelState.AddModelError("UploadedImages", $"Images should be only in format {string.Join(",", allowedExtensions)}");
-                        return View(viewModel);
-                    }
-                }
+                ModelState.AddModelError("ImagesError", response);
             }
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
-            var imagePaths = new List<string>();
-            if (viewModel.UploadedImages != null && viewModel.UploadedImages.Count > 0)
-            {
-                foreach (var file in viewModel.UploadedImages)
-                {
-                    if (file.Length > 0)
-                    {
-                        var fileName = Path.GetFileNameWithoutExtension(file.FileName)
-                            + "_" + Guid.NewGuid()
-                            + Path.GetExtension(file.FileName);
 
-                        var filePath = Path.Combine("wwwroot/offer-images/", fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(stream);
-                        }
-                        //this need to be added to database
-                        imagePaths.Add($"/offer{fileName}");
-                    }
-                }
-            }
-           
-            
-
-            
+            viewModel.UploadedImagesUrls = _pictureHandlerService.SavePicturesToDirectory(viewModel.UploadedImages);
+            await _offerService.Add(viewModel);
             return RedirectToAction("AllUserAuctions");
-
         }
         public IActionResult AllUserAuctions()
         {

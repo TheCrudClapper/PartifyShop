@@ -45,7 +45,7 @@ namespace ComputerServiceOnlineShop.Migrations
                 name: "FK_OfferDeliveryTypes_DeliveryTypes_DeliveryTypeId",
                 table: "OfferDeliveryTypes",
                 column: "DeliveryTypeId",
-                principalTable: "DeliveryTypes",
+                principalTable: "ParcelLockerDeliveries",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
@@ -96,7 +96,7 @@ namespace ComputerServiceOnlineShop.Migrations
                 name: "FK_OfferDeliveryType_DeliveryTypes_DeliveryTypeId",
                 table: "OfferDeliveryType",
                 column: "DeliveryTypeId",
-                principalTable: "DeliveryTypes",
+                principalTable: "ParcelLockerDeliveries",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 

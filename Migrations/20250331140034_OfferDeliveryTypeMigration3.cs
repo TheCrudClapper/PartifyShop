@@ -12,15 +12,15 @@ namespace ComputerServiceOnlineShop.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_DeliveryTypes_Offers_OfferId",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.DropIndex(
                 name: "IX_DeliveryTypes_OfferId",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.DropColumn(
                 name: "OfferId",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
         }
 
         /// <inheritdoc />
@@ -28,18 +28,18 @@ namespace ComputerServiceOnlineShop.Migrations
         {
             migrationBuilder.AddColumn<int>(
                 name: "OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 type: "int",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeliveryTypes_OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 column: "OfferId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_DeliveryTypes_Offers_OfferId",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 column: "OfferId",
                 principalTable: "Offers",
                 principalColumn: "Id");

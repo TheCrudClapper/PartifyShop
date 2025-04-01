@@ -52,7 +52,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.RenameTable(
                 name: "DeliveryType",
-                newName: "DeliveryTypes");
+                newName: "ParcelLockerDeliveries");
 
             migrationBuilder.RenameIndex(
                 name: "IX_Offer_SellerId",
@@ -81,7 +81,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_DeliveryTypes",
-                table: "DeliveryTypes",
+                table: "ParcelLockerDeliveries",
                 column: "Id");
 
             migrationBuilder.AddForeignKey(
@@ -96,7 +96,7 @@ namespace ComputerServiceOnlineShop.Migrations
                 name: "FK_Offers_DeliveryTypes_DeliveryTypeId",
                 table: "Offers",
                 column: "DeliveryTypeId",
-                principalTable: "DeliveryTypes",
+                principalTable: "ParcelLockerDeliveries",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
@@ -158,7 +158,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_DeliveryTypes",
-                table: "DeliveryTypes");
+                table: "ParcelLockerDeliveries");
 
             migrationBuilder.RenameTable(
                 name: "ProductCategories",
@@ -169,7 +169,7 @@ namespace ComputerServiceOnlineShop.Migrations
                 newName: "Offer");
 
             migrationBuilder.RenameTable(
-                name: "DeliveryTypes",
+                name: "ParcelLockerDeliveries",
                 newName: "DeliveryType");
 
             migrationBuilder.RenameIndex(

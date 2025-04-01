@@ -238,7 +238,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
                     b.HasIndex("OfferId");
 
-                    b.ToTable("DeliveryTypes");
+                    b.ToTable("ParcelLockerDeliveries");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Models.Offer", b =>

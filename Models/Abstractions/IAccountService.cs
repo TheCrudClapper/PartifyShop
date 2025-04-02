@@ -35,10 +35,5 @@ namespace ComputerServiceOnlineShop.Models.Abstractions
         /// <param name="model"></param>
         /// <returns>Returs boolean value on success</returns>
         Task<bool> IsUserInDatabase(RegisterViewModel model);
-        /// <summary>
-        /// Method gets countries for select
-        /// </summary>
-        /// <returns>Returns asynchronous list item</returns>
-        Task<List<SelectListItem>> GetCountries();
     }
 }

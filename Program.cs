@@ -10,7 +10,8 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ComputerServiceOnlineShop")));
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
-builder.Services.AddScoped<IPictureHandlerService, PictureSaverService>();
+builder.Services.AddScoped<IPictureHandlerService, PictureHandlerService>();
+builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();

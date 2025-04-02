@@ -17,7 +17,7 @@ namespace ComputerServiceOnlineShop.Models.Services
             //user id for testing purposes
             
             const int userId = 7;
-            var uploadedImagesUrls = await model.UploadedImagesUrls;
+            var uploadedImagesUrls = model.UploadedImagesUrls;
             Product product = new Product()
             {
                 ProductName = model.ProductName,
@@ -72,9 +72,9 @@ namespace ComputerServiceOnlineShop.Models.Services
 
             await _databaseContext.SaveChangesAsync();
         }
-        public  List<UserOffersViewModel> GetUserOffers()
+        public  async Task<List<UserOffersViewModel>> GetUserOffers()
         {
-            return _databaseContext.Offers.Where(item => item.IsActive == true)
+            return await _databaseContext.Offers.Where(item => item.IsActive == true)
                 .Include(item => item.Product)
                 .ThenInclude(item => item.ProductImages)
                 .Select(item => new UserOffersViewModel()
@@ -88,7 +88,7 @@ namespace ComputerServiceOnlineShop.Models.Services
                     ProductName = item.Product.ProductName,
                     ImageUrl = item.Product.ProductImages.First().ImagePath
                 })
-                .ToList();
+                .ToListAsync();
         }
         public async Task<List<SelectListItem>> GetProductConditions()
         {

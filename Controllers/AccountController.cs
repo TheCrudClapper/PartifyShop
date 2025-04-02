@@ -14,15 +14,17 @@ namespace ComputerServiceOnlineShop.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly ICountriesService _countriesService;
+        public AccountController(IAccountService accountService, ICountriesService countriesService)
         {
             _accountService = accountService;
+            _countriesService = countriesService;
         }
         public async Task<IActionResult> Register()
         {
             RegisterViewModel ViewModel = new RegisterViewModel()
             {
-                CountriesSelectionList = await _accountService.GetCountries()
+                CountriesSelectionList = await _countriesService.GetCountriesSelectionList()
             };
             if (IsUserLogged())
             {
@@ -34,7 +36,7 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> Register(RegisterViewModel ViewModel)
         {
             //initializing list of countries for view
-            ViewModel.CountriesSelectionList = await _accountService.GetCountries();
+            ViewModel.CountriesSelectionList = await _countriesService.GetCountriesSelectionList();
 
             if (IsUserLogged())
             {

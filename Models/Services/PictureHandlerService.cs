@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 namespace ComputerServiceOnlineShop.Models.Services
 {
-    public class PictureSaverService : IPictureHandlerService
+    public class PictureHandlerService : IPictureHandlerService
     {
         string response = "";
         string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-        public string? CheckFileExtensions(List<IFormFile> uploadedImages)
+        public string CheckFileExtensions(List<IFormFile> uploadedImages)
         {
             if(uploadedImages != null && uploadedImages.Count > 0)
             {

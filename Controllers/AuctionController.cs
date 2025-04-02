@@ -36,24 +36,24 @@ namespace ComputerServiceOnlineShop.Controllers
 
             string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
 
-            string response = _pictureHandlerService.CheckFileExtensions(viewModel.UploadedImages);
+            string response = _pictureHandlerService.CheckFileExtensions(viewModel.UploadedImages)!;
 
             if (response != "OK")
             {
-                ModelState.AddModelError("ImagesError", response);
+                ModelState.AddModelError("ImagesError", response!);
             }
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
 
-            viewModel.UploadedImagesUrls = _pictureHandlerService.SavePicturesToDirectory(viewModel.UploadedImages);
+            viewModel.UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(viewModel.UploadedImages);
             await _offerService.Add(viewModel);
             return RedirectToAction("AllUserOffers");
         }
-        public IActionResult AllUserOffers()
+        public async Task<IActionResult> AllUserOffersAsync()
         {
-            List<UserOffersViewModel> userOffers = _offerService.GetUserOffers();
+            List<UserOffersViewModel> userOffers = await _offerService.GetUserOffers();
             return View(userOffers);
         }
         public IActionResult ShowAuction()

@@ -60,14 +60,6 @@ namespace ComputerServiceOnlineShop.Models.Services
             return await _databaseContext.Users.SingleOrDefaultAsync(item => item.Email == model.Email);
         }
 
-        public async Task<List<SelectListItem>> GetCountries()
-        {
-            return await _databaseContext.Countries
-                .Where(item => item.IsActive)
-                .Select(item => new SelectListItem { Text = item.CountryName, Value = item.Id.ToString() })
-                .ToListAsync();
-        }
-
         public async Task<bool> IsUserInDatabase(RegisterViewModel model)
         {
             return await _databaseContext.Users.AnyAsync(item => item.Email == model.Email);

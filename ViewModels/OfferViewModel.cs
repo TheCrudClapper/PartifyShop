@@ -29,9 +29,8 @@ namespace ComputerServiceOnlineShop.ViewModels
         public List<IFormFile> UploadedImages { get; set; } = null!;
 
         //Holds images processed to urls
-        public Task<List<string>>? UploadedImagesUrls { get; set; }
+        public List<string> UploadedImagesUrls { get; set; } = null!;
 
-        
         [Required(ErrorMessage = "Price is required")]
         [Range(1, double.MaxValue, ErrorMessage = "Price must be at least 1 PLN")]
         public decimal Price { get; set; }

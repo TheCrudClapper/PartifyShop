@@ -14,6 +14,8 @@ namespace ComputerServiceOnlineShop.Controllers
             _offerService = offerService;
             _pictureHandlerService = pictureHandlerService;
         }
+
+        [HttpGet]
         public async Task<IActionResult> AddAuction()
         {
             //Initializing list in view
@@ -26,17 +28,14 @@ namespace ComputerServiceOnlineShop.Controllers
             };
             return View(viewModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddAuction(OfferViewModel viewModel)
         {
-            viewModel.DeliveryTypes = await _offerService.GetParcelLockerDeliveryTypes();
-            viewModel.ProductConditionsSelectList = await _offerService.GetProductConditions();
-            viewModel.ProductCategoriesSelectionList = await _offerService.GetProductCategories();
-            viewModel.OtherDeliveriesSelectedList = await _offerService.GetOtherDeliveryTypes();
 
             string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
 
-            string response = _pictureHandlerService.CheckFileExtensions(viewModel.UploadedImages)!;
+            string response = _pictureHandlerService.CheckFileExtensions(viewModel.UploadedImages);
 
             if (response != "OK")
             {
@@ -44,6 +43,10 @@ namespace ComputerServiceOnlineShop.Controllers
             }
             if (!ModelState.IsValid)
             {
+                viewModel.DeliveryTypes = await _offerService.GetParcelLockerDeliveryTypes();
+                viewModel.ProductConditionsSelectList = await _offerService.GetProductConditions();
+                viewModel.ProductCategoriesSelectionList = await _offerService.GetProductCategories();
+                viewModel.OtherDeliveriesSelectedList = await _offerService.GetOtherDeliveryTypes();
                 return View(viewModel);
             }
 

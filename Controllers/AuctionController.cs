@@ -1,4 +1,4 @@
-﻿using ComputerServiceOnlineShop.Models.Abstractions;
+﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

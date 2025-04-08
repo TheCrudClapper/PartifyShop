@@ -1,6 +1,6 @@
-﻿using ComputerServiceOnlineShop.Models.Abstractions;
+﻿using ComputerServiceOnlineShop.Abstractions;
 using System.Threading.Tasks;
-namespace ComputerServiceOnlineShop.Models.Services
+namespace ComputerServiceOnlineShop.Services
 {
     public class PictureHandlerService : IPictureHandlerService
     {

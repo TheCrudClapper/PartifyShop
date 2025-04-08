@@ -45,8 +45,6 @@
                     </form>
 
                     <div class="d-flex align-items-center mt-3 mt-lg-0">
-                        <i class="fa-solid fa-heart me-3 fa-lg"></i>
-                        <i class="fa-solid fa-bell me-3 fa-lg"></i>
                         <a asp-controller="cart" asp-action="cart"> <i class="fa-solid fa-bag-shopping me-3 fa-lg"></i></a>
                         <div>
                             <span>PLN 0.00</span>
@@ -90,7 +88,7 @@
                     </div>
                     <div class="col-2 text-center">
                         <span>
-                            @if(Context.Session.GetString("UserId") != null)
+                            @if(User.Identity.IsAuthenticated)
                             {
                                 <a asp-controller="Account" asp-action="Logout" class="fw-bold">
                                     <span class="d-none d-lg-inline">Logout</span>

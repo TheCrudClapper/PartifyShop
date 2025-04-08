@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ComputerServiceOnlineShop.Models.Abstractions
+namespace ComputerServiceOnlineShop.Abstractions
 {
     public interface ICountriesService
     {   /// <summary>

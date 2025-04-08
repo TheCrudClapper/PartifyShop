@@ -1,7 +1,8 @@
-﻿using ComputerServiceOnlineShop.ViewModels;
+﻿using ComputerServiceOnlineShop.Models;
+using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ComputerServiceOnlineShop.Models.Abstractions
+namespace ComputerServiceOnlineShop.Abstractions
 {
     public interface IOfferService
     {

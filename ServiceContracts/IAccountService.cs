@@ -23,6 +23,10 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// </summary>
         /// <returns></returns>
         Task Logout();
-
+        /// <summary>
+        /// Method serches for currently logged user
+        /// </summary>
+        /// <returns>Returns GUID of currently logged in user</returns>
+        Guid GetLoggedUserId();
     }
 }

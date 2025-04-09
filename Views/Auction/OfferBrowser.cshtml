@@ -1,8 +1,9 @@
-﻿@{
+﻿@model IEnumerable<ComputerServiceOnlineShop.ViewModels.PublicOfferViewModel>
+@{
     ViewData["Title"] = "Auction Browser";
 }
 @section Styles {
-      <link rel="stylesheet" href="~/css/auction-styles.css"  />
+<link rel="stylesheet" href="~/css/auction-styles.css"  />
 }
 <div class="container mt-3">
     <h3 class="fw-bold mb-3">Searching "Rtx 3070"</h3>
@@ -16,9 +17,9 @@
                         <div class="col-12 col-sm-4 mb-3 mb-sm-0">
                             <select class="form-select border-secondary-subtle w-100 h-100">
                                 <option selected disabled>Delivery Type</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                <option value="1">Inpost Parcel Locker</option>
+                                <option value="2">Ups Courier</option>
+                                <option value="3">Inpost Courier</option>
                             </select>
                         </div>
                         <div class="col-12 col-sm-4 mb-4 mb-sm-0">
@@ -43,53 +44,51 @@
             </div>
 
             <div class="row">
-
-                @for (int i = 0; i < 3; i++)
+                @foreach(var offer in Model)
                 {
                     <div class="col-12">
                         <div class="card mb-3 shadow p-3">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <img src="~/images/nvidia_gpu.jpg" class="img-fluid rounded h-100 w-100 object-fit-cover" alt="Product Image">
+                                    <img src="@offer.ImageUrl" class="img-fluid offer-browser-image" alt="Product Image">
                                 </div>
-
-
                                 <div class="col-md-5 d-flex flex-column justify-content-between">
                                     <div>
-                                        <h5 class="card-title">Rtx 3060 Nowa Glanc</h5>
-                                        @for(int j = 0; j < 5; j++){
+                                        <h5 class="card-title">@offer.Title</h5>
+                                        @for (int j = 0; j < 5; j++)
+                                        {
                                             <i class="fa-solid fa-star"></i>
                                         }
                                     </div>
                                     <div>
                                         <ul class="ps-3 mb-0">
-                                            <li><span class="fw-bold">Condition:</span> New</li>
-                                            <li><span class="fw-bold">Category:</span> GPU</li>
-                                            <li><span class="fw-bold">Added To Shop:</span> 17.03.2025</li>
-                                            <li><span class="fw-bold">Description:</span>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</li>
+                                            <li><span class="fw-bold">Condition:</span> @offer.Condition</li>
+                                            <li><span class="fw-bold">Category:</span> @offer.Category</li>
+                                            <li><span class="fw-bold">Added To Shop:</span> @offer.DateCreated</li>
+                                            <li><span class="fw-bold">Description:</span> @offer.Description</li>
                                         </ul>
                                     </div>
                                     <div>
                                         <button class="btn custom-button w-100 w-md-auto">Show</button>
-                                        <hr class="d-block d-md-none"/>
+                                        <hr class="d-block d-md-none" />
                                     </div>
                                 </div>
 
                                 <div class="col-md-3 text-start d-flex flex-column justify-content-between">
-                                    <h5 class="fw-bold">Price: 999 PLN</h5>
+                                    <h5 class="fw-bold">Price: @offer.Price PLN</h5>
                                     <p>
                                         Sells and sends:
-                                        <br><span class="fw-bold">PanJaweł2137</span>
+                                        <br><span class="fw-bold">@offer.SellerName</span>
                                     </p>
                                     <p>
-                                       Available: <span class="fw-bold">999</span>
+                                        Available: <span class="fw-bold">@offer.QuantityAvailable</span>
                                     </p>
                                     <button class="btn custom-button w-100">To Cart</button>
                                 </div>
                             </div>
                         </div>
-                        </div>
-                    }
+                    </div>
+                }
                 </div>
             
         </div>

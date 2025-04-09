@@ -18,6 +18,8 @@ namespace ComputerServiceOnlineShop.ViewModels
         public string SelectedProductCategory { get; set; } = null!;
         public List<SelectListItem>? ProductCategoriesSelectionList { get; set; }
 
+        //false when public
+        public bool OfferVisibility { get; set; }
 
         [Required(ErrorMessage = "Product Condition is required")]
         public string SelectedProductCondition { get; set; } = null!;

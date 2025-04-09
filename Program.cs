@@ -21,6 +21,7 @@ builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
+
 builder.Services.AddAuthorization(options =>
 {
     //enforces authorization policy

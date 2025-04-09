@@ -1,5 +1,6 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,10 +55,27 @@ namespace ComputerServiceOnlineShop.Controllers
             await _offerService.Add(viewModel);
             return RedirectToAction("AllUserOffers");
         }
-        public async Task<IActionResult> AllUserOffersAsync()
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAuction([FromRoute]int id)
         {
-            List<UserOffersViewModel> userOffers = await _offerService.GetUserOffers();
+            await _offerService.DeleteOffer(id);
+            return RedirectToAction("AllUserOffers");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult>AllUserOffersAsync()
+        {
+            IEnumerable<UserOffersViewModel> userOffers = await _offerService.GetUserOffers();
             return View(userOffers);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> OfferBrowser()
+        {
+            IEnumerable<PublicOfferViewModel> allOffers = await _offerService.GetAllOffers();
+            return View(allOffers);
         }
         public IActionResult ShowAuction()
         {

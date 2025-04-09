@@ -9,79 +9,85 @@ namespace ComputerServiceOnlineShop.Services
     public class OfferService : IOfferService
     {
         private readonly DatabaseContext _databaseContext;
-        public OfferService(DatabaseContext databaseContext)
+        private readonly IAccountService _accountService;
+        public OfferService(DatabaseContext databaseContext, IAccountService accountService)
         {
             _databaseContext = databaseContext;
+            _accountService = accountService;
         }
         public async Task Add(OfferViewModel model)
         {
-            ////user id for testing purposes
-            //var uploadedImagesUrls = model.UploadedImagesUrls;
-            //Product product = new Product()
-            //{
-            //    ProductName = model.ProductName,
-            //    Description = model.Description,
-            //    ConditionId = int.Parse(model.SelectedProductCondition),
-            //    ProductCategoryId = int.Parse(model.SelectedProductCategory),
-            //    IsActive = true,
-            //    DateCreated = DateTime.Now,
-            //    ProductImages = uploadedImagesUrls.Select(imageUrl => new ProductImage()
-            //    {
-            //        DateCreated = DateTime.Now,
-            //        ImagePath = imageUrl,
-            //        IsActive = true
-            //    }).ToList()
-            //};
-            //await _databaseContext.Products.AddAsync(product);
+            Guid userId = _accountService.GetLoggedUserId();
+            var uploadedImagesUrls = model.UploadedImagesUrls;
+            Product product = new Product()
+            {
+                ProductName = model.ProductName,
+                Description = model.Description,
+                ConditionId = int.Parse(model.SelectedProductCondition),
+                ProductCategoryId = int.Parse(model.SelectedProductCategory),
+                IsActive = true,
+                DateCreated = DateTime.Now,
+                ProductImages = uploadedImagesUrls.Select(imageUrl => new ProductImage()
+                {
+                    DateCreated = DateTime.Now,
+                    ImagePath = imageUrl,
+                    IsActive = true
+                }).ToList()
+            };
+            await _databaseContext.Products.AddAsync(product);
 
-            //Offer offer = new Offer()
-            //{
-            //    Product = product,
-            //    IsActive = true,
-            //    DateCreated = DateTime.Now,
-            //    Price = model.Price,
-            //    SellerId = userId,
-            //    StockQuantity = model.StockQuantity,
-            //    OfferStatus = true,
-            //};
-            //await _databaseContext.Offers.AddAsync(offer);
+            Offer offer = new Offer()
+            {
+                Product = product,
+                IsActive = true,
+                DateCreated = DateTime.Now,
+                Price = model.Price,
+                SellerId = userId,
+                StockQuantity = model.StockQuantity,
+                OfferStatus = model.OfferVisibility,
+            };
+            await _databaseContext.Offers.AddAsync(offer);
 
-            ////adding one selected parcel locker, it is optional
-            //if (model.SelectedParcelLocker.HasValue)
-            //{
-            //    await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
-            //    {
-            //        DeliveryTypeId = model.SelectedParcelLocker.Value,
-            //        DateCreated = DateTime.Now,
-            //        Offer = offer,
-            //        IsActive = true,
-            //    });
-            //}
+            //adding one selected parcel locker, it is optional
+            if (model.SelectedParcelLocker.HasValue)
+            {
+                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
+                {
+                    DeliveryTypeId = model.SelectedParcelLocker.Value,
+                    DateCreated = DateTime.Now,
+                    Offer = offer,
+                    IsActive = true,
+                });
+            }
 
-            //foreach (var deliveryId in model.SelectedOtherDeliveries)
-            //{
-            //    await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
-            //    {
-            //        DeliveryTypeId = deliveryId,
-            //        Offer = offer,
-            //        IsActive = true,
-            //        DateCreated = DateTime.Now
-            //    });
-            //}
+            foreach (var deliveryId in model.SelectedOtherDeliveries)
+            {
+                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
+                {
+                    DeliveryTypeId = deliveryId,
+                    Offer = offer,
+                    IsActive = true,
+                    DateCreated = DateTime.Now
+                });
+            }
 
-            //await _databaseContext.SaveChangesAsync();
+            await _databaseContext.SaveChangesAsync();
         }
-        public  async Task<List<UserOffersViewModel>> GetUserOffers()
+        public async Task<IEnumerable<UserOffersViewModel>> GetUserOffers()
         {
-            return await _databaseContext.Offers.Where(item => item.IsActive == true)
+            Guid userId = _accountService.GetLoggedUserId();
+            return await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => item.SellerId == userId)
                 .Include(item => item.Product)
                 .ThenInclude(item => item.ProductImages)
                 .Select(item => new UserOffersViewModel()
                 {
+                    Id = item.Id,
                     DateCreated = item.DateCreated,
                     ProductCondition = item.Product.Condition.ConditionTitle,
                     DateEdited = item.DateEdited,
                     Price = item.Price,
+                    StockQuantity = item.StockQuantity,
                     ProductCategory = item.Product.ProductCategory.Name,
                     ProductStatus = item.OfferStatus,
                     ProductName = item.Product.ProductName,
@@ -89,6 +95,7 @@ namespace ComputerServiceOnlineShop.Services
                 })
                 .ToListAsync();
         }
+
         public async Task<List<SelectListItem>> GetProductConditions()
         {
             return await _databaseContext.Conditions
@@ -123,6 +130,45 @@ namespace ComputerServiceOnlineShop.Services
                 .Where(item => !item.Title.Contains("Locker"))
                 .Select(item => new SelectListItem { Text = item.Title, Value = item.Id.ToString() })
                 .ToListAsync();
+        }
+        public Task Edit(OfferViewModel model)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<OfferViewModel> GetOffer(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task DeleteOffer(int id)
+        {
+            var offer = await _databaseContext.Offers.Where(item => item.Id == id)
+                .FirstAsync();
+
+            offer.IsActive = false;
+            offer.DateDeleted = DateTime.Now;
+
+            await _databaseContext.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<PublicOfferViewModel>> GetAllOffers()
+        {
+            return await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => !item.OfferStatus)
+                .Include(item => item.Seller)
+                .Include(item => item.Product)
+                .Select(item => new PublicOfferViewModel()
+                {
+                    Title = item.Product.ProductName,
+                    Category = item.Product.ProductCategory.Name,
+                    Condition = item.Product.Condition.ConditionTitle,
+                    DateCreated = item.DateCreated.Date,
+                    Price = item.Price,
+                    SellerName = item.Seller.UserName,
+                    Description = item.Product.Description,
+                    QuantityAvailable = item.StockQuantity,
+                    ImageUrl = item.Product.ProductImages.First().ImagePath,
+                }).ToListAsync();
         }
     }
 }

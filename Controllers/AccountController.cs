@@ -48,7 +48,7 @@ namespace ComputerServiceOnlineShop.Controllers
             {
                 foreach(IdentityError error in result.Errors)
                 {
-                    ModelState.AddModelError("Register", error.Description);
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
                 return View(ViewModel);
             }
@@ -62,7 +62,7 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string? ReturnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -72,11 +72,15 @@ namespace ComputerServiceOnlineShop.Controllers
             var result = await _accountService.Login(model);
             if (result.Succeeded)
             {
+                if(!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                {
+                    return LocalRedirect(ReturnUrl);
+                }
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ModelState.AddModelError("Login", "Invalid email password");
+                ModelState.AddModelError("Login", "Invalid email or password");
                 return View(model);
             }
         }

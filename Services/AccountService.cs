@@ -5,6 +5,7 @@ using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -15,11 +16,13 @@ namespace ComputerServiceOnlineShop.Models.Services
         private readonly DatabaseContext _databaseContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AccountService(DatabaseContext databaseContext, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AccountService(DatabaseContext databaseContext, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor)
         {
             _databaseContext = databaseContext;
             _userManager = userManager;
             _signInManager = signInManager;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IdentityResult> Register(RegisterViewModel model)
         {
@@ -73,6 +76,16 @@ namespace ComputerServiceOnlineShop.Models.Services
         public async Task Logout()
         {
              await _signInManager.SignOutAsync();
+        }
+
+        public Guid GetLoggedUserId()
+        {
+            var userIdString =  _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(Guid.TryParse(userIdString, out var userId))
+            {
+                return userId;
+            }
+            throw new UnauthorizedAccessException("User is not authenticated, or id is invalid");
         }
     }
 }

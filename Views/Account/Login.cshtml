@@ -13,7 +13,7 @@
         <h6>Place for your electronics</h6>
     </div>
     <h3 class="fw-bold ms-1">Login</h3>
-    <form asp-action="Login" method="post">
+    <form asp-action="Login" method="post" asp-route-ReturnUrl="@Context.Request.Query["ReturnUrl"]">
         <div class="row midesection-style shadow p-3 mb-3 ms-1 me-1">
             <div class="col-12 col-md-6">
                 <div class="mb-3">
@@ -30,14 +30,11 @@
                 </div>
             </div>
             <!-- Displaying errors -->
-            @if (!string.IsNullOrEmpty(ViewData["loginError"]?.ToString()))
-            {
                 <div class="col-12 text-center">
                     <div class="mb-3">
-                      <span class="text-danger">@ViewData["loginError"]</span>
+                    <span class="text-danger">@Html.ValidationMessage("Login")</span>
                     </div>
                 </div>
-            }
         </div>
         <div class="row mt-3">
             <div class="col-12 text-center">

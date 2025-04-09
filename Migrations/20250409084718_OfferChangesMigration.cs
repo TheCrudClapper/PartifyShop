@@ -5,7 +5,7 @@
 namespace ComputerServiceOnlineShop.Migrations
 {
     /// <inheritdoc />
-    public partial class CorrectionMigration3 : Migration
+    public partial class OfferChangesMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

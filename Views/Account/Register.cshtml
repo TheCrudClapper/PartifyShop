@@ -1,6 +1,6 @@
 ﻿@model ComputerServiceOnlineShop.ViewModels.RegisterViewModel
 @{
-    ViewData["Title"] = "Register";
+    ViewBag.Title = "Register";
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/registration-style.css" asp-append-version="true" />
@@ -27,12 +27,12 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password*</label>
-                    <input asp-for="Password" type="password" class="form-control">
+                    <input asp-for="Password" class="form-control">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email address*</label>
-                    <input asp-for="Email" type="email" class="form-control" id="exampleInputEmail1">
+                    <input asp-for="Email" class="form-control">
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div> 
             </div>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Phone Number</label>
-                    <input asp-for="PhoneNumber" type="text" class="form-control">
+                    <input asp-for="PhoneNumber" class="form-control">
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
@@ -83,7 +83,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Postal Code*</label>
-                    <input asp-for="PostalCode" type="text" class="form-control">
+                    <input asp-for="PostalCode" class="form-control">
                     <span asp-validation-for="PostalCode" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
@@ -93,6 +93,9 @@
                     </select>
                     <span asp-validation-for="SelectedCountry" class="text-danger"></span>
                 </div>
+            </div>
+            <div class="col-sm-12 text-center">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger list-unstyled d-inline-block" })
             </div>
         </div>
         <div class="row mt-3">

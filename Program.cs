@@ -1,6 +1,10 @@
-using ComputerServiceOnlineShop.Models.Abstractions;
+using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Models.Contexts;
+using ComputerServiceOnlineShop.Models.IdentityEntities;
 using ComputerServiceOnlineShop.Models.Services;
+using ComputerServiceOnlineShop.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +16,23 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IPictureHandlerService, PictureHandlerService>();
 builder.Services.AddScoped<ICountriesService, CountriesService>();
+
+//enabling identity
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddEntityFrameworkStores<DatabaseContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthorization(options =>
+{
+    //enforces authorization policy
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+    .RequireAuthenticatedUser().Build();
+});
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+});
+
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
@@ -30,8 +51,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseAuthorization();
+app.UseAuthentication(); //reads auth cookie and can extract data from it
+app.UseAuthorization(); //validates access permissions of the user
 
 app.MapControllerRoute(
     name: "default",

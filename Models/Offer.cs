@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using ComputerServiceOnlineShop.Models.IdentityEntities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComputerServiceOnlineShop.Models
 {
@@ -14,9 +15,9 @@ namespace ComputerServiceOnlineShop.Models
         public int StockQuantity { get; set; }
 
         public bool OfferStatus { get; set; }
-        public int SellerId { get; set; }
+        public Guid SellerId { get; set; }
         [ForeignKey("SellerId")]
-        public User Seller { get; set; } = null!;
+        public ApplicationUser Seller { get; set; } = null!;
         public ICollection<OfferDeliveryType> OfferDeliveryTypes { get; set; } = new List<OfferDeliveryType>();
         
      }

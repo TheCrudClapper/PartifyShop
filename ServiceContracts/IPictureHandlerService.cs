@@ -1,4 +1,4 @@
-﻿namespace ComputerServiceOnlineShop.Models.Abstractions
+﻿namespace ComputerServiceOnlineShop.Abstractions
 {
     public interface IPictureHandlerService
     {

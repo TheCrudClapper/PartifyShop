@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ComputerServiceOnlineShop.Models.IdentityEntities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace ComputerServiceOnlineShop.Models.Contexts
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
-        public DbSet<User> Users { get; set; } = default!;
         public DbSet<Address> Addresses { get; set; } = default!;
         public DbSet<Country> Countries { get; set; } = default!;
         public DbSet<Cart> Carts { get; set; } = default!;

@@ -1,9 +1,9 @@
-﻿using ComputerServiceOnlineShop.Models.Abstractions;
+﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Models.Contexts;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace ComputerServiceOnlineShop.Models.Services
+namespace ComputerServiceOnlineShop.Services
 {
     public class CountriesService : ICountriesService
     {

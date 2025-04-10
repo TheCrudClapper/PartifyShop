@@ -74,7 +74,7 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOffer([FromRoute]int id)
+        public async Task<IActionResult> ShowOffer([FromRoute]int id)
         {
             var viewModel = await _offerService.GetOffer(id);
             return View(viewModel);

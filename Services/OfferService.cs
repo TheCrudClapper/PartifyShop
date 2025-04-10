@@ -6,6 +6,7 @@ using ComputerServiceOnlineShop.ServiceContracts.DTO;
 using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 namespace ComputerServiceOnlineShop.Services
 {
     public class OfferService : IOfferService
@@ -154,6 +155,10 @@ namespace ComputerServiceOnlineShop.Services
                     Price = item.Price,
                     StockQuantity = item.StockQuantity,
                     Title = item.Product.ProductName,
+                    isSellerCompany = (item.Seller.NIP.IsNullOrEmpty()) ? false : true,
+                    Place = item.Seller.Address.Place,
+                    PostalCity = item.Seller.Address.PostalCity,
+                    PostalCode = item.Seller.Address.PostalCode,
                     ProductImages = item.Product.ProductImages
                         .Select(item => item.ImagePath)
                         .ToList(),

@@ -1,6 +1,8 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
+using ComputerServiceOnlineShop.Entities.Contexts;
+using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Models;
-using ComputerServiceOnlineShop.Models.Contexts;
+using ComputerServiceOnlineShop.ServiceContracts.DTO;
 using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,16 +17,16 @@ namespace ComputerServiceOnlineShop.Services
             _databaseContext = databaseContext;
             _accountService = accountService;
         }
-        public async Task Add(OfferViewModel model)
+        public async Task Add(AddOfferDto dto)
         {
             Guid userId = _accountService.GetLoggedUserId();
-            var uploadedImagesUrls = model.UploadedImagesUrls;
+            var uploadedImagesUrls = dto.UploadedImagesUrls;
             Product product = new Product()
             {
-                ProductName = model.ProductName,
-                Description = model.Description,
-                ConditionId = int.Parse(model.SelectedProductCondition),
-                ProductCategoryId = int.Parse(model.SelectedProductCategory),
+                ProductName = dto.ProductName,
+                Description = dto.Description,
+                ConditionId = dto.SelectedProductCondition,
+                ProductCategoryId = dto.SelectedProductCategory,
                 IsActive = true,
                 DateCreated = DateTime.Now,
                 ProductImages = uploadedImagesUrls.Select(imageUrl => new ProductImage()
@@ -41,26 +43,26 @@ namespace ComputerServiceOnlineShop.Services
                 Product = product,
                 IsActive = true,
                 DateCreated = DateTime.Now,
-                Price = model.Price,
+                Price = dto.Price,
                 SellerId = userId,
-                StockQuantity = model.StockQuantity,
-                OfferStatus = model.OfferVisibility,
+                StockQuantity = dto.StockQuantity,
+                IsOfferPrivate = dto.IsOfferPrivate,
             };
             await _databaseContext.Offers.AddAsync(offer);
 
             //adding one selected parcel locker, it is optional
-            if (model.SelectedParcelLocker.HasValue)
+            if (dto.SelectedParcelLocker.HasValue)
             {
                 await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
                 {
-                    DeliveryTypeId = model.SelectedParcelLocker.Value,
+                    DeliveryTypeId = dto.SelectedParcelLocker.Value,
                     DateCreated = DateTime.Now,
                     Offer = offer,
                     IsActive = true,
                 });
             }
 
-            foreach (var deliveryId in model.SelectedOtherDeliveries)
+            foreach (var deliveryId in dto.SelectedOtherDeliveries)
             {
                 await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
                 {
@@ -89,7 +91,7 @@ namespace ComputerServiceOnlineShop.Services
                     Price = item.Price,
                     StockQuantity = item.StockQuantity,
                     ProductCategory = item.Product.ProductCategory.Name,
-                    ProductStatus = item.OfferStatus,
+                    ProductStatus = item.IsOfferPrivate,
                     ProductName = item.Product.ProductName,
                     ImageUrl = item.Product.ProductImages.First().ImagePath
                 })
@@ -131,11 +133,11 @@ namespace ComputerServiceOnlineShop.Services
                 .Select(item => new SelectListItem { Text = item.Title, Value = item.Id.ToString() })
                 .ToListAsync();
         }
-        public Task Edit(OfferViewModel model)
+        public Task Edit(AddOfferViewModel model)
         {
             throw new NotImplementedException();
         }
-        public async Task<OfferViewModel> GetOffer(int id)
+        public async Task<AddOfferViewModel> GetOffer(int id)
         {
             throw new NotImplementedException();
         }
@@ -151,20 +153,20 @@ namespace ComputerServiceOnlineShop.Services
             await _databaseContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<PublicOfferViewModel>> GetAllOffers()
+        public async Task<IEnumerable<OfferBrowserViewModel>> GetAllOffers()
         {
             return await _databaseContext.Offers.Where(item => item.IsActive)
-                .Where(item => !item.OfferStatus)
+                .Where(item => !item.IsOfferPrivate)
                 .Include(item => item.Seller)
                 .Include(item => item.Product)
-                .Select(item => new PublicOfferViewModel()
+                .Select(item => new OfferBrowserViewModel()
                 {
                     Title = item.Product.ProductName,
                     Category = item.Product.ProductCategory.Name,
                     Condition = item.Product.Condition.ConditionTitle,
                     DateCreated = item.DateCreated.Date,
                     Price = item.Price,
-                    SellerName = item.Seller.UserName,
+                    SellerName = item.Seller.UserName!,
                     Description = item.Product.Description,
                     QuantityAvailable = item.StockQuantity,
                     ImageUrl = item.Product.ProductImages.First().ImagePath,

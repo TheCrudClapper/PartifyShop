@@ -31,6 +31,12 @@ namespace ComputerServiceOnlineShop.Services
         public async Task<List<string>> SavePicturesToDirectory(List<IFormFile> uploadedImages)
         {
             List<string> imagePaths = new List<string>();
+
+            string directoryPath = "wwwroot/offer-images/";
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
             if(uploadedImages != null && uploadedImages.Count > 0)
             {
                 foreach(var file in uploadedImages)
@@ -41,7 +47,8 @@ namespace ComputerServiceOnlineShop.Services
                             + "_" + Guid.NewGuid()
                             + Path.GetExtension(file.FileName).ToLower();
 
-                        var filePath = Path.Combine("wwwroot/offer-images/", fileName);
+                        var filePath = Path.Combine(directoryPath, fileName);
+                        
 
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {

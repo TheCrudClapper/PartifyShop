@@ -1,5 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Models.Contexts;
+using ComputerServiceOnlineShop.Entities.Contexts;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 

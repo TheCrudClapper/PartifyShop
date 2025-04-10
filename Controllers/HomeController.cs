@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ComputerServiceOnlineShop.Models;
 using Microsoft.AspNetCore.Authorization;
+using ComputerServiceOnlineShop.Entities.Models;
 namespace ComputerServiceOnlineShop.Controllers;
 
 [AllowAnonymous]

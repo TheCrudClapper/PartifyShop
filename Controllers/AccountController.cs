@@ -1,5 +1,6 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Models;
+using ComputerServiceOnlineShop.ServiceContracts.DTO;
 using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -38,8 +39,23 @@ namespace ComputerServiceOnlineShop.Controllers
             {
                 return View(ViewModel);
             }
-
-            IdentityResult result =  await _accountService.Register(ViewModel);
+            var dto = new RegisterDto()
+            {
+                FirstName = ViewModel.FirstName,
+                Surname = ViewModel.Surname,
+                Email = ViewModel.Email,
+                HouseNumber = ViewModel.HouseNumber,
+                NIP = ViewModel.NIP,
+                Password = ViewModel.Password,
+                PhoneNumber = ViewModel.PhoneNumber,
+                Place = ViewModel.Place,
+                PostalCity = ViewModel.PostalCity,
+                PostalCode= ViewModel.PostalCode,
+                SelectedCountry = int.Parse(ViewModel.SelectedCountry),
+                Street = ViewModel.Street,
+                Title = ViewModel.Title,
+            };
+            IdentityResult result =  await _accountService.Register(dto);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
@@ -62,14 +78,18 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, string? ReturnUrl)
+        public async Task<IActionResult> Login(LoginViewModel viewModel, string? ReturnUrl)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(viewModel);
             }
-
-            var result = await _accountService.Login(model);
+            var dto = new LoginDto()
+            {
+                Email = viewModel.Email,
+                Password = viewModel.Password,
+            };
+            var result = await _accountService.Login(dto);
             if (result.Succeeded)
             {
                 if(!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
@@ -81,7 +101,7 @@ namespace ComputerServiceOnlineShop.Controllers
             else
             {
                 ModelState.AddModelError("Login", "Invalid email or password");
-                return View(model);
+                return View(viewModel);
             }
         }
 

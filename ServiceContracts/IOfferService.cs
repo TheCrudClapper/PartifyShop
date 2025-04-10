@@ -1,4 +1,5 @@
-﻿using ComputerServiceOnlineShop.Models;
+﻿using ComputerServiceOnlineShop.Entities.Models;
+using ComputerServiceOnlineShop.ServiceContracts.DTO;
 using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -9,21 +10,21 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// <summary>
         /// Adds user's offer to database
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="dto"></param>
         /// <returns></returns>
-        Task Add(OfferViewModel model);
+        Task Add(AddOfferDto dto);
         /// <summary>
         /// Edit user offer and saves changes in database
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task Edit(OfferViewModel model);
+        Task Edit(AddOfferViewModel model);
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id">Id of offer</param>
         /// <returns>Returns an element from database</returns>
-        Task<OfferViewModel> GetOffer(int id);
+        Task<AddOfferViewModel> GetOffer(int id);
         /// <summary>
         /// Deletes user's offer from database
         /// </summary>
@@ -34,7 +35,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// Returns all avaliable offers in show
         /// </summary>
         /// <returns>An IEnumaerable collection</returns>
-        Task<IEnumerable<PublicOfferViewModel>> GetAllOffers();
+        Task<IEnumerable<OfferBrowserViewModel>> GetAllOffers();
         Task<IEnumerable<UserOffersViewModel>> GetUserOffers();
         Task<List<SelectListItem>> GetProductCategories();
         Task<List<SelectListItem>> GetProductConditions();

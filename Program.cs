@@ -1,6 +1,6 @@
 using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Models.Contexts;
-using ComputerServiceOnlineShop.Models.IdentityEntities;
+using ComputerServiceOnlineShop.Entities.Contexts;
+using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using ComputerServiceOnlineShop.Models.Services;
 using ComputerServiceOnlineShop.Services;
 using Microsoft.AspNetCore.Authorization;

@@ -1,6 +1,8 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Models.Contexts;
-using ComputerServiceOnlineShop.Models.IdentityEntities;
+using ComputerServiceOnlineShop.Entities.Contexts;
+using ComputerServiceOnlineShop.Entities.Models;
+using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+using ComputerServiceOnlineShop.ServiceContracts.DTO;
 using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,16 +26,16 @@ namespace ComputerServiceOnlineShop.Models.Services
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<IdentityResult> Register(RegisterViewModel model)
+        public async Task<IdentityResult> Register(RegisterDto dto)
         {
             var address = new Address()
             {
-                Place = model.Place,
-                Street = model.Street,
-                PostalCity = model.PostalCity,
-                PostalCode = model.PostalCode,
-                HouseNumber = model.HouseNumber,
-                CountryId = int.Parse(model.SelectedCountry),
+                Place = dto.Place,
+                Street = dto.Street,
+                PostalCity = dto.PostalCity,
+                PostalCode = dto.PostalCode,
+                HouseNumber = dto.HouseNumber,
+                CountryId = dto.SelectedCountry,
                 IsActive = true,
                 DateCreated = DateTime.Now,
             };
@@ -49,28 +51,28 @@ namespace ComputerServiceOnlineShop.Models.Services
 
             var user = new ApplicationUser()
             {
-                UserName = model.Email,
+                UserName = dto.Email,
                 Address = address,
-                FirstName = model.FirstName,
-                Title = model.Title,
-                Surname = model.Surname,
-                PhoneNumber = model.PhoneNumber,
+                FirstName = dto.FirstName,
+                Title = dto.Title,
+                Surname = dto.Surname,
+                PhoneNumber = dto.PhoneNumber,
                 Cart = cart,
                 DateCreated = DateTime.Now,
                 IsActive = true,
-                Email = model.Email,
-                NIP = model.NIP,
+                Email = dto.Email,
+                NIP = dto.NIP,
             };
-            var result =  await _userManager.CreateAsync(user, model.Password);
+            var result =  await _userManager.CreateAsync(user, dto.Password);
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
             }
             return result;
         }
-        public async Task<SignInResult> Login(LoginViewModel model)
+        public async Task<SignInResult> Login(LoginDto dto)
         {
-            return await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure:false);
+            return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: false, lockoutOnFailure:false);
         }
 
         public async Task Logout()

@@ -137,9 +137,35 @@ namespace ComputerServiceOnlineShop.Services
         {
             throw new NotImplementedException();
         }
-        public async Task<AddOfferViewModel> GetOffer(int id)
+        public async Task<SingleOfferViewModel> GetOffer(int id)
         {
-            throw new NotImplementedException();
+            return await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => item.Id == id)
+                .Include(item => item.Product)
+                .Include(item => item.Seller)
+                .Include(item => item.OfferDeliveryTypes)
+                    .ThenInclude(item => item.DeliveryType)
+                .Select(item => new SingleOfferViewModel()
+                {
+                    Condition = item.Product.Condition.ConditionTitle,
+                    DateCreated = item.DateCreated.Date,
+                    Seller = item.Seller.UserName!,
+                    Description = item.Product.Description,
+                    Price = item.Price,
+                    StockQuantity = item.StockQuantity,
+                    Title = item.Product.ProductName,
+                    ProductImages = item.Product.ProductImages
+                        .Select(item => item.ImagePath)
+                        .ToList(),
+                    AvaliableDeliveryTypes = item.OfferDeliveryTypes
+                    .Select(item => new DeliveryTypeViewModel()
+                    {
+                        Title = item.DeliveryType.Title,
+                        Price = item.DeliveryType.Price,
+                        Id = item.DeliveryType.Id
+                    }).ToList()
+                })
+                .FirstAsync();
         }
 
         public async Task DeleteOffer(int id)

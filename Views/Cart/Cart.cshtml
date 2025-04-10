@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
 }
 
-<div class="container mt-3 p-4">
+<div class="container mt-3">
     <h3 class="fw-bold ps-2">Your Cart Items</h3>
     <div class="row g-3">
-        <div class="col-12 col-lg-8 midesection-style">
+        @* <div class="col-12 col-lg-8 midesection-style">
             <form>
                 <div class="mb-3 midesection-style shadow">
                     <h5 class="fw-bold">Sells and sends user: <span class="purple-text">PanJaweł2137</span></h5>
@@ -65,6 +65,8 @@
 
 
         </div>
-
+        
+ *@
+        @await Html.PartialAsync("_EmptyCartPartialView")
     </div>
 </div>

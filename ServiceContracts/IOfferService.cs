@@ -24,7 +24,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// </summary>
         /// <param name="id">Id of offer</param>
         /// <returns>Returns an element from database</returns>
-        Task<AddOfferViewModel> GetOffer(int id);
+        Task<SingleOfferViewModel> GetOffer(int id);
         /// <summary>
         /// Deletes user's offer from database
         /// </summary>

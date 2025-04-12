@@ -1,7 +1,7 @@
-﻿@using ComputerServiceOnlineShop.Entities.Models
+﻿@using ComputerServiceOnlineShop.ViewModels
 @{
     ViewData["Title"] = "Home Page";
-    @model List<CardItem>
+    @model MainPageViewModel
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/index-styles.css" asp-append-version="true" />
@@ -48,29 +48,11 @@
     <div class="container offers-container bg-white rounded">
         <div class="row mt-3">
             <div class="col-sm-12 mt-2">
-                <p class="fw-bold fs-4">Top Today's Picks:</p>
+                <p class="fw-bold fs-4">Freshly added:</p>
             </div>
         </div>
         <div class="row mt-2">
-            @foreach (var item in Model)
-            {
-                <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
-                    <div class="card">
-                        <img src="~/images/gpu_listing.jpg" class="card-img-top" alt="ram-image">
-                        <div class="card-body text-start">
-                            <h5 class="card-title">@item.Name</h5>
-                            <h6 class="card-title">@item.Price</h6>
-                            <p>
-                                @for (int j = 0; j < 5; j++)
-                                {
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                }
-                            </p>
-                            <button class="btn buy-now-button">Show</button>
-                        </div>
-                    </div>
-                </div>
-            }
+            @await Html.PartialAsync("_FreshlyAddedOffersPartial", Model.Cards)
         </div>
     </div>
     <div class="container offers-container bg-white rounded">
@@ -86,15 +68,15 @@
                     <div class="card">
                         <img src="~/images/ram.png" class="card-img-top" alt="ram-image">
                         <div class="card-body text-start">
-                            <h5 class="card-title">RAM DDR4 3200Mhz 16GB</h5>
-                            <h6 class="card-title">150 PLN</h6>
+                            <h5 class="card-title item-price">150 PLN</h5>
+                            <h6 class="card-title item-name">RAM DDR4 3200Mhz 16GB</h6>
                             <p>
                                 @for (int j = 0; j < 5; j++)
                                 {
                                     <i class="fa fa-star" aria-hidden="true"></i>
                                 }
                             </p>
-                            <button class="btn buy-now-button">Show</button>
+                            <button class="btn show-button">Show</button>
                         </div>
                     </div>
                 </div>
@@ -114,8 +96,8 @@
                     <div class="card">
                         <img src="~/images/pc_case.jpg" class="card-img-top" alt="ram-image">
                         <div class="card-body text-start">
-                            <h5 class="card-title">Shadow X2 Savio</h5>
-                            <h6 class="card-title">250 PLN</h6>
+                            <h5 class="card-title item-price">250 PLN</h5>
+                            <h6 class="card-title item-name">Shadow X2 Savio</h6>
                             <p>
                                 @{
                                     int starsAmount = new Random().Next(1, 6);
@@ -127,7 +109,7 @@
                                     }
                                 }
                             </p>
-                            <button class="btn buy-now-button">Show</button>
+                            <button class="btn show-button">Show</button>
                         </div>
                     </div>
                 </div>

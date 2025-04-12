@@ -552,7 +552,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImagesPaths");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -767,7 +767,7 @@ namespace ComputerServiceOnlineShop.Migrations
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.ProductImage", b =>
                 {
                     b.HasOne("ComputerServiceOnlineShop.Entities.Models.Product", "Product")
-                        .WithMany("ProductImages")
+                        .WithMany("ProductImagesPaths")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -850,7 +850,7 @@ namespace ComputerServiceOnlineShop.Migrations
                 {
                     b.Navigation("Offers");
 
-                    b.Navigation("ProductImages");
+                    b.Navigation("ProductImagesPaths");
                 });
 #pragma warning restore 612, 618
         }

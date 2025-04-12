@@ -3,7 +3,7 @@
     ViewData["Title"] = "Auction Browser";
 }
 @section Styles {
-<link rel="stylesheet" href="~/css/auction-styles.css"  />
+<link rel="stylesheet" href="~/css/offer-browser-styles.css"  />
 }
 <div class="container mt-3">
     <h3 class="fw-bold mb-3">Searching "Rtx 3070"</h3>
@@ -52,9 +52,11 @@
                                 <div class="col-md-4">
                                     <img src="@offer.ImageUrl" class="img-fluid offer-browser-image" alt="Product Image">
                                 </div>
-                                <div class="col-md-5 d-flex flex-column justify-content-between">
+                                <div class="col-md-5 d-flex flex-column">
                                     <div>
-                                        <h5 class="card-title">@offer.Title</h5>
+                                        <a href="@Url.Action("ShowOffer", "Offer", new { id = offer.Id })" class="offer-link ">
+                                            <h5 class="card-title mt-3 mt-md-0 fw-bold">@offer.Title</h5>
+                                        </a>
                                         @for (int j = 0; j < 5; j++)
                                         {
                                             <i class="fa-solid fa-star"></i>
@@ -65,17 +67,17 @@
                                             <li><span class="fw-bold">Condition:</span> @offer.Condition</li>
                                             <li><span class="fw-bold">Category:</span> @offer.Category</li>
                                             <li><span class="fw-bold">Added To Shop:</span> @offer.DateCreated</li>
-                                            <li><span class="fw-bold">Description:</span> @offer.Description</li>
+                                            <li>
+                                                <div><span class="fw-bold">Description:</span></div>
+                                                <div class="description-preview">
+                                                    @offer.Description
+                                                </div>
+                                            </li>
                                         </ul>
                                     </div>
-                                    <div>
-                                        <button class="btn custom-button w-100 w-md-auto">Show</button>
-                                        <hr class="d-block d-md-none" />
-                                    </div>
                                 </div>
-
                                 <div class="col-md-3 text-start d-flex flex-column justify-content-between">
-                                    <h5 class="fw-bold">Price: @offer.Price PLN</h5>
+                                    <h5 class="fw-bold mt-3 mt-md-0">Price: @offer.Price PLN</h5>
                                     <p>
                                         Sells and sends:
                                         <br><span class="fw-bold">@offer.SellerName</span>
@@ -83,7 +85,7 @@
                                     <p>
                                         Available: <span class="fw-bold">@offer.QuantityAvailable</span>
                                     </p>
-                                    <button class="btn custom-button w-100">To Cart</button>
+                                    <button class="btn custom-button mt-2 w-100">To Cart</button>
                                 </div>
                             </div>
                         </div>

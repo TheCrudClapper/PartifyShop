@@ -3,54 +3,28 @@ using Microsoft.AspNetCore.Mvc;
 using ComputerServiceOnlineShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using ComputerServiceOnlineShop.Entities.Models;
+using ComputerServiceOnlineShop.Abstractions;
+using ComputerServiceOnlineShop.Services;
+using ComputerServiceOnlineShop.ViewModels;
 namespace ComputerServiceOnlineShop.Controllers;
 
 [AllowAnonymous]
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly IOfferService _offerService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IOfferService offerService)
     {
-        _logger = logger;
+        _offerService = offerService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        List<CardItem> items = new List<CardItem>()
+        var viewModel = new MainPageViewModel()
         {
-            new CardItem()
-            {
-                Name = "Rtx 3060",
-                Price = 999,
-            },
-            new CardItem()
-            {
-                Name = "Rtx 3070",
-                Price = 1999,
-            },
-            new CardItem()
-            {
-                Name = "Rtx 3080",
-                Price = 2999,
-            },
-             new CardItem()
-            {
-                Name = "Another card",
-                Price = 2999,
-            },
-            new CardItem()
-            {
-                Name = "Even more cards",
-                Price = 2999,
-            },
-            new CardItem()
-            {
-                Name = "Last Card",
-                Price = 2999,
-            }
+            Cards = await _offerService.GetIndexPageOffers(),
         };
-        return View(items);
+        return View(viewModel);
     }
     public IActionResult Privacy()
     {

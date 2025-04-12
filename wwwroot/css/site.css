@@ -55,9 +55,7 @@ body {
 }
 
 form .btn {
-    color: #c1c8dd;
     background-color: #25262b;
-    border: 1px solid black;
 }
 /*Makes the navbar responsive for smallest to large dispklays*/
 @media (max-width: 991px) {
@@ -72,16 +70,6 @@ form .btn {
             margin-bottom: 5px;
         }
 }
-
-.lower-navbar a,
-.lower-navbar span {
-    color: #d3d3d3;
-}
-    .lower-navbar a:hover,
-    .lower-navbar span:hover {
-        color: #863cb0;
-    }
-
 
 /*Custome background color*/
 .custom-gray-background {

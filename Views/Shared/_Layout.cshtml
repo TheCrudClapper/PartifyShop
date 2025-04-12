@@ -29,7 +29,7 @@
 
 
                 <div class="collapse navbar-collapse" id="navbarContent">
-                    <form class="d-flex flex-grow-1 my-2 my-lg-0">
+                    <form class="d-flex flex-grow-1 my-2 my-lg-0" asp-controller="Offer" asp-action="OfferBrowser" method="get">
                         <input class="form-control me-2" type="search" placeholder="Search phrase" aria-label="Search">
                         <select class="form-select me-2">
                             <option selected disabled class="fw-bold">Category</option>
@@ -41,7 +41,7 @@
                             <option value="6">Mouse</option>
                             <option value="7">Keyboard</option>
                         </select>
-                        <button class="btn btn-outline-light me-2" type="submit" asp-action="OfferBrowser">Search</button>
+                        <button class="btn btn-outline-light me-2" type="submit">Search</button>
                     </form>
                     @if (User.Identity!.IsAuthenticated)
                     {

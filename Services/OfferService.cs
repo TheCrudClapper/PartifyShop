@@ -192,6 +192,7 @@ namespace ComputerServiceOnlineShop.Services
                 .Include(item => item.Product)
                 .Select(item => new OfferBrowserViewModel()
                 {
+                    Id = item.Id,
                     Title = item.Product.ProductName,
                     Category = item.Product.ProductCategory.Name,
                     Condition = item.Product.Condition.ConditionTitle,
@@ -201,6 +202,23 @@ namespace ComputerServiceOnlineShop.Services
                     Description = item.Product.Description,
                     QuantityAvailable = item.StockQuantity,
                     ImageUrl = item.Product.ProductImages.First().ImagePath,
+                }).ToListAsync();
+        }
+
+        public async Task<IEnumerable<MainPageCardViewModel>> GetIndexPageOffers()
+        {
+            return await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => !item.IsOfferPrivate)
+                .Include(item => item.Product)
+                .ThenInclude(item => item.ProductImages)
+                .OrderByDescending(item => item.DateCreated)
+                .Take(6)
+                .Select(item => new MainPageCardViewModel()
+                {
+                    Id = item.Id,
+                    Price = item.Price,
+                    Title = item.Product.ProductName,
+                    ImagePath = item.Product.ProductImages.First().ImagePath,
                 }).ToListAsync();
         }
     }

@@ -2,6 +2,7 @@
 using ComputerServiceOnlineShop.ServiceContracts.DTO;
 using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections;
 
 namespace ComputerServiceOnlineShop.Abstractions
 {
@@ -35,6 +36,8 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// Returns all avaliable offers in show
         /// </summary>
         /// <returns>An IEnumaerable collection</returns>
+
+        Task<IEnumerable<MainPageCardViewModel>> GetIndexPageOffers();
         Task<IEnumerable<OfferBrowserViewModel>> GetAllOffers();
         Task<IEnumerable<UserOffersViewModel>> GetUserOffers();
         Task<List<SelectListItem>> GetProductCategories();

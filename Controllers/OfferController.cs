@@ -74,6 +74,7 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> ShowOffer([FromRoute]int id)
         {
             var viewModel = await _offerService.GetOffer(id);

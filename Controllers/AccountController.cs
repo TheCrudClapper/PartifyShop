@@ -1,7 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Models;
 using ComputerServiceOnlineShop.ServiceContracts.DTO;
-using ComputerServiceOnlineShop.ViewModels;
+using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -50,25 +50,25 @@ namespace ComputerServiceOnlineShop.Controllers
                 PhoneNumber = ViewModel.PhoneNumber,
                 Place = ViewModel.Place,
                 PostalCity = ViewModel.PostalCity,
-                PostalCode= ViewModel.PostalCode,
+                PostalCode = ViewModel.PostalCode,
                 SelectedCountry = int.Parse(ViewModel.SelectedCountry),
                 Street = ViewModel.Street,
                 Title = ViewModel.Title,
             };
-            IdentityResult result =  await _accountService.Register(dto);
+            IdentityResult result = await _accountService.Register(dto);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                foreach(IdentityError error in result.Errors)
+                foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
                 return View(ViewModel);
             }
-            
+
         }
 
         [HttpGet]
@@ -92,7 +92,7 @@ namespace ComputerServiceOnlineShop.Controllers
             var result = await _accountService.Login(dto);
             if (result.Succeeded)
             {
-                if(!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
                 {
                     return LocalRedirect(ReturnUrl);
                 }

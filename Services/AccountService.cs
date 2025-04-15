@@ -3,13 +3,9 @@ using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using ComputerServiceOnlineShop.ServiceContracts.DTO;
-using ComputerServiceOnlineShop.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace ComputerServiceOnlineShop.Models.Services
 {
@@ -72,6 +68,14 @@ namespace ComputerServiceOnlineShop.Models.Services
         }
         public async Task<SignInResult> Login(LoginDto dto)
         {
+            var response = await _databaseContext.Users
+                .AnyAsync(item => item.UserName == dto.Email && item.IsActive);
+
+            if (!response)
+            {
+                return SignInResult.Failed;
+            }
+
             return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: false, lockoutOnFailure:false);
         }
 

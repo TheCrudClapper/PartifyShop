@@ -6,6 +6,7 @@ using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Services;
 using ComputerServiceOnlineShop.ViewModels;
+using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
 namespace ComputerServiceOnlineShop.Controllers;
 
 [AllowAnonymous]

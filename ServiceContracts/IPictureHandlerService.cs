@@ -14,5 +14,6 @@
         /// <param name="uploadedImages"></param>
         /// <returns>Returns potetnial error message as string</returns>
         string CheckFileExtensions(List<IFormFile> uploadedImages);
+        void DeleteSelectedPictures(List<string> ImagesUrlsToDelete);
     }
 }

@@ -1,6 +1,6 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
+﻿using ComputerServiceOnlineShop.ViewModels.SharedViewModels;
 
-namespace ComputerServiceOnlineShop.ViewModels
+namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
 {
     public class SingleOfferViewModel
     {
@@ -18,6 +18,7 @@ namespace ComputerServiceOnlineShop.ViewModels
         public decimal Price { get; set; }
 
         public List<string> ProductImages = new List<string>();
+
         public List<DeliveryTypeViewModel> AvaliableDeliveryTypes = new List<DeliveryTypeViewModel>();
     }
 }

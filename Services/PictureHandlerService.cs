@@ -60,5 +60,13 @@ namespace ComputerServiceOnlineShop.Services
             }
             return imagePaths;
         }
+        public void DeleteSelectedPictures(List<string> ImagesUrlsToDelete)
+        {
+            foreach (var path in ImagesUrlsToDelete)
+            {
+               File.Delete($"wwwroot/{path}");
+            }
+        }
+
     }
 }

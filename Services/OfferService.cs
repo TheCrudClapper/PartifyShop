@@ -1,9 +1,10 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
-using ComputerServiceOnlineShop.Models;
 using ComputerServiceOnlineShop.ServiceContracts.DTO;
-using ComputerServiceOnlineShop.ViewModels;
+using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
+using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
+using ComputerServiceOnlineShop.ViewModels.SharedViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -30,7 +31,7 @@ namespace ComputerServiceOnlineShop.Services
                 ProductCategoryId = dto.SelectedProductCategory,
                 IsActive = true,
                 DateCreated = DateTime.Now,
-                ProductImages = uploadedImagesUrls.Select(imageUrl => new ProductImage()
+                ProductImages = uploadedImagesUrls!.Select(imageUrl => new ProductImage()
                 {
                     DateCreated = DateTime.Now,
                     ImagePath = imageUrl,
@@ -76,6 +77,73 @@ namespace ComputerServiceOnlineShop.Services
 
             await _databaseContext.SaveChangesAsync();
         }
+        public async Task Edit(EditOfferDto dto)
+        {
+            Guid userId = _accountService.GetLoggedUserId();
+            var offer = await _databaseContext.Offers
+                .Where(item => item.SellerId == userId)
+                .Include(item => item.Product)
+                    .ThenInclude(item => item.ProductImages)
+                .Include(item => item.OfferDeliveryTypes)
+                    .ThenInclude(item => item.DeliveryType)
+                .FirstAsync(item => item.Id == dto.Id && item.IsActive);
+
+            offer.IsOfferPrivate = dto.IsOfferPrivate;
+            offer.StockQuantity = dto.StockQuantity;
+            offer.Price = dto.Price;
+
+            var product = offer.Product;
+            product.ProductName = dto.ProductName;
+            product.Description = dto.Description;
+            product.ConditionId = dto.SelectedProductCondition;
+            product.ProductCategoryId = dto.SelectedProductCategory;
+
+            //deletes images checked by user
+            if(dto.ImagesToDelete?.Count > 0 && dto.ImagesToDelete != null)
+            {
+                await DeleteImagesFromOffer(dto.Id, dto.ImagesToDelete);
+            }
+
+            if (dto.UploadedImagesUrls != null && dto.UploadedImagesUrls.Count > 0)
+            {
+                foreach (var url in dto.UploadedImagesUrls)
+                {
+                    product.ProductImages.Add(new ProductImage
+                    {
+                        ImagePath = url,
+                        IsActive = true,
+                        DateCreated = DateTime.Now
+                    });
+                }
+            }
+
+            //clear all existing delivery types
+            offer.OfferDeliveryTypes.Clear();
+
+            if (dto.SelectedParcelLocker.HasValue)
+            {
+                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
+                {
+                    DeliveryTypeId = dto.SelectedParcelLocker.Value,
+                    DateCreated = DateTime.Now,
+                    Offer = offer,
+                    IsActive = true,
+                });
+            }
+
+            foreach (var deliveryId in dto.SelectedOtherDeliveries)
+            {
+                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
+                {
+                    DeliveryTypeId = deliveryId,
+                    Offer = offer,
+                    IsActive = true,
+                    DateCreated = DateTime.Now
+                });
+            }
+
+            await _databaseContext.SaveChangesAsync();
+        }
         public async Task<IEnumerable<UserOffersViewModel>> GetUserOffers()
         {
             Guid userId = _accountService.GetLoggedUserId();
@@ -94,51 +162,14 @@ namespace ComputerServiceOnlineShop.Services
                     ProductCategory = item.Product.ProductCategory.Name,
                     ProductStatus = item.IsOfferPrivate,
                     ProductName = item.Product.ProductName,
-                    ImageUrl = item.Product.ProductImages.First().ImagePath
+                    ImageUrl = item.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .First().ImagePath
                 })
                 .ToListAsync();
         }
 
-        public async Task<List<SelectListItem>> GetProductConditions()
-        {
-            return await _databaseContext.Conditions
-              .Where(item => item.IsActive)
-              .Select(item => new SelectListItem { Text = item.ConditionTitle, Value = item.Id.ToString() })
-              .ToListAsync();
-        }
-        public async Task<List<SelectListItem>> GetProductCategories()
-        {
-            return await _databaseContext.ProductCategories
-                .Where(item => item.IsActive)
-                .Select(item => new SelectListItem { Text = item.Name, Value = item.Id.ToString() })
-                .ToListAsync();
-        }
-        public async Task<List<DeliveryType>> GetDeliveryTypes()
-        {
-            return await _databaseContext.DeliveryTypes
-                .Where(item => item.IsActive)
-                .ToListAsync();
-        }
-        public async Task<List<DeliveryType>> GetParcelLockerDeliveryTypes()
-        {
-            return await _databaseContext.DeliveryTypes
-                .Where(item => item.IsActive)
-                .Where(item => item.Title.Contains("Locker"))
-                .ToListAsync();
-        }
-        public async Task<List<SelectListItem>> GetOtherDeliveryTypes()
-        {
-            return await _databaseContext.DeliveryTypes
-                .Where(item => item.IsActive)
-                .Where(item => !item.Title.Contains("Locker"))
-                .Select(item => new SelectListItem { Text = item.Title, Value = item.Id.ToString() })
-                .ToListAsync();
-        }
-        public Task Edit(AddOfferViewModel model)
-        {
-            throw new NotImplementedException();
-        }
-        public async Task<SingleOfferViewModel> GetOffer(int id)
+        public async Task<SingleOfferViewModel> ShowOffer(int id)
         {
             return await _databaseContext.Offers.Where(item => item.IsActive)
                 .Where(item => item.Id == id)
@@ -160,6 +191,7 @@ namespace ComputerServiceOnlineShop.Services
                     PostalCity = item.Seller.Address.PostalCity,
                     PostalCode = item.Seller.Address.PostalCode,
                     ProductImages = item.Product.ProductImages
+                        .Where(item => item.IsActive)
                         .Select(item => item.ImagePath)
                         .ToList(),
                     AvaliableDeliveryTypes = item.OfferDeliveryTypes
@@ -172,7 +204,63 @@ namespace ComputerServiceOnlineShop.Services
                 })
                 .FirstAsync();
         }
+        public async Task<EditOfferViewModel> GetOfferForEdit(int id)
+        {
+            Guid userId = _accountService.GetLoggedUserId();
+            return await _databaseContext.Offers
+                .Where(item => item.IsActive)
+                .Where(item => item.SellerId == userId)
+                .Where(item => item.Id == id)
+                .Include(item => item.Product)
+                .Select(item => new EditOfferViewModel()
+                {
+                    Id = item.Id,
+                    ProductName = item.Product.ProductName,
+                    Price = item.Price,
+                    ExistingImagesUrls = item.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .Select(item => new SelectListItem()
+                        {
+                            Value = item.ImagePath,
+                            Text = item.ImagePath,
+                        })
+                        .ToList(),
+                    Description = item.Product.Description,
+                    SelectedProductCondition = item.Product.Condition.Id.ToString(),
+                    SelectedProductCategory = item.Product.ProductCategory.Id.ToString(),
+                    IsOfferPrivate = item.IsOfferPrivate,
+                    StockQuantity = item.StockQuantity,
+                    SelectedOtherDeliveries = item.OfferDeliveryTypes
+                        .Where(item => !item.DeliveryType.Title.Contains("Locker"))
+                        .Select(item => item.DeliveryTypeId)
+                        .ToList(),
+                    SelectedParcelLocker = item.OfferDeliveryTypes
+                        .Where(item => item.DeliveryType.Title.Contains("Locker"))
+                        .Select(item => item.DeliveryTypeId)
+                        .FirstOrDefault(),
+                    //First or default because Parcel Locker can be not choosen
+                })
+                .FirstAsync();
+        }
+        public async Task<List<SelectListItem>> GetOfferPictures(int id)
+        {
+            var imagePaths = await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => item.Id == id)
+                .Include(item => item.Product)
+                    .ThenInclude(item => item.ProductImages)
+                .SelectMany(item => item.Product.ProductImages
+                    .Where(img => img.IsActive)
+                    .Select(img => img.ImagePath))
+                .ToListAsync();
 
+            var imageSelectList = imagePaths.Select(path => new SelectListItem
+            {
+                Value = path,
+                Text = path,
+            }).ToList();
+
+            return imageSelectList;
+        }
         public async Task DeleteOffer(int id)
         {
             var offer = await _databaseContext.Offers.Where(item => item.Id == id)
@@ -218,8 +306,68 @@ namespace ComputerServiceOnlineShop.Services
                     Id = item.Id,
                     Price = item.Price,
                     Title = item.Product.ProductName,
-                    ImagePath = item.Product.ProductImages.First().ImagePath,
-                }).ToListAsync();
+                    ImagePath = item.Product.ProductImages
+                    .Where(item => item.IsActive).
+                    First().ImagePath,
+                })
+                .ToListAsync();
+        }
+        public async Task<bool> DoesOfferExist(int id)
+        {
+            return await _databaseContext.Offers
+                .AnyAsync(item => item.Id == id && item.IsActive);
+        }
+        public async Task DeleteImagesFromOffer(int offerId, List<string> imageUrls)
+        {
+            var productImages = await _databaseContext.Offers
+                .Where(item => item.IsActive && item.Id == offerId)
+                .Include(item => item.Product)
+                    .ThenInclude(item => item.ProductImages)
+                    .SelectMany(item => item.Product.ProductImages)
+                    .Where(item => imageUrls.Contains(item.ImagePath) && item.IsActive)
+                    .ToListAsync();
+
+            foreach (var image in productImages)
+            {
+                image.IsActive = false;
+                image.DateDeleted = DateTime.Now;
+            }
+            await _databaseContext.SaveChangesAsync();
+        }
+        public async Task<List<SelectListItem>> GetProductConditions()
+        {
+            return await _databaseContext.Conditions
+              .Where(item => item.IsActive)
+              .Select(item => new SelectListItem { Text = item.ConditionTitle, Value = item.Id.ToString() })
+              .ToListAsync();
+        }
+        public async Task<List<SelectListItem>> GetProductCategories()
+        {
+            return await _databaseContext.ProductCategories
+                .Where(item => item.IsActive)
+                .Select(item => new SelectListItem { Text = item.Name, Value = item.Id.ToString() })
+                .ToListAsync();
+        }
+        public async Task<List<DeliveryTypeViewModel>> GetParcelLockerDeliveryTypes()
+        {
+            return await _databaseContext.DeliveryTypes
+                .Where(item => item.IsActive)
+                .Where(item => item.Title.Contains("Locker"))
+                .Select(item => new DeliveryTypeViewModel()
+                {
+                    Id = item.Id,
+                    Price = item.Price,
+                    Title = item.Title,
+                })
+                .ToListAsync();
+        }
+        public async Task<List<SelectListItem>> GetOtherDeliveryTypes()
+        {
+            return await _databaseContext.DeliveryTypes
+                .Where(item => item.IsActive)
+                .Where(item => !item.Title.Contains("Locker"))
+                .Select(item => new SelectListItem { Text = item.Title, Value = item.Id.ToString() })
+                .ToListAsync();
         }
     }
 }

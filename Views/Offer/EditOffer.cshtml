@@ -1,17 +1,18 @@
-﻿@model ComputerServiceOnlineShop.ViewModels.OfferViewModels.AddOfferViewModel;
+﻿@model EditOfferViewModel
 @{
-    ViewData["Title"] = "Add Offer";
+    ViewData["Title"] = "Edit Offer";
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
 }
 @section Scripts {
-<script src="~/js/auction-scripts.js"></script>
+    <script src="~/js/auction-scripts.js"></script>
 }
 <div class="container mt-3">
-    <h3 class="fw-bold ps-2">Adding Offer</h3>
-    <form asp-action="AddOffer" method="post" enctype="multipart/form-data">
-    <div class="col-md-12 d-flex justify-content-end">
+    <h3 class="fw-bold ps-2">Editing Offer</h3>
+
+    <form asp-action="EditOffer" asp-controller="Offer" asp-route-id="@Model.Id"  method="post" enctype="multipart/form-data">
+        <div class="col-md-12 d-flex justify-content-end">
         <div class="row">
             <div class="col-auto">
                 <label class="form-check-label">
@@ -40,10 +41,36 @@
             </div>
         </div>
     </div>
+
+        <div class="mb-3 midesection-style">
+            <h5 class="fw-bold">Current Photos</h5>
+            <span>(check if you want to delete)</span>
+            <div class="row">
+                @if (Model.ExistingImagesUrls != null && Model.ExistingImagesUrls.Any())
+                {
+                    foreach (var imageUrl in Model.ExistingImagesUrls)
+                    {
+                        <div class="col-2">
+                            <div class="form-check text-start">
+                                <img src="@imageUrl.Value" alt="image" style="width: 200px; height: 200px;">
+                                <input class="form-check-input" type="checkbox" name="ImagesToDelete" value="@imageUrl.Value" />
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No images available</p>
+                }
+                
+            </div>
+            <span class="text-danger">@Html.ValidationMessage("ImagesDeletion")</span>
+        </div>
+
         <div class="mb-3 midesection-style">
             <div class="row">
-                <h5 class="fw-bold">Pictures*</h5>
-                <label for="pictures" class="form-label">Add some photos of your product</label>
+                <h5 class="fw-bold">Add New Photos</h5>
+                <label for="pictures" class="form-label">Upload New Photos of Your Product</label>
                 <div class="col-7">
                     <input class="form-control" type="file" asp-for="UploadedImages" id="pictures" multiple accept="image/*">
                 </div>
@@ -51,11 +78,9 @@
                     <button class="btn custom-button" onclick="clearPictures()">Clear Photos</button>
                 </div>
             </div>
-            <div>
-                <span asp-validation-for="UploadedImages" class="text-danger"></span>
-                <span class="text-danger">@Html.ValidationMessage("WrongFileType")</span>
-            </div>
+            <span class="text-danger">@Html.ValidationMessage("WrongFileType")</span>
         </div>
+
         <div class="mb-3 midesection-style">
             <div class="col-12 col-lg-7">
                 <h5 class="fw-bold">Title*</h5>
@@ -114,7 +139,7 @@
             <div class="col-12 col-lg-7">
                 <h5 class="fw-bold">Description*</h5>
                 <label class="form-label">Give detailed info about item, to evade customers questions</label>
-                <textarea asp-for = "Description" class="form-control" rows="10"></textarea>
+                <textarea asp-for="Description" class="form-control" rows="10"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
         </div>
@@ -129,9 +154,9 @@
 
                         <div class="form-check">
                             <input class="form-check-input"
-                            type="radio"
-                            name="SelectedParcelLocker"
-                            value="@deliveryType.Id"
+                                   type="radio"
+                                   name="SelectedParcelLocker"
+                                   value="@deliveryType.Id"
                             @(Model.SelectedParcelLocker == deliveryType.Id ? "checked" : "")>
                             <label class="form-check-label">
                                 @deliveryType.Title <span class="text-secondary"> - @deliveryType.Price PLN</span>
@@ -161,14 +186,10 @@
             <span asp-validation-for="SelectedOtherDeliveries" class="text-danger"></span>
         </div>
 
-
         <div class="mb-3 midesection-style text-end">
             <div class="col-12">
-                <button type="submit" class="btn submit-btn">Place offer</button>
+                <button type="submit" class="btn submit-btn">Update Offer</button>
             </div>
         </div>
     </form>
-    <script>
-
-    </script>
 </div>

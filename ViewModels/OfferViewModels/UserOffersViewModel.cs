@@ -1,6 +1,6 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels
+﻿namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
 {
-    public class UserOffersViewModel 
+    public class UserOffersViewModel
     {
         public int Id { get; set; }
         public string ImageUrl { get; set; } = null!;
@@ -8,6 +8,7 @@
         public string ProductCategory { get; set; } = null!;
         public string ProductCondition { get; set; } = null!;
         public bool ProductStatus { get; set; }
+
         public int StockQuantity;
         public decimal Price;
         public DateTime DateCreated { get; set; }

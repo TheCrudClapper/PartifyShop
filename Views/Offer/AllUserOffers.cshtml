@@ -1,4 +1,5 @@
 ﻿@using ComputerServiceOnlineShop.ViewModels
+@using ComputerServiceOnlineShop.ViewModels.OfferViewModels
 @model List<UserOffersViewModel>
 @{
     ViewData["Title"] = "User Auctions";
@@ -28,7 +29,7 @@
                 {
                     <div class="col-md-6 col-lg-4">
                         <div class="card shadow h-100 w-100 border-1">
-                            <img src="@userOffer.ImageUrl" class="card-img-top offer-image img-fluid object-cover" alt="GPU Listing">
+                            <img src="@userOffer.ImageUrl" class="card-img-top offer-image img-fluid object-cover" alt="offer image">
                             <div class="card-body">
                                 <h5><span class="fw-bold">Title: </span>@userOffer.ProductName</h5>
 
@@ -52,7 +53,15 @@
                                         </button>
                                     </form>
 
-                                    <button class="btn custom-button">Edit</button>
+                                    <form class="d-inline">
+                                        <button class="btn custom-button"
+                                                asp-action="EditOffer"
+                                                asp-route-id="@userOffer.Id"
+                                                formmethod="get">
+                                            Edit
+                                        </button>
+                                    </form>
+
                                     <form class="d-inline">
                                         <button class="btn custom-button"
                                                 asp-action="DeleteOffer"
@@ -62,7 +71,6 @@
                                             Delete
                                         </button>
                                     </form>
-
                                 </div>
                             </div>
                         </div>

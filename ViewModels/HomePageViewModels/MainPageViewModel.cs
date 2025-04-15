@@ -1,4 +1,4 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels
+﻿namespace ComputerServiceOnlineShop.ViewModels.IndexPageViewModel
 {
     public class MainPageViewModel
     {

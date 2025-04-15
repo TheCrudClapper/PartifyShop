@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
-namespace ComputerServiceOnlineShop.ViewModels
+namespace ComputerServiceOnlineShop.ViewModels.AccountViewModels
 {
     public class RegisterViewModel
     {
@@ -47,6 +48,7 @@ namespace ComputerServiceOnlineShop.ViewModels
         [Required(ErrorMessage = "Country is required")]
         public string SelectedCountry { get; set; } = null!;
 
+        [BindNever]
         public List<SelectListItem>? CountriesSelectionList { get; set; }
     }
 }

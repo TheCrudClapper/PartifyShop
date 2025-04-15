@@ -1,11 +1,9 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels
+﻿namespace ComputerServiceOnlineShop.ViewModels.SharedViewModels
 {
-    public class MainPageCardViewModel
+    public class DeliveryTypeViewModel
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public decimal Price { get; set; }
-
-        public string ImagePath { get; set; } = null!;
     }
 }

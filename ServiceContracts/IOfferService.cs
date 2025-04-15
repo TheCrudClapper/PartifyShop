@@ -1,8 +1,9 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ServiceContracts.DTO;
-using ComputerServiceOnlineShop.ViewModels;
+using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
+using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
+using ComputerServiceOnlineShop.ViewModels.SharedViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections;
 
 namespace ComputerServiceOnlineShop.Abstractions
 {
@@ -17,33 +18,31 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// <summary>
         /// Edit user offer and saves changes in database
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="dto"></param>
         /// <returns></returns>
-        Task Edit(AddOfferViewModel model);
+        Task Edit(EditOfferDto dto);
         /// <summary>
-        /// 
+        /// Method that gets offer of specific id from database
         /// </summary>
         /// <param name="id">Id of offer</param>
         /// <returns>Returns an element from database</returns>
-        Task<SingleOfferViewModel> GetOffer(int id);
+        Task<SingleOfferViewModel> ShowOffer(int id);
         /// <summary>
         /// Deletes user's offer from database
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         Task DeleteOffer(int id);
-        /// <summary>
-        /// Returns all avaliable offers in show
-        /// </summary>
-        /// <returns>An IEnumaerable collection</returns>
-
+        Task<EditOfferViewModel> GetOfferForEdit(int id);
+        Task DeleteImagesFromOffer(int offerId, List<string> imageUrls);
+        Task<List<SelectListItem>> GetOfferPictures(int id);
+        Task<bool> DoesOfferExist(int id);
         Task<IEnumerable<MainPageCardViewModel>> GetIndexPageOffers();
         Task<IEnumerable<OfferBrowserViewModel>> GetAllOffers();
         Task<IEnumerable<UserOffersViewModel>> GetUserOffers();
         Task<List<SelectListItem>> GetProductCategories();
         Task<List<SelectListItem>> GetProductConditions();
-        Task<List<DeliveryType>> GetDeliveryTypes();
         Task<List<SelectListItem>> GetOtherDeliveryTypes();
-        Task<List<DeliveryType>> GetParcelLockerDeliveryTypes();
+        Task<List<DeliveryTypeViewModel>> GetParcelLockerDeliveryTypes();
     }
 }

@@ -272,15 +272,14 @@ namespace ComputerServiceOnlineShop.Services
             await _databaseContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<OfferBrowserViewModel>> GetAllOffers()
+        public async Task<OfferBrowserViewModel> GetAllOffers()
         {
-            return await _databaseContext.Offers.Where(item => item.IsActive)
+            var offerItems = await _databaseContext.Offers.Where(item => item.IsActive)
                 .Where(item => !item.IsOfferPrivate)
                 .Include(item => item.Seller)
                 .Include(item => item.Product)
-                .Select(item => new OfferBrowserViewModel()
+                .Select(item => new OfferBrowserItemViewModel()
                 {
-                    Id = item.Id,
                     Title = item.Product.ProductName,
                     Category = item.Product.ProductCategory.Name,
                     Condition = item.Product.Condition.ConditionTitle,
@@ -291,8 +290,64 @@ namespace ComputerServiceOnlineShop.Services
                     QuantityAvailable = item.StockQuantity,
                     ImageUrl = item.Product.ProductImages.First().ImagePath,
                 }).ToListAsync();
-        }
 
+                return new OfferBrowserViewModel()
+                {
+                    Items = offerItems
+                };
+        }
+        public async Task<OfferBrowserViewModel> GetFilteredOffers(OfferFilter filter)
+        {
+            var query = _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => !item.IsOfferPrivate)
+                .Include(item => item.Seller)
+                .Include(item => item.Product)
+                .AsQueryable();
+
+            if (filter.PriceFrom.HasValue)
+                query = query.Where(item => item.Price >= filter.PriceFrom);
+
+            if (filter.PriceTo.HasValue)
+                query = query.Where(item => item.Price <= filter.PriceTo);
+
+            if (filter.SortOption == "price_desc")
+                query = query.OrderByDescending(item => item.Price);
+
+            if (filter.SortOption == "price_asc")
+                query = query.OrderBy(item => item.Price);
+
+
+            if (!string.IsNullOrWhiteSpace(filter.DeliveryOption))
+            {
+                if (int.TryParse(filter.DeliveryOption, out int deliveryId))
+                {
+                    query = query.Where(item =>
+                        item.OfferDeliveryTypes.Any(dt => dt.DeliveryTypeId == deliveryId));
+                }
+            }
+            
+            var items = await query.Select(item => new OfferBrowserItemViewModel()
+            {
+                Id = item.Id,
+                Title = item.Product.ProductName,
+                Category = item.Product.ProductCategory.Name,
+                Condition = item.Product.Condition.ConditionTitle,
+                DateCreated = item.DateCreated.Date,
+                Price = item.Price,
+                SellerName = item.Seller.UserName!,
+                Description = item.Product.Description,
+                QuantityAvailable = item.StockQuantity,
+                ImageUrl = item.Product.ProductImages.First().ImagePath,
+            }).ToListAsync();
+
+            return new OfferBrowserViewModel()
+            {
+                Items = items,
+                Filter = filter,
+                SortingOptions = GetSortingOptions(),
+                DeliveryOptions = await GetOtherDeliveryTypes(),
+            };
+        }
         public async Task<IEnumerable<MainPageCardViewModel>> GetIndexPageOffers()
         {
             return await _databaseContext.Offers.Where(item => item.IsActive)
@@ -368,6 +423,24 @@ namespace ComputerServiceOnlineShop.Services
                 .Where(item => !item.Title.Contains("Locker"))
                 .Select(item => new SelectListItem { Text = item.Title, Value = item.Id.ToString() })
                 .ToListAsync();
+        }
+        //Just for testing
+        //Later create table in db for filtering options
+        public List<SelectListItem> GetSortingOptions()
+        {
+            return new List<SelectListItem>()
+            {
+                new SelectListItem()
+                {
+                    Text = "Price - from highest",
+                    Value = "price_desc",
+                },
+                new SelectListItem()
+                {
+                    Text = "Price - from lowest",
+                    Value = "price_asc",
+                }
+            };
         }
     }
 }

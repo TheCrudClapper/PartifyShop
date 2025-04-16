@@ -145,10 +145,10 @@ namespace ComputerServiceOnlineShop.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> OfferBrowser()
+        public async Task<IActionResult> OfferBrowser([FromQuery] OfferFilter filter)
         {
-            IEnumerable<OfferBrowserViewModel> allOffers = await _offerService.GetAllOffers();
-            return View(allOffers);
+            OfferBrowserViewModel offers = await _offerService.GetFilteredOffers(filter);
+            return View(offers);
         }
         public async Task InitializeViewModelsCollections<ViewModelType>(ViewModelType viewModel) where ViewModelType : BaseOfferViewModel
         {

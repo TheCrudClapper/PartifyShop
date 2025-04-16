@@ -37,12 +37,14 @@ namespace ComputerServiceOnlineShop.Abstractions
         Task DeleteImagesFromOffer(int offerId, List<string> imageUrls);
         Task<List<SelectListItem>> GetOfferPictures(int id);
         Task<bool> DoesOfferExist(int id);
+        Task<OfferBrowserViewModel> GetFilteredOffers(OfferFilter filter);
         Task<IEnumerable<MainPageCardViewModel>> GetIndexPageOffers();
-        Task<IEnumerable<OfferBrowserViewModel>> GetAllOffers();
+        Task<OfferBrowserViewModel> GetAllOffers();
         Task<IEnumerable<UserOffersViewModel>> GetUserOffers();
         Task<List<SelectListItem>> GetProductCategories();
         Task<List<SelectListItem>> GetProductConditions();
         Task<List<SelectListItem>> GetOtherDeliveryTypes();
         Task<List<DeliveryTypeViewModel>> GetParcelLockerDeliveryTypes();
+        List<SelectListItem> GetSortingOptions();
     }
 }

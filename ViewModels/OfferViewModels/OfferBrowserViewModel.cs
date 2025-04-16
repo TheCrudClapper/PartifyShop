@@ -1,16 +1,14 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
 {
     public class OfferBrowserViewModel
     {
-        public int Id { get; set; }
-        public string Condition { get; set; }
-        public string Title { get; set; }
-        public string ImageUrl { get; set; }
-        public string Category { get; set; }
-        public DateTime DateCreated { get; set; }
-        public string Description { get; set; }
-        public int QuantityAvailable { get; set; }
-        public decimal Price { get; set; }
-        public string SellerName { get; set; }
+        public List<OfferBrowserItemViewModel> Items = new List<OfferBrowserItemViewModel>();
+        public OfferFilter Filter { get; set; }
+
+        public List<SelectListItem> DeliveryOptions = new List<SelectListItem>();
+
+        public List<SelectListItem> SortingOptions = new List<SelectListItem>();
     }
 }

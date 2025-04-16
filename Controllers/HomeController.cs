@@ -21,9 +21,10 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var viewModel = new MainPageViewModel()
+        var viewModel = new IndexPageViewModel()
         {
             Cards = await _offerService.GetIndexPageOffers(),
+            Categories = await _offerService.GetProductCategories()
         };
         return View(viewModel);
     }

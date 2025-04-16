@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ViewModels\LayoutViewModels\" />
     <Folder Include="wwwroot\offer-images\" />
   </ItemGroup>
 

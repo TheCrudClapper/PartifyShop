@@ -304,6 +304,12 @@ namespace ComputerServiceOnlineShop.Services
                 .Include(item => item.Product)
                 .AsQueryable();
 
+            if (!string.IsNullOrWhiteSpace(filter.SearchPhrase))
+                query = query.Where(item => item.Product.ProductName.Contains(filter.SearchPhrase) || item.Product.Description.Contains(filter.SearchPhrase));
+
+            if (filter.CategoryId != null)
+                query = query.Where(item => item.Product.ProductCategoryId == filter.CategoryId);
+
             if (filter.PriceFrom.HasValue)
                 query = query.Where(item => item.Price >= filter.PriceFrom);
 
@@ -345,7 +351,7 @@ namespace ComputerServiceOnlineShop.Services
                 Items = items,
                 Filter = filter,
                 SortingOptions = GetSortingOptions(),
-                DeliveryOptions = await GetOtherDeliveryTypes(),
+                DeliveryOptions = await GetAllDeliveryTypes(),
             };
         }
         public async Task<IEnumerable<MainPageCardViewModel>> GetIndexPageOffers()
@@ -441,6 +447,17 @@ namespace ComputerServiceOnlineShop.Services
                     Value = "price_asc",
                 }
             };
+        }
+
+        public async Task<List<SelectListItem>> GetAllDeliveryTypes()
+        {
+            return await _databaseContext.DeliveryTypes.Where(item => item.IsActive)
+                .Select(item => new SelectListItem
+                {
+                    Text = item.Title,
+                    Value = item.Id.ToString(),
+
+                }).ToListAsync();
         }
     }
 }

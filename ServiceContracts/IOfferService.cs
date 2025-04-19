@@ -40,6 +40,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         Task<OfferBrowserViewModel> GetFilteredOffers(OfferFilter filter);
         Task<IEnumerable<MainPageCardViewModel>> GetIndexPageOffers();
         Task<OfferBrowserViewModel> GetAllOffers();
+        Task<List<SelectListItem>> GetAllDeliveryTypes();
         Task<IEnumerable<UserOffersViewModel>> GetUserOffers();
         Task<List<SelectListItem>> GetProductCategories();
         Task<List<SelectListItem>> GetProductConditions();

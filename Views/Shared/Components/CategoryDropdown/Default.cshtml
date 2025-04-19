@@ -1,0 +1,9 @@
+﻿@model List<SelectListItem>
+
+<select class="form-select me-2" name="CategoryId">
+    <option selected disabled class="fw-bold">Category</option>
+    @foreach (var cat in Model)
+    {
+        <option value="@cat.Value" selected="@(Context.Request.Query["CategoryId"] == cat.Value.ToString())">@cat.Text</option>
+    }
+</select>

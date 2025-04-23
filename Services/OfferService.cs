@@ -361,7 +361,7 @@ namespace ComputerServiceOnlineShop.Services
                 .Include(item => item.Product)
                 .ThenInclude(item => item.ProductImages)
                 .OrderByDescending(item => item.DateCreated)
-                .Take(6)
+                .Take(12)
                 .Select(item => new MainPageCardViewModel()
                 {
                     Id = item.Id,
@@ -402,7 +402,7 @@ namespace ComputerServiceOnlineShop.Services
               .Select(item => new SelectListItem { Text = item.ConditionTitle, Value = item.Id.ToString() })
               .ToListAsync();
         }
-        public async Task<List<SelectListItem>> GetProductCategories()
+        public async Task<List<SelectListItem>> GetProductCategoriesAsSelectList()
         {
             return await _databaseContext.ProductCategories
                 .Where(item => item.IsActive)
@@ -430,6 +430,7 @@ namespace ComputerServiceOnlineShop.Services
                 .Select(item => new SelectListItem { Text = item.Title, Value = item.Id.ToString() })
                 .ToListAsync();
         }
+
         //Just for testing
         //Later create table in db for filtering options
         public List<SelectListItem> GetSortingOptions()
@@ -456,6 +457,41 @@ namespace ComputerServiceOnlineShop.Services
                 {
                     Text = item.Title,
                     Value = item.Id.ToString(),
+
+                }).ToListAsync();
+        }
+
+        public async Task<List<MainPageCardViewModel>> GetProductCategories()
+        {
+            return await _databaseContext.ProductCategories.Where(item => item.IsActive)
+                .Select(item => new MainPageCardViewModel
+                {
+                    Id = item.Id,
+                    ImagePath = item.CategoryImage,
+                    Title = item.Name,
+                }).ToListAsync();
+        }
+
+        public async Task<List<MainPageCardViewModel>> GetDealsOfTheDay()
+        {
+            //add daily reshuffle logic
+            var count = await _databaseContext.Offers.CountAsync(item => item.IsActive && !item.IsOfferPrivate);
+            if (count == 0)
+                return new();
+
+            var take = Math.Min(count, 7);
+
+            return await _databaseContext.Offers.Where(item => item.IsActive && !item.IsOfferPrivate)
+                .OrderBy(item => Guid.NewGuid())
+                .Take(take)
+                .Select(item => new MainPageCardViewModel
+                {
+                    Id = item.Id,
+                    ImagePath = item.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .First().ImagePath,
+                    Price = item.Price,
+                    Title = item.Product.ProductName,
 
                 }).ToListAsync();
         }

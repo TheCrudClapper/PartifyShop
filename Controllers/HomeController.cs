@@ -24,7 +24,9 @@ public class HomeController : Controller
         var viewModel = new IndexPageViewModel()
         {
             Cards = await _offerService.GetIndexPageOffers(),
-            Categories = await _offerService.GetProductCategories()
+            Categories = await _offerService.GetProductCategoriesAsSelectList(),
+            CategoriesSlider = await _offerService.GetProductCategories(),
+            BestDeals = await _offerService.GetDealsOfTheDay(),
         };
         return View(viewModel);
     }

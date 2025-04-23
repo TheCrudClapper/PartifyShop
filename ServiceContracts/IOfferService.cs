@@ -42,10 +42,13 @@ namespace ComputerServiceOnlineShop.Abstractions
         Task<OfferBrowserViewModel> GetAllOffers();
         Task<List<SelectListItem>> GetAllDeliveryTypes();
         Task<IEnumerable<UserOffersViewModel>> GetUserOffers();
-        Task<List<SelectListItem>> GetProductCategories();
+        Task<List<SelectListItem>> GetProductCategoriesAsSelectList();
         Task<List<SelectListItem>> GetProductConditions();
         Task<List<SelectListItem>> GetOtherDeliveryTypes();
         Task<List<DeliveryTypeViewModel>> GetParcelLockerDeliveryTypes();
         List<SelectListItem> GetSortingOptions();
+
+        Task<List<MainPageCardViewModel>> GetDealsOfTheDay();
+        Task<List<MainPageCardViewModel>> GetProductCategories();
     }
 }

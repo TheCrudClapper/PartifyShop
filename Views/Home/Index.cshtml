@@ -1,4 +1,5 @@
 ﻿@using ComputerServiceOnlineShop.ViewModels
+@using ComputerServiceOnlineShop.ViewModels.HomePageViewModels;
 @using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel
 @{
     ViewData["Title"] = "Home Page";
@@ -7,7 +8,12 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/index-styles.css" asp-append-version="true" />
 }
+@section Scripts {
+    <script src="~/js/index-script.js"></script>
+}
 <div class="container-fluid">
+    @* Carousel with pictures *@
+
     <div id="carouselExampleCaptions" class="carousel slide">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -46,47 +52,106 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    <div class="container offers-container bg-white rounded">
-        <div class="row mt-3">
-            <div class="col-sm-12 mt-2">
-                <p class="display-3 fs-4">Freshly added</p>
+
+    @* Section with categories from shop *@
+    <div class="container mt-4">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-auto">
+                <p class="display-3 fs-4">Our Categories</p>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-outline-secondary me-2 scrollButton" id="categoryScrollLeft">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button class="btn btn-outline-secondary scrollButton" id="categoryScrollRight">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
             </div>
         </div>
-        <div class="row mt-2">
-            @await Html.PartialAsync("_FreshlyAddedOffersPartial", Model.Cards)
-        </div>
+
+        @await Html.PartialAsync("_CategoryScrollerPartial", Model.CategoriesSlider)
+
     </div>
-    <div class="container offers-container bg-white rounded">
-        <div class="row mt-3">
-            <div class="col-sm-12 mt-2">
-                <p class="fw-bold fs-4">Opti Pc Recommends:</p>
+
+    @* Freashly added offers *@
+    <div class="container">
+        <div class="row mt-3 align-items-center justify-content-between">
+            <div class="col-auto">
+                <p class="display-3 fs-4 mb-0">Freshly added</p>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-outline-secondary me-2 scrollButton" id="freshScrollLeft">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button class="btn btn-outline-secondary scrollButton" id="freshScrollRight">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
             </div>
         </div>
-        <div class="row mt-2">
-            @for (int i = 0; i < 6; i++)
-            {
-                <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
-                    <div class="card">
-                        <img src="~/images/ram.png" class="card-img-top" alt="ram-image">
-                        <div class="card-body text-start">
-                            <h5 class="card-title item-price">150 PLN</h5>
-                            <h6 class="card-title item-name">RAM DDR4 3200Mhz 16GB</h6>
-                            <p>
-                                @for (int j = 0; j < 5; j++)
-                                {
-                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                }
-                            </p>
-                        </div>
-                    </div>
+
+        @await Html.PartialAsync("_ProductScrollerPartial", new ProductScrollerViewModel
+   {
+       IdPrefix = "freshCarousel",
+       Items = Model.Cards
+   })
+    </div>
+
+    @* Featured Offers *@
+    <div class="container mb-3">
+        <div class="row mt-3 align-items-center justify-content-between">
+            <div class="col-auto">
+                <p class="display-3 fs-4 mb-0">Featured Offers</p>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-outline-secondary me-2 scrollButton" id="featuredScrollLeft">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button class="btn btn-outline-secondary scrollButton" id="featuredScrollRight">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+        @await Html.PartialAsync("_ProductScrollerPartial", new ProductScrollerViewModel
+       {
+           IdPrefix = "featuredCarousel",
+           Items = Model.Cards
+       })
+    </div>
+
+    @* Deals of the day section*@
+    <div class="container-fluid best-deals-container">
+        <div class="container text-white">
+            <div class="row justify-content-end">
+                <div class="col-auto mt-3">
+                    <button class="btn btn-outline-light me-2 scrollButton" id="dealsScrollLeft">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <button class="btn btn-outline-light scrollButton" id="dealsScrollRight">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
                 </div>
-            }
+            </div>
+            <div class="row mt-3">
+                <div class="col-2 d-flex align-items-center justify-content-center flex-column">
+                    <h2 class="fw-bold">Deals of<br /> the Day</h2>
+                    <h3 id="clock">08:21:17</h3>
+                </div>
+                <div class="col-10">
+                    @await Html.PartialAsync("_ProductScrollerPartial", new ProductScrollerViewModel
+                   {
+                       IdPrefix = "dealsCarousel",
+                       Items = Model.BestDeals
+                   })
+                </div>
+            </div>  
         </div>
     </div>
-    <div class="container offers-container bg-white rounded">
+
+    @* Best in X Category - for now static*@
+    <div class="container">
         <div class="row mt-3">
             <div class="col-sm-12 mt-2">
-                <p class="fw-bold fs-4">Best In CASE Cateogory:</p>
+                <p class="display-3 fs-4">Best In CASE Category</p>
             </div>
         </div>
         <div class="row mt-2">

@@ -13,7 +13,7 @@ namespace ComputerServiceOnlineShop.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categories = await _offerService.GetProductCategories();
+            var categories = await _offerService.GetProductCategoriesAsSelectList();
             return View(categories);
         }
     }

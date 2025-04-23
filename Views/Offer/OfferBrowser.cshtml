@@ -9,13 +9,13 @@
 <div class="container mt-3">
     @{
         var searchPhrase = Context.Request.Query["SearchPhrase"];
-        if(searchPhrase != "")
+        if(!string.IsNullOrWhiteSpace(searchPhrase))
         {
             <h3 class="fw-bold mb-3">Searching "@searchPhrase"</h3>
         }
         else
         {
-            <h3 class="fw-bold mb-3">Offers found @Model.Items.Count</h3>
+            <h3 class="mb-3">Offers found: @Model.Items.Count</h3>
         }
     }
     <div class="row g-3">

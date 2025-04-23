@@ -233,7 +233,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ParcelLockerDeliveries");
+                    b.ToTable("DeliveryTypes");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.IdentityEntities.ApplicationRole", b =>
@@ -496,6 +496,10 @@ namespace ComputerServiceOnlineShop.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CategoryImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -552,7 +556,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImagesPaths");
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -767,7 +771,7 @@ namespace ComputerServiceOnlineShop.Migrations
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.ProductImage", b =>
                 {
                     b.HasOne("ComputerServiceOnlineShop.Entities.Models.Product", "Product")
-                        .WithMany("ProductImagesPaths")
+                        .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -850,7 +854,7 @@ namespace ComputerServiceOnlineShop.Migrations
                 {
                     b.Navigation("Offers");
 
-                    b.Navigation("ProductImagesPaths");
+                    b.Navigation("ProductImages");
                 });
 #pragma warning restore 612, 618
         }

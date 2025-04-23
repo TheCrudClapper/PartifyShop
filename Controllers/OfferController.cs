@@ -154,7 +154,7 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             viewModel.ParcelLockerDeliveriesList = await _offerService.GetParcelLockerDeliveryTypes();
             viewModel.ProductConditionsSelectList = await _offerService.GetProductConditions();
-            viewModel.ProductCategoriesSelectionList = await _offerService.GetProductCategories();
+            viewModel.ProductCategoriesSelectionList = await _offerService.GetProductCategoriesAsSelectList();
             viewModel.OtherDeliveriesSelectedList = await _offerService.GetOtherDeliveryTypes();
         }
     }

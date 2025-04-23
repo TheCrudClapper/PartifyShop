@@ -1,13 +1,11 @@
-﻿/*Index page styles*/
-.carousel-item {
+﻿.carousel-item {
     max-height: 1000px;
     height: auto;
 }
     /*Image in carousel props*/
     .carousel-item img {
-        object-fit: cover;
-        height: 100%;
         filter: brightness(0.5);
+        
     }
 /*Setting position of captions*/
 .carousel-caption {
@@ -72,3 +70,55 @@
     text-overflow: ellipsis;
     font-size: 16px;
 }
+.scrolling-wrapper {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    gap: 0.5rem; 
+}
+
+    .scrolling-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+
+.scrollButton {
+    background-color: white;
+    border-radius: 20px;
+    border: 0px;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border: 2px solid #e0e0e0;
+    padding: 5px;
+    background-color: white;
+    transition: transform 0.3s ease-in-out;
+    opacity: 0.9;
+}
+
+    .category-img:hover {
+        transform: scale(1.20);
+        border-color: #863cb0;
+        opacity: 1;
+    }
+
+.best-deals-container {
+    background-image: url('/images/nebula.jpg');
+    height: 450px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    border-top: 2px solid #863cb0;
+    border-bottom: 2px solid #863cb0;
+}
+    .best-deals-container .scrollButton {
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background-color: rgba(0, 0, 0, 0.3);
+    }

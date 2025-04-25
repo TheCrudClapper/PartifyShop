@@ -1,4 +1,6 @@
-﻿@{
+﻿@using ComputerServiceOnlineShop.ViewModels.CartViewModels
+@model CartViewModel;
+@{
     ViewData["Title"] = "Cart";
 }
 
@@ -6,37 +8,65 @@
     <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
 }
 
+@* @if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
+{
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark @(TempData["SuccessMessage"] != null ? "bg-success text-white" : "bg-danger text-white")">
+                    <h5 class="modal-title" id="messageModalLabel">
+                        @(TempData["SuccessMessage"] != null ? "Success" : "Error")
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @TempData["SuccessMessage"] ?? @TempData["ErrorMessage"]
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+} *@
+@if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
+{
+    @await Html.PartialAsync("_ToastMessagePartial", TempData)
+}
 <div class="container mt-3">
     <h3 class="fw-bold ps-2">Your Cart Items</h3>
     <div class="row g-3">
-        @* <div class="col-12 col-lg-8 midesection-style">
-            <form>
+        @if (Model.CartItems.Count() > 0)
+        {
+            <div class="col-12 col-lg-8">
                 <div class="mb-3 midesection-style shadow">
                     <h5 class="fw-bold">Sells and sends user: <span class="purple-text">PanJaweł2137</span></h5>
                 </div>
-                @for (int i = 0; i < 3; i++)
+                @foreach (var item in Model.CartItems)
                 {
                     <div class="card mb-3 shadow">
                         <div class="row">
                             <div class="col-md-5">
-                                <img src="~/images/nvidia_gpu.jpg" class="img-fluid rounded-start h-100 w-100 object-fit-cover" alt="Product Image">
+                                <img src="@item.ImageUrl" class="img-fluid rounded-start h-100 w-100 object-fit-cover" alt="Product Image">
                             </div>
                             <div class="col-md-7">
                                 <div class="card-body">
-                                    <h5 class="card-title">Rtx 3060 Nowa Glanc</h5>
+                                    <h5 class="card-title">@item.Title</h5>
                                     <p class="card-text">
-                                        <span class="fw-bold">Condition:</span> New<br>
-                                        <span class="fw-bold">Category:</span> GPU<br>
-                                        <span class="fw-bold">Price:</span> 999 PLN<br>
-                                        <span class="fw-bold">Added To Cart:</span> 17.03.2025
+                                        <span class="fw-bold">Condition:</span> @item.Condition<br>
+                                        <span class="fw-bold">Category:</span> @item.Category<br>
+                                        <span class="fw-bold">Price:</span> @item.Price PLN<br>
+                                        <span class="fw-bold">Added To Cart:</span> @item.DateAdded.ToString("dd-MM-yyyy");
                                     </p>
                                     <div class="d-flex justify-content-between">
                                         <div class="w-25">
-                                            <input type="text" value="1" class="form-control text-center">
+                                            <input type="text" value="@item.Quantity" class="form-control text-center">
                                         </div>
                                         <div>
-                                            <button type="button" class="btn custom-button">Show</button>
-                                            <button type="button" class="btn custom-button ms-2">Delete</button>
+                                            <a class="btn custom-button" href="@Url.Action("ShowOffer", "Offer", new {id = item.OfferId})">Show</a>
+                                            <form method="post" class="d-inline-flex" asp-action="DeleteFromCart" asp-route-id="@item.Id">
+                                                <button type="submit" class="btn custom-button ms-2">Delete</button>
+                                            </form>
                                         </div>
 
                                     </div>
@@ -44,29 +74,45 @@
                             </div>
                         </div>
                     </div>
-
                 }
-            </form>
-        </div>
-        <!-- Spacer -->
-        <div class="col-12 col-lg-1"></div>
-        <div class="col-12 col-lg-3 midesection-style h-25 p-4">
-            <div class="row">
-                <div class="col-12 d-flex justify-content-between">
-                    <h5>Total</h5>
-                    <h5 class="fw-bold">999,99 PLN</h5>
+            </div>
+
+            <!-- Spacer -->
+
+            <div class="col-12 col-lg-1"></div>
+            <div class="col-12 col-lg-3 midesection-style h-25 p-4">
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-between">
+                        <h5>Total</h5>
+                        <h5 class="fw-bold">@Html.Raw(Model.TotalCartValue ?? 0) PLN</h5>
+                    </div>
                 </div>
-            </div>
-            <hr />
-            <div class="row">
-                <button class="btn custom-button w-100 fw-bold">Checkout</button>
-            </div>
-            <div />
+                <hr />
+                <div class="row">
+                    <button class="btn custom-button w-100 fw-bold">Checkout</button>
+                </div>
+                <div />
 
 
-        </div>
-        
- *@
-        @await Html.PartialAsync("_EmptyCartPartialView")
+            </div>
+        }
+        else
+        {
+            @await Html.PartialAsync("_EmptyCartPartialView")
+        }
+
     </div>
 </div>
+@section Scripts {
+    @* <script>
+        // window.addEventListener('DOMContentLoaded', () => {
+        //     const myModal = new bootstrap.Modal(document.getElementById('messageModal'));
+        //     myModal.show();
+        // });
+          window.addEventListener('DOMContentLoaded', () => {
+            const toastEl = document.getElementById('liveToast');
+            const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+            toast.show();
+        });
+    </script> *@
+}

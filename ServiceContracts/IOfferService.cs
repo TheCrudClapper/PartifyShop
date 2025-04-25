@@ -24,7 +24,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// <summary>
         /// Method that gets offer of specific id from database
         /// </summary>
-        /// <param name="id">Id of offer</param>
+        /// <param name="id">CartiD of offer</param>
         /// <returns>Returns an element from database</returns>
         Task<SingleOfferViewModel> ShowOffer(int id);
         /// <summary>

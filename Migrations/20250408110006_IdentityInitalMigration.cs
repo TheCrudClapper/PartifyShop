@@ -131,7 +131,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -159,7 +159,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_Addresses_Countries_CountryId",
                         column: x => x.CountryId,
                         principalTable: "Countries",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -185,13 +185,13 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_Products_Conditions_ConditionId",
                         column: x => x.ConditionId,
                         principalTable: "Conditions",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Products_ProductCategories_ProductCategoryId",
                         column: x => x.ProductCategoryId,
                         principalTable: "ProductCategories",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -232,13 +232,13 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_AspNetUsers_Addresses_AdressId",
                         column: x => x.AdressId,
                         principalTable: "Addresses",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Carts_CartId",
                         column: x => x.CartId,
                         principalTable: "Carts",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -262,7 +262,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_ProductImages_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -283,7 +283,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -303,7 +303,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -321,13 +321,13 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -347,7 +347,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -374,13 +374,13 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_Offers_AspNetUsers_SellerId",
                         column: x => x.SellerId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Offers_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -405,13 +405,13 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_CartItems_Carts_CartId",
                         column: x => x.CartId,
                         principalTable: "Carts",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CartItems_Offers_OfferId",
                         column: x => x.OfferId,
                         principalTable: "Offers",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.NoAction);
                 });
 
@@ -435,13 +435,13 @@ namespace ComputerServiceOnlineShop.Migrations
                         name: "FK_OfferDeliveryTypes_DeliveryTypes_DeliveryTypeId",
                         column: x => x.DeliveryTypeId,
                         principalTable: "DeliveryTypes",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OfferDeliveryTypes_Offers_OfferId",
                         column: x => x.OfferId,
                         principalTable: "Offers",
-                        principalColumn: "Id",
+                        principalColumn: "CartiD",
                         onDelete: ReferentialAction.Cascade);
                 });
 

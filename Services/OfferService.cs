@@ -179,6 +179,7 @@ namespace ComputerServiceOnlineShop.Services
                     .ThenInclude(item => item.DeliveryType)
                 .Select(item => new SingleOfferViewModel()
                 {
+                    Id = item.Id,
                     Condition = item.Product.Condition.ConditionTitle,
                     DateCreated = item.DateCreated.Date,
                     Seller = item.Seller.UserName!,

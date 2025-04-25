@@ -52,12 +52,22 @@
             <hr />
             <h3 class="fw-bold">@Model.Price PLN</h3>
             <div class="row mb-2">
-                <div class="col-3">
-                    <input type="text" value="1" class="form-control text-center">
-                </div>
-                <div class="col-9">
-                    <button type="submit" class="btn custom-button w-100">To Cart</button>
-                </div>
+                @if (User.Identity.Name != Model.Seller)
+                {
+                    <div class="col-3">
+                        <input type="text" value="1" class="form-control text-center">
+                    </div>
+                    <div class="col-9">
+                        <button type="submit" class="btn custom-button w-100">To Cart</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-9">
+                        <a class="btn custom-button w-100" href="@Url.Action("EditOffer", "Offer", new {id = Model.Id})">Edit</a>
+                    </div>
+                }
+
             </div>
             <p>Available: @Model.StockQuantity</p>
             <hr />

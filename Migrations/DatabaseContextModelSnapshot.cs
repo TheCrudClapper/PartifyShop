@@ -24,11 +24,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.Address", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
@@ -65,7 +65,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("CountryId");
 
@@ -74,11 +74,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.Cart", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -95,18 +95,18 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<decimal?>("TotalCartValue")
                         .HasColumnType("decimal(10, 2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.CartItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<int>("CartId")
                         .HasColumnType("int");
@@ -129,7 +129,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("CartId");
 
@@ -140,11 +140,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.Condition", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<string>("ConditionDescription")
                         .IsRequired()
@@ -166,18 +166,18 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.ToTable("Conditions");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.Country", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<string>("CountryName")
                         .IsRequired()
@@ -195,18 +195,18 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.DeliveryType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -231,14 +231,14 @@ namespace ComputerServiceOnlineShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.ToTable("DeliveryTypes");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.IdentityEntities.ApplicationRole", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -254,7 +254,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
@@ -266,7 +266,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.IdentityEntities.ApplicationUser", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -349,7 +349,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("AdressId");
 
@@ -368,11 +368,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.Offer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -401,7 +401,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("ProductId");
 
@@ -412,11 +412,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.OfferDeliveryType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -436,7 +436,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<int>("OfferId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("DeliveryTypeId");
 
@@ -447,11 +447,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<int>("ConditionId")
                         .HasColumnType("int");
@@ -479,7 +479,7 @@ namespace ComputerServiceOnlineShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("ConditionId");
 
@@ -490,11 +490,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.ProductCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<string>("CategoryImage")
                         .IsRequired()
@@ -520,18 +520,18 @@ namespace ComputerServiceOnlineShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.ProductImage", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -552,7 +552,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("ProductId");
 
@@ -561,11 +561,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -576,7 +576,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("RoleId");
 
@@ -585,11 +585,11 @@ namespace ComputerServiceOnlineShop.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CartiD")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartiD"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -600,7 +600,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("CartiD");
 
                     b.HasIndex("UserId");
 

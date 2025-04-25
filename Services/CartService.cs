@@ -1,0 +1,138 @@
+﻿using ComputerServiceOnlineShop.Abstractions;
+using ComputerServiceOnlineShop.Entities.Contexts;
+using ComputerServiceOnlineShop.Entities.Models;
+using ComputerServiceOnlineShop.ServiceContracts;
+using ComputerServiceOnlineShop.ViewModels.CartViewModels;
+using Microsoft.EntityFrameworkCore;
+
+namespace ComputerServiceOnlineShop.Services
+{
+    public class CartService : ICartService
+    {
+        private readonly DatabaseContext _databaseContext;
+        private readonly IAccountService _accountService;
+        public CartService(DatabaseContext databaseContext, IAccountService accountService)
+        {
+            _databaseContext = databaseContext;
+            _accountService = accountService;
+        }
+        public async Task AddToCart(int offerId)
+        {
+            //downloading offer
+            var offer = await _databaseContext.Offers
+                .Where(item => item.Id == offerId && item.IsActive)
+                .FirstOrDefaultAsync();
+
+            if (offer == null)
+                throw new InvalidOperationException("Couldn't find offer of given id");
+
+            int cartId = await GetLoggedUserCartId();
+
+            var existingItem = await _databaseContext.CartItems
+                .Where(item => item.CartId == cartId && item.OfferId == offer.Id && item.IsActive)
+                .FirstOrDefaultAsync();
+
+            if(existingItem != null)
+            {
+                existingItem.Quantity += 1;
+                existingItem.DateCreated = DateTime.Now;
+            }
+            else
+            {
+                CartItem cartItem = new CartItem()
+                {
+                    CartId = cartId,
+                    DateCreated = DateTime.Now,
+                    IsActive = true,
+                    Offer = offer,
+                    Quantity = 1,
+                };
+                await _databaseContext.CartItems.AddAsync(cartItem);
+            }
+            await _databaseContext.SaveChangesAsync();
+            await UpdateTotalCartValue(cartId);
+        }
+
+        public async Task DeleteFromCart(int cartItemId)
+        {
+            var cartItem = await _databaseContext.CartItems.Where(item => item.Id == cartItemId)
+                .FirstOrDefaultAsync();
+
+
+            if (cartItem == null)
+                throw new InvalidOperationException("Couldn't find such item in cart");
+
+            var cartId = cartItem.CartId;
+
+            //Soft Delete
+            cartItem.IsActive = false;
+            cartItem.DateDeleted = DateTime.Now;
+
+            await _databaseContext.SaveChangesAsync();
+            await UpdateTotalCartValue(cartId);
+        }
+
+        public async Task<CartViewModel> GetLoggedUserCart()
+        {
+            var cartId = await GetLoggedUserCartId();
+
+            return await _databaseContext.Carts
+                .Where(item => item.Id == cartId)
+                .Include(item => item.CartItems)
+                    .ThenInclude(item => item.Offer)
+                        .ThenInclude(item => item.Product)
+                            .ThenInclude(item => item.ProductImages)
+                .Select(item => new CartViewModel
+                {
+                    CartItems = item.CartItems.Where(item => item.IsActive)
+                    .Select(item => new CartItemViewModel
+                    {
+                        Category = item.Offer.Product.ProductCategory.Name,
+                        Condition = item.Offer.Product.Condition.ConditionTitle,
+                        DateAdded = item.DateCreated,
+                        Id = item.Id,
+                        Price = item.Offer.Price,
+                        Quantity = item.Quantity,
+                        Title = item.Offer.Product.ProductName,
+                        ImageUrl = item.Offer.Product.ProductImages.FirstOrDefault().ImagePath,
+                        OfferId = item.OfferId,
+
+                    }).ToList(),
+                    TotalCartValue = item.TotalCartValue ?? 0,
+
+                }).FirstAsync();
+        }
+
+        public async Task<int> GetLoggedUserCartId()
+        {
+            Guid userId = _accountService.GetLoggedUserId();
+
+            return await _databaseContext.Users
+                .Where(user => user.IsActive && user.Id == userId && user.Cart.IsActive)
+                .Select(item => item.Cart.Id)
+                .FirstAsync();
+        }
+
+        public async Task UpdateTotalCartValue(int cartId)
+        {
+            decimal? totalValue = await _databaseContext.CartItems
+                .Where(cartItem => cartItem.CartId == cartId && cartItem.IsActive)
+                .Include(offer => offer.Offer)
+                .SumAsync(item => item.Quantity * item.Offer.Price);
+
+            var cart = await _databaseContext.Carts.FirstOrDefaultAsync(item => item.Id == cartId && item.IsActive);
+            if (cart != null)
+            {
+                cart.TotalCartValue = totalValue;
+                await _databaseContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> IsOfferInCart(int cartId)
+        {
+            throw new NotImplementedException();
+        }
+
+       
+    }
+}

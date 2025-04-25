@@ -2,6 +2,7 @@ using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using ComputerServiceOnlineShop.Models.Services;
+using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IPictureHandlerService, PictureHandlerService>();
 builder.Services.AddScoped<ICountriesService, CountriesService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 //enabling identity
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
@@ -38,7 +40,6 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-app.UseSession();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -53,6 +54,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication(); //reads auth cookie and can extract data from it
 app.UseAuthorization(); //validates access permissions of the user
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

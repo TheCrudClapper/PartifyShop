@@ -4,6 +4,7 @@ namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
 {
     public class SingleOfferViewModel
     {
+        public int Id { get; set; }
         public string Condition { get; set; } = null!;
         public DateTime DateCreated { get; set; }
         public string Title { get; set; } = null!;

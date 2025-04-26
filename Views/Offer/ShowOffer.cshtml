@@ -6,6 +6,10 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
 }
+@if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
+{
+    @await Html.PartialAsync("_ToastMessagePartial", TempData)
+}
 <div class="container  mt-3">
     <div class="row g-2">
         <div class="col-12 col-lg-8 midesection-style">
@@ -51,15 +55,31 @@
             </p>
             <hr />
             <h3 class="fw-bold">@Model.Price PLN</h3>
-            <div class="row mb-2">
+            <div class="row">
                 @if (User.Identity.Name != Model.Seller)
                 {
-                    <div class="col-3">
-                        <input type="text" value="1" class="form-control text-center">
-                    </div>
-                    <div class="col-9">
-                        <button type="submit" class="btn custom-button w-100">To Cart</button>
-                    </div>
+                    @* <form method="post" asp-action="AddToCart" asp-controller="Cart">
+                        <div class="col-3">
+                            <input type="number" value="1" class="form-control text-center" min="1">
+                        </div>
+                        <div class="col-9">
+                            <button type="submit" class="btn custom-button w-100">To Cart</button>
+                        </div>
+                    </form> *@
+                    <form method="post" asp-action="AddToCart" asp-controller="Cart" asp-route-id = "@Model.Id" class="row">
+                        <div class="col-4">
+                            <input type="number"
+                                value="1"
+                                name="quantity"
+                                class="form-control text-center"
+                                min="1"
+                                max="@Model.StockQuantity"
+                                title="Max available: @Model.StockQuantity"/>
+                        </div>
+                        <div class="col-8">
+                            <button type="submit" class="btn custom-button w-100">To Cart</button>
+                        </div>
+                    </form>
                 }
                 else
                 {
@@ -69,7 +89,7 @@
                 }
 
             </div>
-            <p>Available: @Model.StockQuantity</p>
+            <p class="mt-2">Available: @Model.StockQuantity</p>
             <hr />
             <p>
                 <strong>Delivery Types</strong>

@@ -40,7 +40,7 @@
         {
             <div class="col-12 col-lg-8">
                 <div class="mb-3 midesection-style shadow">
-                    <h5 class="fw-bold">Sells and sends user: <span class="purple-text">PanJaweł2137</span></h5>
+                    <h5 class="fw-bold">Sells and sends user: <span class="purple-text">KurwaTest123</span></h5>
                 </div>
                 @foreach (var item in Model.CartItems)
                 {
@@ -51,7 +51,10 @@
                             </div>
                             <div class="col-md-7">
                                 <div class="card-body">
-                                    <h5 class="card-title">@item.Title</h5>
+                                    <a class="offer-link" href="@Url.Action("ShowOffer", "Offer", new {id = item.OfferId})">
+                                        <h5 class="card-title fw-bold">@item.Title</h5>
+                                    </a>
+
                                     <p class="card-text">
                                         <span class="fw-bold">Condition:</span> @item.Condition<br>
                                         <span class="fw-bold">Category:</span> @item.Category<br>
@@ -60,12 +63,15 @@
                                     </p>
                                     <div class="d-flex justify-content-between">
                                         <div class="w-25">
-                                            <input type="text" value="@item.Quantity" class="form-control text-center">
+                                            <form method="post" asp-action="UpdateQuantityInCart" asp-route-cartItemId="@item.Id">
+                                                <input type="number" name="quantity" value="@item.Quantity" class="form-control text-center" onblur="this.form.submit()">
+                                            </form>
                                         </div>
                                         <div>
-                                            <a class="btn custom-button" href="@Url.Action("ShowOffer", "Offer", new {id = item.OfferId})">Show</a>
                                             <form method="post" class="d-inline-flex" asp-action="DeleteFromCart" asp-route-id="@item.Id">
-                                                <button type="submit" class="btn custom-button ms-2">Delete</button>
+                                                <button type="submit" class="btn custom-button ms-2">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
                                             </form>
                                         </div>
 
@@ -104,15 +110,15 @@
     </div>
 </div>
 @section Scripts {
-    @* <script>
-        // window.addEventListener('DOMContentLoaded', () => {
-        //     const myModal = new bootstrap.Modal(document.getElementById('messageModal'));
-        //     myModal.show();
-        // });
-          window.addEventListener('DOMContentLoaded', () => {
-            const toastEl = document.getElementById('liveToast');
-            const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
-            toast.show();
-        });
-    </script> *@
+@* <script>
+                // window.addEventListener('DOMContentLoaded', () => {
+                //     const myModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                //     myModal.show();
+                // });
+                  window.addEventListener('DOMContentLoaded', () => {
+                    const toastEl = document.getElementById('liveToast');
+                    const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+                    toast.show();
+                });
+            </script> *@
 }

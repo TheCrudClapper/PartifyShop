@@ -139,7 +139,7 @@ namespace ComputerServiceOnlineShop.Controllers
             {
                 return View("OfferNotFound", id);
             }
-            var viewModel = await _offerService.ShowOffer(id);
+            var viewModel = await _offerService.GetOffer(id);
             return View(viewModel);
         }
 

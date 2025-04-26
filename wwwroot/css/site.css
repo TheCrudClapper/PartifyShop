@@ -137,3 +137,11 @@ form .btn {
 .purple-text {
     color: #863cb0;
 }
+.offer-link {
+    color: black;
+}
+
+    .offer-link:hover {
+        color: black;
+        text-decoration: underline;
+    }

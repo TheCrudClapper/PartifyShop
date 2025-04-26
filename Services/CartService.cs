@@ -4,6 +4,7 @@ using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ViewModels.CartViewModels;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ComputerServiceOnlineShop.Services
 {
@@ -16,8 +17,11 @@ namespace ComputerServiceOnlineShop.Services
             _databaseContext = databaseContext;
             _accountService = accountService;
         }
-        public async Task AddToCart(int offerId)
+        public async Task AddToCart(int offerId, int quantity = 1)
         {
+            if(quantity <= 0)
+                throw new InvalidOperationException("Quantity must be greater that zero !");
+
             //downloading offer
             var offer = await _databaseContext.Offers
                 .Where(item => item.Id == offerId && item.IsActive)
@@ -31,21 +35,28 @@ namespace ComputerServiceOnlineShop.Services
             var existingItem = await _databaseContext.CartItems
                 .Where(item => item.CartId == cartId && item.OfferId == offer.Id && item.IsActive)
                 .FirstOrDefaultAsync();
-
+            
             if(existingItem != null)
             {
-                existingItem.Quantity += 1;
-                existingItem.DateCreated = DateTime.Now;
+                if(existingItem.Quantity + quantity <= offer.StockQuantity) {
+                    existingItem.Quantity += quantity;
+                    existingItem.DateCreated = DateTime.Now;
+                }
+                else
+                    throw new InvalidOperationException("Cannot add more than is in shop");
             }
             else
             {
+                if(quantity > offer.StockQuantity)
+                    throw new InvalidOperationException("Invalid quantity. Please try again.");
+
                 CartItem cartItem = new CartItem()
                 {
                     CartId = cartId,
                     DateCreated = DateTime.Now,
                     IsActive = true,
                     Offer = offer,
-                    Quantity = 1,
+                    Quantity = quantity,
                 };
                 await _databaseContext.CartItems.AddAsync(cartItem);
             }
@@ -57,7 +68,6 @@ namespace ComputerServiceOnlineShop.Services
         {
             var cartItem = await _databaseContext.CartItems.Where(item => item.Id == cartItemId)
                 .FirstOrDefaultAsync();
-
 
             if (cartItem == null)
                 throw new InvalidOperationException("Couldn't find such item in cart");
@@ -128,11 +138,34 @@ namespace ComputerServiceOnlineShop.Services
             }
         }
 
-        public async Task<bool> IsOfferInCart(int cartId)
+        public async Task UpdateCartItemQuantity(int cartItemId, int quantity)
         {
-            throw new NotImplementedException();
-        }
+            var existingItem = await _databaseContext.CartItems
+                .Include(item => item.Offer)
+                .FirstOrDefaultAsync(item => item.Id == cartItemId && item.IsActive);
 
-       
+            if (existingItem?.Offer == null)
+                throw new InvalidOperationException("Something went wrong");
+
+            if (existingItem == null)
+                throw new InvalidOperationException("Couldn't find this item in db");
+
+            if (quantity <= 0)
+            {
+                await DeleteFromCart(cartItemId);
+                return;
+            }
+
+            if (quantity <= existingItem.Offer.StockQuantity)
+            {
+                existingItem.Quantity = quantity;
+                existingItem.DateEdited = DateTime.Now;
+            }
+            else
+                existingItem.Quantity = existingItem.Offer.StockQuantity;
+
+            await _databaseContext.SaveChangesAsync();
+            await UpdateTotalCartValue(existingItem.CartId);
+        }
     }
 }

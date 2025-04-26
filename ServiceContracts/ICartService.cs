@@ -5,11 +5,11 @@ namespace ComputerServiceOnlineShop.ServiceContracts
 {
     public interface ICartService
     {
-        Task AddToCart(int id);
+        Task AddToCart(int offerId, int quantity = 1);
         Task DeleteFromCart(int id);
-        Task<bool> IsOfferInCart(int id);
         Task<CartViewModel> GetLoggedUserCart();
         Task<int> GetLoggedUserCartId();
         Task UpdateTotalCartValue(int id);
+        Task UpdateCartItemQuantity(int cartItemId, int quantity);
     }
 }

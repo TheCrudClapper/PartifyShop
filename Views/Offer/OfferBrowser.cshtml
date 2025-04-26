@@ -6,6 +6,10 @@
 @section Styles {
 <link rel="stylesheet" href="~/css/offer-browser-styles.css"  />
 }
+@if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
+{
+    @await Html.PartialAsync("_ToastMessagePartial", TempData)
+}
 <div class="container mt-3">
     @{
         var searchPhrase = Context.Request.Query["SearchPhrase"];

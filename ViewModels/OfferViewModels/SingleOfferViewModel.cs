@@ -10,7 +10,6 @@ namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
         public string Title { get; set; } = null!;
         public string Seller { get; set; } = null!;
         public int StockQuantity { get; set; }
-
         public bool isSellerCompany { get; set; }
         public string Description { get; set; } = null!;
         public string PostalCity { get; set; } = null!;

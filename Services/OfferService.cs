@@ -169,7 +169,7 @@ namespace ComputerServiceOnlineShop.Services
                 .ToListAsync();
         }
 
-        public async Task<SingleOfferViewModel> ShowOffer(int id)
+        public async Task<SingleOfferViewModel> GetOffer(int id)
         {
             return await _databaseContext.Offers.Where(item => item.IsActive)
                 .Where(item => item.Id == id)

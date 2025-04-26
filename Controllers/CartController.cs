@@ -18,12 +18,14 @@ namespace ComputerServiceOnlineShop.Controllers
             return View(cart);
         }
 
+        
         [HttpPost]
-        public async Task<IActionResult> AddToCart(int id)
+        //default quantity always 1
+        public async Task<IActionResult> AddToCart(int id, int quantity = 1)
         {
             try
             {
-                await _cartService.AddToCart(id);
+                await _cartService.AddToCart(id, quantity);
                 TempData["SuccessMessage"] = "Item added to cart successfully !";
             }
             catch (InvalidOperationException ex)
@@ -46,6 +48,21 @@ namespace ComputerServiceOnlineShop.Controllers
                 TempData["ErrorMessage"] = $"Error: {ex.Message}";
             }
             
+            return RedirectToAction("Cart");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateQuantityInCart(int cartItemId, int quantity)
+        {
+            try
+            {
+                await _cartService.UpdateCartItemQuantity(cartItemId, quantity);
+                TempData["SuccessMessage"] = "Updated cart successfully !";
+            }
+            catch(InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = $"Error: {ex.Message}";
+            }
             return RedirectToAction("Cart");
         }
     }

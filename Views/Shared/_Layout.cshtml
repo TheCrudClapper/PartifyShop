@@ -13,68 +13,122 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-    <header>
 
-        <nav class="navbar navbar-expand-lg">
+    <div class="main-navbar shadow-sm sticky-top">
+        <div class="top-navbar">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="fa-solid fa-store"></i>
-                    <span class="fw-bold fs-4">Marketplace</span>
-                </a>
-
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <form class="d-flex flex-grow-1 my-2 my-lg-0" asp-controller="Offer" asp-action="OfferBrowser" method="get">
-                       @*  <input class="form-control me-2" type="search" name="SearchPhrase" value="@Context.Request.Query["SearchPhrase"]" placeholder="Search phrase" aria-label="Search">
-                        @await Component.InvokeAsync("CategoryDropdown")
-                        <button class="btn btn-outline-light me-2" type="submit">Search</button> *@
-                        <div class="input-group me-2">
-                            <input class="form-control search-bar" type="search" name="SearchPhrase" value="@Context.Request.Query["SearchPhrase"]" placeholder="Search phrase">
-                            <button class="btn search-button btn-outline-light" type="submit">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                        @await Component.InvokeAsync("CategoryDropdown")
-                    </form>
+                <div class="row">
+                    <div class="col-12 col-lg-2 my-auto">
+                        <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center gap-2 text-decoration-none">
+                            <i class=" fa-solid fa-store logo-link"></i>
+                            <span class="fw-bold fs-4 logo-link ">Marketplace</span>
+                        </a>
+                    </div>
+                    <div class="col-lg-7 my-auto">
+                        <form role="search" asp-controller="Offer" asp-action="OfferBrowser" method="get">
+                            <div class="input-group">
+                                <input type="search" name="SearchPhrase" value="@Context.Request.Query["SearchPhrase"]" placeholder="Search your product" class="form-control" />
+                                @await Component.InvokeAsync("CategoryDropdown")
+                                <button class="btn bg-white search-button" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                     @if (User.Identity!.IsAuthenticated)
                     {
-                        <div class="dropdown">
-                            <a class="btn btn-outline-light dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-user me-1"></i> Account
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" asp-controller="Offer" asp-action="AddOffer"><i class="fa-solid fa-plus me-2"></i> Add Offer</a></li>
-                                <li><a class="dropdown-item" asp-controller="Offer" asp-action="AllUserOffers"><i class="fa-solid fa-boxes-stacked me-2"></i> Your Offers</a></li>
-                                <li><a class="dropdown-item" asp-controller="Cart" asp-action="Cart"><i class="fa-solid fa-bag-shopping me-2"></i> Cart</a></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="fa-solid fa-id-card me-2"></i> Profile</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a></li>
+                        <div class="col-lg-3 my-auto">
+                            <ul class="nav justify-content-start">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Cart" asp-action="Cart">
+                                        <i class="fa fa-shopping-cart"></i> Cart (0)
+                                    </a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-user"></i> Account
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" asp-controller="Offer" asp-action="AddOffer"><i class="fa-solid fa-plus me-2 list-icons"></i> Add Offer</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Offer" asp-action="AllUserOffers"><i class="fa-solid fa-boxes-stacked me-2"></i> Your Offers</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Cart" asp-action="Cart"><i class="fa-solid fa-bag-shopping me-2"></i> Cart</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="fa-solid fa-id-card me-2"></i> Profile</a></li>
+                                        <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     }
                     else
                     {
-                        <div class="dropdown">
-                            <a class="btn btn-outline-light dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-user me-1"></i> Account
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="authDropdown">
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Login">Login</a></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Register">Register</a></li>
+                        <div class="col-lg-3 my-auto">
+                            <ul class="nav justify-content-end">
+                                <li class="nav-item" >
+                                    <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                        Login
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Account" asp-action="Register">
+                                        Register
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     }
+
                 </div>
             </div>
-
+        </div>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">All Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">New Arrivals</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Featured Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Electronics</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Fashions</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Accessories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Appliances</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Home</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
         </nav>
+    </div>
 
-    </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()

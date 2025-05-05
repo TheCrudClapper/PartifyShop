@@ -32,53 +32,95 @@ body {
     font-family: 'Montserrat', sans-serif;
     background-color: #f0eded;
 }
-.search-button {
-    background-color: white !important;
-    border: 1px solid #863cb0;
-    border-left: 0px;
-    
-}
-.search-bar {
 
-    border: 1px solid #863cb0;
-}
-
-.navbar .container i,
-.navbar .container span,
-.navbar .container a {
-    color: #25262b;
-}
-.navbar a span {
-    color: #25262b;
-}
-.navbar select {
-    width: 300px;
-}
-
-.navbar form input {
-    flex-grow: 2;
-    min-width: 300px;
-}
-
-.navbar {
+.purple-background {
     background-color: #863cb0;
 }
 
-form .btn {
-    background-color: #25262b;
+.purple-text {
+    color: #863cb0;
 }
-/*Makes the navbar responsive for smallest to large dispklays*/
-@media (max-width: 991px) {
-    .navbar form {
-        flex-direction: column;
-        width: 100%;
+
+.midesection-style {
+    background-color: white;
+    padding: 13px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-select {
+    max-width: 150px;
+    min-width: 90px;
+    flex: 0 1 auto;
+    border-right: 0;
+}
+
+.logo-link {
+    color: #ddd;
+    text-decoration: none;
+}
+    .logo-link:hover {
+        color: #ddd;
+        text-decoration: none;
     }
-        .navbar form input,
-        .navbar form select,
-        .navbar form button {
-            width: 100%;
-            margin-bottom: 5px;
+.search-button {
+    border: 1px solid #ced4da !important;
+}
+.main-navbar {
+    border-bottom: 1px solid #ccc;
+}
+
+    .main-navbar .top-navbar {
+        background-color: #2874f0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background-color: #863cb0;
+    }
+
+        .main-navbar .top-navbar .brand-name {
+            color: #fff;
         }
+
+        .main-navbar .top-navbar .nav-link {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .main-navbar .top-navbar .dropdown-menu {
+            padding: 0px 0px;
+            border-radius: 0px;
+        }
+
+            .main-navbar .top-navbar .dropdown-menu .dropdown-item {
+                padding: 8px 16px;
+                border-bottom: 1px solid #ccc;
+                font-size: 14px;
+            }
+
+                .main-navbar .top-navbar .dropdown-menu .dropdown-item i {
+                    width: 20px;
+                    text-align: center;
+                    color: #863cb0;
+                    font-size: 14px;
+                }
+
+    .main-navbar .navbar {
+        padding: 0px;
+        background-color: #ddd;
+    }
+
+        .main-navbar .navbar .nav-item .nav-link {
+            padding: 8px 20px;
+            color: #000;
+            font-size: 15px;
+        }
+
+@media only screen and (max-width: 600px) {
+    .main-navbar .top-navbar .nav-link {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
 }
 
 /*Custome background color*/
@@ -111,6 +153,7 @@ form .btn {
     .footer li {
         line-height: 35px;
     }
+
 /*Styles for icon in footer*/
 .icon {
     height: 25px;
@@ -125,18 +168,7 @@ form .btn {
     .icon:hover {
         background-color: #863cb0;
     }
-.midesection-style {
-    background-color: white;
-    padding: 13px;
-    border-radius: 10px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-}
-.purple-background {
-    background-color: #863cb0;
-}
-.purple-text {
-    color: #863cb0;
-}
+
 .offer-link {
     color: black;
 }
@@ -145,3 +177,4 @@ form .btn {
         color: black;
         text-decoration: underline;
     }
+

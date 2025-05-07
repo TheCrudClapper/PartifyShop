@@ -11,5 +11,6 @@ namespace ComputerServiceOnlineShop.ServiceContracts
         Task<int> GetLoggedUserCartId();
         Task UpdateTotalCartValue(int id);
         Task UpdateCartItemQuantity(int cartItemId, int quantity);
+        Task<int> GetCartItemsQuantity();
     }
 }

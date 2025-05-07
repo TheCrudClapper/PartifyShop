@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -18,18 +18,18 @@
         <div class="top-navbar">
             <div class="container">
                 <div class="row">
-                    <div class="col-12 col-lg-2 my-auto">
-                        <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center gap-2 logo">
-                            <i class ="fa-solid fa-store logo-link"></i>
-                            <span class="fw-bold fs-4 logo-link ">Marketplace</span>
+                    <div class="col-md-2 my-auto d-none d-sm-none d-md-block d-lg-block">
+                        <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center gap-2 text-decoration-none">
+                            <i class="fa-solid fa-store logo-link"></i>
+                            <span class="fw-bold fs-4 logo-link">Marketplace</span>
                         </a>
                     </div>
-                    <div class="col-lg-7 my-auto">
+                    <div class="col-md-7 my-auto">
                         <form role="search" asp-controller="Offer" asp-action="OfferBrowser" method="get">
                             <div class="input-group">
                                 <input type="search" name="SearchPhrase" value="@Context.Request.Query["SearchPhrase"]" placeholder="Search your product" class="form-control" />
                                 @await Component.InvokeAsync("CategoryDropdown")
-                                <button class="btn bg-white search-button" type="submit">
+                                <button class="btn bg-white" type="submit">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </div>
@@ -37,17 +37,19 @@
                     </div>
                     @if (User.Identity!.IsAuthenticated)
                     {
-                        <div class="col-lg-3 my-auto">
+                        <div class="col-md-3 my-auto">
                             <ul class="nav justify-content-start">
                                 <li class="nav-item">
-                                    @await Component.InvokeAsync("NavbarCart")
+                                    <a class="nav-link" href="#">
+                                        <i class="fa fa-shopping-cart"></i> Cart (0)
+                                    </a>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="fa fa-user"></i> Account
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" asp-controller="Offer" asp-action="AddOffer"><i class="fa-solid fa-plus me-2 list-icons"></i> Add Offer</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Offer" asp-action="AddOffer"><i class="fa-solid fa-plus me-2"></i> Add Offer</a></li>
                                         <li><a class="dropdown-item" asp-controller="Offer" asp-action="AllUserOffers"><i class="fa-solid fa-boxes-stacked me-2"></i> Your Offers</a></li>
                                         <li><a class="dropdown-item" asp-controller="Cart" asp-action="Cart"><i class="fa-solid fa-bag-shopping me-2"></i> Cart</a></li>
                                         <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="fa-solid fa-id-card me-2"></i> Profile</a></li>
@@ -59,18 +61,10 @@
                     }
                     else
                     {
-                        <div class="col-lg-3 my-auto">
+                        <div class="col-md-4 my-auto">
                             <ul class="nav justify-content-end">
-                                <li class="nav-item" >
-                                    <a class="nav-link" asp-controller="Account" asp-action="Login">
-                                        Login
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Account" asp-action="Register">
-                                        Register
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Login">Login</a></li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Register">Register</a></li>
                             </ul>
                         </div>
                     }
@@ -88,7 +82,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-action="Index" asp-controller="Home">Home</a>
+                                <a class="nav-link" href="#">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">All Categories</a>
@@ -126,6 +120,66 @@
             </div>
         </nav>
     </div>
+
+    @* <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fa-solid fa-store"></i>
+                    <span class="fw-bold fs-4">Marketplace</span>
+                </a>
+
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <form class="d-flex flex-grow-1 my-2 my-lg-0" asp-controller="Offer" asp-action="OfferBrowser" method="get">
+                       @*  <input class="form-control me-2" type="search" name="SearchPhrase" value="@Context.Request.Query["SearchPhrase"]" placeholder="Search phrase" aria-label="Search">
+                        @await Component.InvokeAsync("CategoryDropdown")
+                        <button class="btn btn-outline-light me-2" type="submit">Search</button> *@
+    @*
+                        <div class="input-group me-2">
+                            <input class="form-control search-bar" type="search" name="SearchPhrase" value="@Context.Request.Query["SearchPhrase"]" placeholder="Search phrase">
+                            <button class="btn search-button btn-outline-light" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                        @await Component.InvokeAsync("CategoryDropdown")
+                    </form>
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <div class="dropdown">
+                            <a class="btn btn-outline-light dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-user me-1"></i> Account
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" asp-controller="Offer" asp-action="AddOffer"><i class="fa-solid fa-plus me-2"></i> Add Offer</a></li>
+                                <li><a class="dropdown-item" asp-controller="Offer" asp-action="AllUserOffers"><i class="fa-solid fa-boxes-stacked me-2"></i> Your Offers</a></li>
+                                <li><a class="dropdown-item" asp-controller="Cart" asp-action="Cart"><i class="fa-solid fa-bag-shopping me-2"></i> Cart</a></li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="fa-solid fa-id-card me-2"></i> Profile</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="dropdown">
+                            <a class="btn btn-outline-light dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-user me-1"></i> Account
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="authDropdown">
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Login">Login</a></li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Register">Register</a></li>
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </nav> *@
 
     <div class="container-fluid">
         <main role="main" class="pb-3">

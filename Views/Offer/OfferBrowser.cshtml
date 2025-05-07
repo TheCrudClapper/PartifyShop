@@ -10,12 +10,13 @@
 {
     @await Html.PartialAsync("_ToastMessagePartial", TempData)
 }
+
 <div class="container mt-3">
     @{
         var searchPhrase = Context.Request.Query["SearchPhrase"];
         if(!string.IsNullOrWhiteSpace(searchPhrase))
         {
-            <h3 class="fw-bold mb-3">Searching "@searchPhrase"</h3>
+            <h3 class="mb-3">Searching "@searchPhrase"</h3>
         }
         else
         {
@@ -55,8 +56,7 @@
                 </form>
 
             </div>
-
-            <div class="row">
+            <div class="row" id="offerResults">
                 @if(Model.Items.Count > 0)
                 {
                     @foreach (var offer in Model.Items)

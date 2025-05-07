@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="ViewModels\LayoutViewModels\" />
+    <Folder Include="Views\Shared\Nowy folder\" />
     <Folder Include="wwwroot\offer-images\" />
   </ItemGroup>
 

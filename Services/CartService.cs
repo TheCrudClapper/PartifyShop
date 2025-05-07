@@ -167,5 +167,12 @@ namespace ComputerServiceOnlineShop.Services
             await _databaseContext.SaveChangesAsync();
             await UpdateTotalCartValue(existingItem.CartId);
         }
+
+        public async Task<int> GetCartItemsQuantity()
+        {
+            var cartId = await GetLoggedUserCartId();
+            return await _databaseContext.CartItems.Where(item => item.CartId == cartId && item.IsActive)
+                .SumAsync(item => item.Quantity);
+        }
     }
 }

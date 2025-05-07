@@ -125,9 +125,20 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AllUserOffers()
+        public async Task<IActionResult> AllUserOffers(string? title)
         {
-            IEnumerable<UserOffersViewModel> userOffers = await _offerService.GetUserOffers();
+            IEnumerable<UserOffersViewModel> userOffers = await _offerService.GetFilteredUserOffers(title);
+            if (!userOffers.Any())
+            {
+                if (string.IsNullOrEmpty(title))
+                {
+                    ViewBag.Message = "You don't have any active offers yet";
+                }
+                else
+                {
+                    ViewBag.Message = "No offer matched your search phrase";
+                }
+            }
             return View(userOffers);
         }
 

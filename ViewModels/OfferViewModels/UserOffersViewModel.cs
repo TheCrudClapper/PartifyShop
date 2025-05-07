@@ -12,6 +12,5 @@
         public int StockQuantity;
         public decimal Price;
         public DateTime DateCreated { get; set; }
-        public DateTime? DateEdited { get; set; }
     }
 }

@@ -156,7 +156,6 @@ namespace ComputerServiceOnlineShop.Services
                     Id = item.Id,
                     DateCreated = item.DateCreated,
                     ProductCondition = item.Product.Condition.ConditionTitle,
-                    DateEdited = item.DateEdited,
                     Price = item.Price,
                     StockQuantity = item.StockQuantity,
                     ProductCategory = item.Product.ProductCategory.Name,
@@ -168,7 +167,37 @@ namespace ComputerServiceOnlineShop.Services
                 })
                 .ToListAsync();
         }
+        public async Task<IEnumerable<UserOffersViewModel>> GetFilteredUserOffers(string? title)
+        {
+            Guid userId = _accountService.GetLoggedUserId();
 
+            var query =  _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => item.SellerId == userId)
+                .Include(item => item.Product)
+                .ThenInclude(item => item.ProductImages)
+                .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(title))
+                    query = query.Where(item => item.Product.ProductName.Contains(title));
+
+                var items = await query.Select(item => new UserOffersViewModel()
+                {
+                    Id = item.Id,
+                    DateCreated = item.DateCreated,
+                    ProductCondition = item.Product.Condition.ConditionTitle,
+                    Price = item.Price,
+                    StockQuantity = item.StockQuantity,
+                    ProductCategory = item.Product.ProductCategory.Name,
+                    ProductStatus = item.IsOfferPrivate,
+                    ProductName = item.Product.ProductName,
+                    ImageUrl = item.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .First().ImagePath
+                })
+                .ToListAsync();
+
+            return items;
+        }
         public async Task<SingleOfferViewModel> GetOffer(int id)
         {
             return await _databaseContext.Offers.Where(item => item.IsActive)

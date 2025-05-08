@@ -10,44 +10,46 @@
 {
     @await Html.PartialAsync("_ToastMessagePartial", TempData)
 }
-<div class="container  mt-3">
-    <div class="row g-2">
-        <div class="col-12 col-lg-8 midesection-style">
-            <span class="mb-2"><span class="fw-bold">Condition: </span>@Model.Condition</span>
-            <span class="mb-2"><span class="fw-bold">Created: </span>@Model.DateCreated.ToString("dd-MM-yyyy")</span>
-            <h2>@Model.Title</h2>
-            @for (int i = 0; i < 5; i++)
-            {
-                <i class="fa-solid fa-star"></i>
-            }
-            <div class="image-container mt-3 mb-3">
-                <div id="carouselExample" class="carousel slide">
-                    <div class="carousel-inner">
-                        @for (int i = 0; i < Model.ProductImages.Count; i++)
+<div class="container mt-3">
+    <div class="row g-3">
+        <div class="col-12 col-lg-8">
+            <div class="midesection-style shadow">
+                <span class="mb-2"><span class="fw-bold">Condition: </span>@Model.Condition</span>
+                <span class="mb-2"><span class="fw-bold">Created: </span>@Model.DateCreated.ToString("dd-MM-yyyy")</span>
+                <h2>@Model.Title</h2>
+                @for (int i = 0; i < 5; i++)
+                {
+                    <i class="fa-solid fa-star"></i>
+                }
+                <div class="image-container mt-3 mb-3">
+                    <div id="carouselExample" class="carousel slide">
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < Model.ProductImages.Count; i++)
+                            {
+                                var isActive = i == 0 ? "active" : "";
+                                <div class="carousel-item @isActive">
+                                    <img src="@Url.Content(Model.ProductImages[i])" class="d-block w-100" alt="offer-image">
+                                </div>
+                            }
+                        </div>
+                        @if (Model.ProductImages.Count > 1)
                         {
-                            var isActive = i == 0 ? "active" : "";
-                            <div class="carousel-item @isActive">
-                                <img src="@Url.Content(Model.ProductImages[i])" class="d-block w-100" alt="offer-image">
-                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         }
+
                     </div>
-                    @if (Model.ProductImages.Count > 1)
-                    {
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    }
                 </div>
             </div>
+           
         </div>
-        <div class="col-1">
-        </div>
-        <div class="col-12 col-lg-3 midesection-style">
+        <div class="col-12 col-lg-4 midesection-style">
             <p>
                 Sells and sends:
                 <br />
@@ -102,7 +104,6 @@
             <strong>Place:</strong> @Model.Place <br />
             <strong>Postal City:</strong> @Model.PostalCity <br />
             <strong>Postal Code:</strong> @Model.PostalCode
-
         </div>
     </div>
     <div class="row g-2 mt-2">

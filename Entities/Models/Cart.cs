@@ -8,6 +8,10 @@ namespace ComputerServiceOnlineShop.Entities.Models
     {
         [Column(TypeName = "decimal(10, 2)")]
         public decimal? TotalCartValue { get; set; }
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal? MinimalDeliveryValue { get; set; }
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal? TotalItemsValue { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
     }
 }

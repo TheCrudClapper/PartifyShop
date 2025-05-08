@@ -34,14 +34,32 @@
     @await Html.PartialAsync("_ToastMessagePartial", TempData)
 }
 <div class="container mt-3">
-    <h3 class="fw-bold ps-2">Your Cart Items</h3>
     <div class="row g-3">
         @if (Model.CartItems.Count() > 0)
         {
             <div class="col-12 col-lg-8">
                 <div class="mb-3 midesection-style shadow">
-                    <h5 class="fw-bold">Sells and sends user: <span class="purple-text">KurwaTest123</span></h5>
-                </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <span class="fw-bold">Your Cart</span>
+                            <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <span>Delivery</span>
+                            <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-secondary" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <span>Summary</span>
+                            <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-secondary" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
                 @foreach (var item in Model.CartItems)
                 {
                     <div class="card mb-3 shadow">
@@ -54,7 +72,6 @@
                                     <a class="offer-link" href="@Url.Action("ShowOffer", "Offer", new {id = item.OfferId})">
                                         <h5 class="card-title fw-bold">@item.Title</h5>
                                     </a>
-
                                     <p class="card-text">
                                         <span class="fw-bold">Condition:</span> @item.Condition<br>
                                         <span class="fw-bold">Category:</span> @item.Category<br>
@@ -85,22 +102,31 @@
 
             <!-- Spacer -->
 
-            <div class="col-12 col-lg-1"></div>
-            <div class="col-12 col-lg-3 midesection-style h-25 p-4">
+            <div class="col-12 col-lg-4 midesection-style h-25 p-4 ">
                 <div class="row">
                     <div class="col-12 d-flex justify-content-between">
-                        <h5>Total</h5>
-                        <h5 class="fw-bold">@Html.Raw(Model.TotalCartValue ?? 0) PLN</h5>
+                        <span>Items worth</span>
+                        <span>@Html.Raw(Model.TotalItemsValue) PLN</span>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-12 d-flex justify-content-between">
+                        <span>Delivery from</span>
+                        <span>@Html.Raw(Model.TotalDeliveryValue) PLN</span>
                     </div>
                 </div>
                 <hr />
                 <div class="row">
-                    <button class="btn custom-button w-100 fw-bold">Checkout</button>
+                    <div class="col-12 d-flex justify-content-between">
+                        <span>Total</span>
+                        <h4 class="fw-bold">@Html.Raw(Model.TotalCartValue) PLN</h4>
+                    </div>
                 </div>
-                <div />
-
-
-            </div>
+                
+                <div class="row">
+                    <button class="btn custom-button w-100 fw-bold">Delivery and Payment</button>
+                </div>
+                </div>
         }
         else
         {

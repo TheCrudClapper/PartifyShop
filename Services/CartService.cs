@@ -109,6 +109,8 @@ namespace ComputerServiceOnlineShop.Services
 
                     }).ToList(),
                     TotalCartValue = item.TotalCartValue ?? 0,
+                    TotalDeliveryValue = item.MinimalDeliveryValue ?? 0,
+                    TotalItemsValue = item.TotalItemsValue ?? 0,
 
                 }).FirstAsync();
         }
@@ -125,15 +127,29 @@ namespace ComputerServiceOnlineShop.Services
 
         public async Task UpdateTotalCartValue(int cartId)
         {
-            decimal? totalValue = await _databaseContext.CartItems
+            var query = _databaseContext.CartItems
                 .Where(cartItem => cartItem.CartId == cartId && cartItem.IsActive)
                 .Include(offer => offer.Offer)
-                .SumAsync(item => item.Quantity * item.Offer.Price);
+                    .ThenInclude(item => item.OfferDeliveryTypes)
+                        .ThenInclude(item => item.DeliveryType)
+                .AsQueryable();
 
+            var totalValue = await query.SumAsync(item => item.Quantity * item.Offer.Price);
+
+            var cartItems = await query.ToListAsync();
+
+            var minimalDeliveryValue = cartItems.Select(item => item.Offer.OfferDeliveryTypes
+                    .Select(item => item.DeliveryType.Price)
+                    .DefaultIfEmpty(0)
+                    .Min())
+                .Sum();
+            
             var cart = await _databaseContext.Carts.FirstOrDefaultAsync(item => item.Id == cartId && item.IsActive);
             if (cart != null)
             {
-                cart.TotalCartValue = totalValue;
+                cart.TotalItemsValue = totalValue;
+                cart.TotalCartValue = totalValue + minimalDeliveryValue;
+                cart.MinimalDeliveryValue = minimalDeliveryValue;
                 await _databaseContext.SaveChangesAsync();
             }
         }

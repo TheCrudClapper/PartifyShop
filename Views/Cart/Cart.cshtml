@@ -65,7 +65,7 @@
                     <div class="card mb-3 shadow">
                         <div class="row">
                             <div class="col-md-5">
-                                <img src="@item.ImageUrl" class="img-fluid rounded-start h-100 w-100 object-fit-cover" alt="Product Image">
+                                <img src="@item.ImageUrl" class="img-fluid rounded-start offer-browser-image" alt="Product Image">
                             </div>
                             <div class="col-md-7">
                                 <div class="card-body">
@@ -124,7 +124,7 @@
                 </div>
                 
                 <div class="row">
-                    <button class="btn custom-button w-100 fw-bold">Delivery and Payment</button>
+                    <a asp-action="AddOrder" asp-controller="Order" class="btn custom-button w-100 fw-bold">Delivery and Payment</a>
                 </div>
                 </div>
         }

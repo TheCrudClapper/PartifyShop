@@ -1,0 +1,115 @@
+﻿@model AddOrderViewModel
+@{
+    ViewBag.Title = "New Order";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
+}
+<div class="container mt-3">
+    <div class="row g-3">
+        <div class="col-12 col-lg-8">
+            <div class="mb-3 midesection-style shadow">
+                <div class="row">
+                    <div class="col-4">
+                        <span>Your Cart</span>
+                        <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-secondary" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <span class="fw-bold">Delivery</span>
+                        <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <span>Summary</span>
+                        <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-secondary" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 midesection-style shadow">
+                <div class="row">
+                    <div class="col-auto mt-2">
+                        <h4 class="fw-bold">
+                            Details of the recipient of the shipment
+                        </h4>
+                    </div>
+                    <hr class="mt-2"/>
+                </div>
+
+                <div class="row">
+                    <div class="col-auto">
+                        <ul class="list-unstyled">
+                            <li>Wojciech Mucha</li>
+                            <li>Siedlce 26</li>
+                            <li>33-322 Siedlce</li>
+                            <li>+48724075416</li>
+                        </ul>
+                        <a asp-action="Edit" asp-controller="Address" class="purple-text">Edit Adress</a>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="mb-3 midesection-style shadow">
+                <div class="row">
+                    <div class="col-auto mt-2">
+                        <h4 class="fw-bold">
+                            Delivery Methods
+                        </h4>
+                    </div>
+                    <hr class="mt-2"/>
+                </div>
+                
+            </div>
+
+            <div class="mb-3 midesection-style shadow">
+                <div class="row">
+                    <div class="col-auto mt-2">
+                        <h4 class="fw-bold">
+                            Payment Methods
+                        </h4>
+                    </div>
+                    <hr class="mt-2" />
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-12 col-lg-4 midesection-style h-25 p-4 ">
+            <div class="row">
+                <div class="col-auto">
+                    <h4 class="fw-bold">Summary</h4>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-12 d-flex justify-content-between">
+                    <span>Items worth</span>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-12 d-flex justify-content-between">
+                    <span>Delivery from</span>
+
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-12 d-flex justify-content-between">
+                    <span class="fw-bold">Total</span>
+                    <h4 class="fw-bold">4000,0PLN</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <a asp-action="AddOrder" asp-controller="Order" class="btn custom-button w-100 fw-bold">Place Order</a>
+            </div>
+        </div>
+
+    </div>
+</div>

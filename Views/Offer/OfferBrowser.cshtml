@@ -104,6 +104,7 @@
                                         @if(User.Identity.Name != offer.SellerName)
                                         {
                                             <form method="post" asp-action="AddToCart" asp-controller="Cart" asp-route-id="@offer.Id">
+                                                @Html.AntiForgeryToken()
                                                 <button class="btn custom-button mt-2 w-100" type="submit">To Cart</button>
                                             </form>
                                         }

@@ -15,6 +15,7 @@
     </div>
     <h3 class="fw-bold ms-1">Login</h3>
     <form asp-action="Login" method="post" asp-route-ReturnUrl="@Context.Request.Query["ReturnUrl"]">
+        @Html.AntiForgeryToken();
         <div class="row midesection-style shadow p-3 mb-3 ms-1 me-1">
             <div class="col-12 col-md-6">
                 <div class="mb-3">

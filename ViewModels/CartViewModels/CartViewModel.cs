@@ -1,4 +1,5 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels.CartViewModels
+﻿using ComputerServiceOnlineShop.ViewModels.CartItemViewModels;
+namespace ComputerServiceOnlineShop.ViewModels.CartViewModels
 {
     public class CartViewModel
     {

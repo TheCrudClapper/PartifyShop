@@ -1,3 +1,54 @@
-﻿@{
-    ViewBag.Title = "Edit Address";
-}
+﻿@model EditAddressViewModel
+<div class="container">
+    <form  asp-action="Edit" asp-controller="Address" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken();
+        <h3 class="fw-bold ms-1 mt-3">Address Info</h3>
+        <div class="row midesection-style shadow p-3 ms-1 me-1">
+            <div class="col-sm-6">
+                <div class="mb-3">
+                    <label class="form-label">Place*</label>
+                    <input asp-for="Place" type="text" class="form-control">
+                    <span asp-validation-for="Place" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Street*</label>
+                    <input asp-for="Street" type="text" class="form-control">
+                    <span asp-validation-for="Street" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">House Number*</label>
+                    <input asp-for="HouseNumber" type="text" class="form-control">
+                    <span asp-validation-for="HouseNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="mb-3">
+                    <label class="form-label">Postal City*</label>
+                    <input asp-for="PostalCity" type="text" class="form-control">
+                    <span asp-validation-for="PostalCity" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Postal Code*</label>
+                    <input asp-for="PostalCode" class="form-control">
+                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Country*</label>
+                    <select class="form-select" asp-for="SelectedCountry" asp-items="Model.CountriesSelectionList">
+                        <option selected disabled>Select Country</option>
+                    </select>
+                    <span asp-validation-for="SelectedCountry" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-sm-12 text-center">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger list-unstyled d-inline-block" })
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-outline-dark btn-dark text-white w-50">Save Changes</button>
+            </div>
+        </div>
+    </form>
+</div>
+

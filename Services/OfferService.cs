@@ -1,6 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
+using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ServiceContracts.DTO;
 using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
 using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
@@ -77,16 +78,15 @@ namespace ComputerServiceOnlineShop.Services
 
             await _databaseContext.SaveChangesAsync();
         }
-        public async Task Edit(EditOfferDto dto)
+        public async Task Edit(int id, EditOfferDto dto)
         {
-            Guid userId = _accountService.GetLoggedUserId();
             var offer = await _databaseContext.Offers
-                .Where(item => item.SellerId == userId)
+                .Where(item => item.Id == id && item.IsActive)
                 .Include(item => item.Product)
                     .ThenInclude(item => item.ProductImages)
                 .Include(item => item.OfferDeliveryTypes)
                     .ThenInclude(item => item.DeliveryType)
-                .FirstAsync(item => item.Id == dto.Id && item.IsActive);
+                .FirstAsync();
 
             offer.IsOfferPrivate = dto.IsOfferPrivate;
             offer.StockQuantity = dto.StockQuantity;
@@ -101,7 +101,7 @@ namespace ComputerServiceOnlineShop.Services
             //deletes images checked by user
             if(dto.ImagesToDelete?.Count > 0 && dto.ImagesToDelete != null)
             {
-                await DeleteImagesFromOffer(dto.Id, dto.ImagesToDelete);
+                await DeleteImagesFromOffer(id, dto.ImagesToDelete);
             }
 
             if (dto.UploadedImagesUrls != null && dto.UploadedImagesUrls.Count > 0)
@@ -293,8 +293,14 @@ namespace ComputerServiceOnlineShop.Services
         }
         public async Task DeleteOffer(int id)
         {
-            var offer = await _databaseContext.Offers.Where(item => item.Id == id)
-                .FirstAsync();
+            var userId = _accountService.GetLoggedUserId();
+            var offer = await _databaseContext.Offers.Where(item => item.Id == id && item.SellerId == userId)
+                .FirstOrDefaultAsync();
+
+            if(offer == null)
+            {
+                throw new UnauthorizedAccessException("Offer not found or you are not the owner");
+            }
 
             offer.IsActive = false;
             offer.DateDeleted = DateTime.Now;

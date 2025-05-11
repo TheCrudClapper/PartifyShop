@@ -21,7 +21,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task Edit(EditOfferDto dto);
+        Task Edit(int id, EditOfferDto dto);
 
         /// <summary>
         /// Method that gets offer of specific id from database

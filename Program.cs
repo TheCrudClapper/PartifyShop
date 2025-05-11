@@ -6,6 +6,7 @@ using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,7 @@ builder.Services.AddScoped<IPictureHandlerService, PictureHandlerService>();
 builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
 
 //enabling identity
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
@@ -39,7 +40,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    //for every form that uses POST,DELETE,PUT generate csrf token
+    //this auto-adds [ValidateAntiForgeryToken] in certain controller actions
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+});
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

@@ -1,0 +1,55 @@
+﻿@model EditAddressViewModel;
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header purple-background">
+                <h1 class="modal-title text-white fs-5" id="staticBackdropLabel">Edit Address</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="editAddressModalBody">
+                <form asp-action="Edit" asp-controller="Address" asp-route-id="@Model.Id" id="editAddressForm" data-action="/Address/Edit/@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    <div class="mb-3">
+                        <label asp-for="Place" class="form-label"></label>
+                        <input asp-for="Place" class="form-control" />
+                        <span class="text-danger" asp-validation-for="Place"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Street" class="form-label"></label>
+                        <input asp-for="Street" class="form-control" />
+                        <span class="text-danger" asp-validation-for="Street"></span>
+                    </div>
+
+                    <div class="mb-3">
+                       <label asp-for="HouseNumber" class="form-label"></label>
+                       <input asp-for="HouseNumber" class="form-control" />
+                       <span class="text-danger" asp-validation-for="HouseNumber"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="PostalCity" class="form-label"></label>
+                        <input asp-for="PostalCity" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PostalCity"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="PostalCode" class="form-label"></label>
+                        <input asp-for="PostalCode" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PostalCode"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select Country</label>
+                        <select class="form-select" asp-for="SelectedCountry" asp-items="Model.CountriesSelectionList">
+                            <option selected disabled>Select Country</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="SelectedCountry"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn purple-background text-white">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -42,6 +42,7 @@
                     <p>Send us message</p>
                 </div>
                 <form>
+                    @Html.AntiForgeryToken()
                     <div class="mb-3">
                         <label htmlFor="" class="form-label">Name and Last Name</label>
                         <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Example: Jan Kowalski">

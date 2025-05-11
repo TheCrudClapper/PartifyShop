@@ -12,6 +12,7 @@
     <h3 class="fw-bold ps-2">Editing Offer</h3>
 
     <form asp-action="EditOffer" asp-controller="Offer" asp-route-id="@Model.Id"  method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
         <div class="col-md-12 d-flex justify-content-end">
         <div class="row">
             <div class="col-auto">

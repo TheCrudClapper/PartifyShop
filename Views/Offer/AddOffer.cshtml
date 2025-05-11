@@ -11,6 +11,7 @@
 <div class="container mt-3">
     <h3 class="fw-bold ps-2">Adding Offer</h3>
     <form asp-action="AddOffer" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
     <div class="col-md-12 d-flex justify-content-end">
         <div class="row">
             <div class="col-auto">

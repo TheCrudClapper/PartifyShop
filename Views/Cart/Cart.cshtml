@@ -81,11 +81,13 @@
                                     <div class="d-flex justify-content-between">
                                         <div class="w-25">
                                             <form method="post" asp-action="UpdateQuantityInCart" asp-route-cartItemId="@item.Id">
+                                                @Html.AntiForgeryToken()
                                                 <input type="number" name="quantity" value="@item.Quantity" class="form-control text-center" onblur="this.form.submit()">
                                             </form>
                                         </div>
                                         <div>
                                             <form method="post" class="d-inline-flex" asp-action="DeleteFromCart" asp-route-id="@item.Id">
+                                                @Html.AntiForgeryToken()
                                                 <button type="submit" class="btn custom-button ms-2">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
@@ -100,7 +102,6 @@
                 }
             </div>
 
-            <!-- Spacer -->
 
             <div class="col-12 col-lg-4 midesection-style h-25 p-4 ">
                 <div class="row">

@@ -61,6 +61,7 @@
                 @if (User.Identity!.Name != Model.Seller)
                 {
                     <form method="post" asp-action="AddToCart" asp-controller="Cart" asp-route-id = "@Model.Id" class="row">
+                        @Html.AntiForgeryToken()
                         <div class="col-4">
                             <input type="number"
                                 value="1"

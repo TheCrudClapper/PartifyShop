@@ -99,7 +99,6 @@ namespace ComputerServiceOnlineShop.Controllers
 
             var dto = new EditOfferDto()
             {
-                Id = viewModel.Id,
                 Description = viewModel.Description,
                 IsOfferPrivate = viewModel.IsOfferPrivate,
                 Price = viewModel.Price,
@@ -114,14 +113,25 @@ namespace ComputerServiceOnlineShop.Controllers
                 SelectedProductCategory = int.Parse(viewModel.SelectedProductCategory),
                 SelectedOtherDeliveries = viewModel.SelectedOtherDeliveries,
             };
-            await _offerService.Edit(dto);
+            await _offerService.Edit(id, dto);
             return RedirectToAction("AllUserOffers");
         }
         [HttpPost]
-        public async Task<IActionResult> DeleteOffer([FromRoute] int id)
+        public async Task<IActionResult> DeleteOffer([FromRoute]int id)
         {
-            await _offerService.DeleteOffer(id);
-            return RedirectToAction("AllUserOffers");
+            try
+            {
+                await _offerService.DeleteOffer(id);
+                return Ok();
+            }
+            catch(UnauthorizedAccessException ex)
+            {
+                return Forbid(ex.Message);
+            }
+            catch(Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         [HttpGet]

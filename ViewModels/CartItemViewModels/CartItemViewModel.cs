@@ -1,5 +1,5 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels.CartViewModels
-{
+﻿namespace ComputerServiceOnlineShop.ViewModels.CartItemViewModels
+{ 
     public class CartItemViewModel
     {
         public int Id { get; set; }

@@ -2,9 +2,9 @@
 using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ServiceContracts;
+using ComputerServiceOnlineShop.ViewModels.CartItemViewModels;
 using ComputerServiceOnlineShop.ViewModels.CartViewModels;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace ComputerServiceOnlineShop.Services
 {
@@ -57,7 +57,7 @@ namespace ComputerServiceOnlineShop.Services
                     IsActive = true,
                     Offer = offer,
                     Quantity = quantity,
-                };
+                }; 
                 await _databaseContext.CartItems.AddAsync(cartItem);
             }
             await _databaseContext.SaveChangesAsync();

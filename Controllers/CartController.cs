@@ -26,13 +26,16 @@ namespace ComputerServiceOnlineShop.Controllers
             try
             {
                 await _cartService.AddToCart(id, quantity);
-                TempData["SuccessMessage"] = "Item added to cart successfully !";
+                return Json(new { success = true, message = "Item added to cart successfully!" });
             }
             catch (InvalidOperationException ex)
             {
-                TempData["ErrorMessage"] = $"Error: {ex.Message}";
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
-            return RedirectToAction("Cart");
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "Unexpected server error. Please try again later." });
+            }
         }
 
         [HttpPost]
@@ -42,13 +45,17 @@ namespace ComputerServiceOnlineShop.Controllers
             {
                 await _cartService.DeleteFromCart(id);
                 TempData["SuccessMessage"] = "Item removed from cart successfully";
+                return Json(new { success = true, message = "Item removed from cart successfully!" });
             }
             catch(InvalidOperationException ex)
-            {
+            { 
                 TempData["ErrorMessage"] = $"Error: {ex.Message}";
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
-            
-            return RedirectToAction("Cart");
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "Unexpected server error. Please try again later." });
+            }
         }
 
         [HttpPost]

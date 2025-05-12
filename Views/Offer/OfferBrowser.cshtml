@@ -6,11 +6,6 @@
 @section Styles {
 <link rel="stylesheet" href="~/css/offer-browser-styles.css"  />
 }
-@if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
-{
-    @await Html.PartialAsync("_ToastMessagePartial", TempData)
-}
-
 <div class="container mt-3">
     @{
         var searchPhrase = Context.Request.Query["SearchPhrase"];
@@ -103,9 +98,9 @@
                                         </p>
                                         @if(User.Identity.Name != offer.SellerName)
                                         {
-                                            <form method="post" asp-action="AddToCart" asp-controller="Cart" asp-route-id="@offer.Id">
+                                            <form method="post">
                                                 @Html.AntiForgeryToken()
-                                                <button class="btn custom-button mt-2 w-100" type="submit">To Cart</button>
+                                                <button class="btn custom-button mt-2 w-100 addToCartButton" type="submit" data-id="@offer.Id">To Cart</button>
                                             </form>
                                         }
                                         else
@@ -127,3 +122,33 @@
         </div>
     </div>
 </div>
+@section Scripts{
+    <script>
+        $(document).on('click', '.addToCartButton', function (e){
+            e.preventDefault();
+            var offerId = $(this).data('id');
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                url: '/Cart/AddToCart/' + offerId,
+                type: 'POST',
+                headers: {
+                     'RequestVerificationToken': token
+                },
+                success: function(response){
+                    showToast(response.message, response.success);
+                    if(response.success){
+                         $('#navbarCart').load(location.href + ' #navbarCart');
+                    }
+                },
+                error: function(xhr){
+                    const response = xhr.responseJSON;
+                    const message = response?.message ?? 'Unexpected error occurred. Try again later.';
+                    showToast(message, false);
+                }
+            });
+
+        });
+    </script>
+   
+}

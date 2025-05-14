@@ -1,0 +1,125 @@
+﻿@using ComputerServiceOnlineShop.ViewModels
+@using ComputerServiceOnlineShop.ViewModels.OfferViewModels
+@model List<UserOffersViewModel>
+@{
+    ViewBag.Title = "User Offers";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
+}
+@await Html.PartialAsync("_ConfirmationModalPartial")
+<div class="container mt-3">
+    <h3 class="fw-bold ps-2">Your Active Listings</h3>
+    <div class="midesection-style mb-3">
+        <form method="get" asp-action="AllUserOffers">
+            <div class="row">
+                <div class="col-12 col-md-10">
+                    <input type="text" name="title" class="form-control" id="searchPhrase" placeholder="search for listing">
+                </div>
+                <div class="col-12 col-md-2 mt-2 mt-md-0 ">
+                    <button type="submit" class="btn custom-button w-100">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    @if (Model.Count != 0)
+    {
+        <div class="midesection-style mb-3" id="offersContainer">
+            <div class="row g-4">
+                @foreach (var userOffer in Model)
+                {
+                   
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card shadow h-100 w-100 border-1">
+                            <img src="@userOffer.ImageUrl" class="card-img-top offer-image img-fluid object-cover" alt="offer image">
+                            <div class="card-body">
+                                <a asp-action="ShowOffer" asp-route-id="@userOffer.Id" class="offer-link">
+                                    <h5><span class="fw-bold">Title: </span>@userOffer.ProductName</h5>
+                                </a>
+                                
+                                <p class="mb-3">
+                                    <span class="fw-bold">Condition: </span>@userOffer.ProductCondition<br>
+                                    <span class="fw-bold">Category: </span>@userOffer.ProductCategory<br>
+                                    <span class="fw-bold">Visibility: </span> @(userOffer.ProductStatus ? "Private" : "Public") <br>
+                                    <span class="fw-bold">Quantity: </span>@userOffer.StockQuantity<br>
+                                    <span class="fw-bold">Price: </span>@userOffer.Price PLN<br>
+                                    <span class="fw-bold">Date Created: </span>@userOffer.DateCreated<br>
+                                </p>
+
+                                <div class="mt-3">
+                                    <form class="d-inline" method="get">
+                                        <button class="btn custom-button"
+                                                asp-action="EditOffer"
+                                                asp-route-id="@userOffer.Id">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    </form>
+
+                                    <form class="d-inline" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button class="btn deleteButton custom-button"
+                                                data-id ="@userOffer.Id">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        @await Html.PartialAsync("_EmptyUserOffersPartialView");
+    }
+
+
+</div>
+@section Scripts{
+    <script>
+        let offerIdToDelete = null;
+        let tokenToUse = null;
+
+        $(document).on('click', '.deleteButton', function (e){
+            e.preventDefault();
+            offerIdToDelete = $(this).data('id');
+            tokenToUse = $('input[name="__RequestVerificationToken"]').val();
+
+             const modal = new bootstrap.Modal(document.getElementById('messageModal'));
+            $('#messageModalLabel').text("Delete Offer");
+            $('.modal-body').text("Are you sure you want to delete this offer?");
+            $('.modal-footer .btn-ok').show();
+            modal.show();
+        });
+
+        $(document).on('click', '.yes-btn', function (){
+            if(offerIdToDelete !== null && tokenToUse !== null){
+                $.ajax({
+                    url: '/Offer/DeleteOffer/' + offerIdToDelete,
+                    type: 'POST',
+                    headers:{
+                        'RequestVerificationToken': tokenToUse
+                    },
+                    success: function (html){
+                        if ($('#offersContainer .card').length === 1) {
+                            location.reload();
+                        } else {
+                            $('#offersContainer').load(location.href + ' #offersContainer > *');
+                        }
+                    },
+                    error: function () {
+                        showToast('Could not delete item',false)
+                    },
+                    complete: function () {
+                        offerIdToDelete = null;
+                        tokenToUse = null;
+                    }
+                });
+            }
+            const modal = bootstrap.Modal.getInstance(document.getElementById('messageModal'));
+            modal.hide();
+        });
+    </script>
+}

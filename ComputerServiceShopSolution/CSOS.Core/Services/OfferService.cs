@@ -1,0 +1,531 @@
+﻿using ComputerServiceOnlineShop.Abstractions;
+using ComputerServiceOnlineShop.Entities.Contexts;
+using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.DTO;
+using CSOS.Core.DTO.Responses.Deliveries;
+using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.Helpers;
+using Microsoft.EntityFrameworkCore;
+namespace ComputerServiceOnlineShop.Services
+{
+    public class OfferService : IOfferService
+    {
+        private readonly DatabaseContext _databaseContext;
+        private readonly IAccountService _accountService;
+        public OfferService(DatabaseContext databaseContext, IAccountService accountService)
+        {
+            _databaseContext = databaseContext;
+            _accountService = accountService;
+        }
+        public async Task Add(AddOfferDto dto)
+        {
+            Guid userId = _accountService.GetLoggedUserId();
+            var uploadedImagesUrls = dto.UploadedImagesUrls;
+            Product product = new Product()
+            {
+                ProductName = dto.ProductName,
+                Description = dto.Description,
+                ConditionId = dto.SelectedProductCondition,
+                ProductCategoryId = dto.SelectedProductCategory,
+                IsActive = true,
+                DateCreated = DateTime.Now,
+                ProductImages = uploadedImagesUrls!.Select(imageUrl => new ProductImage()
+                {
+                    DateCreated = DateTime.Now,
+                    ImagePath = imageUrl,
+                    IsActive = true
+                }).ToList()
+            };
+            await _databaseContext.Products.AddAsync(product);
+
+            Offer offer = new Offer()
+            {
+                Product = product,
+                IsActive = true,
+                DateCreated = DateTime.Now,
+                Price = dto.Price,
+                SellerId = userId,
+                StockQuantity = dto.StockQuantity,
+                IsOfferPrivate = dto.IsOfferPrivate,
+            };
+            await _databaseContext.Offers.AddAsync(offer);
+
+            //adding one selected parcel locker, it is optional
+            if (dto.SelectedParcelLocker.HasValue)
+            {
+                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
+                {
+                    DeliveryTypeId = dto.SelectedParcelLocker.Value,
+                    DateCreated = DateTime.Now,
+                    Offer = offer,
+                    IsActive = true,
+                });
+            }
+
+            foreach (var deliveryId in dto.SelectedOtherDeliveries)
+            {
+                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
+                {
+                    DeliveryTypeId = deliveryId,
+                    Offer = offer,
+                    IsActive = true,
+                    DateCreated = DateTime.Now
+                });
+            }
+
+            await _databaseContext.SaveChangesAsync();
+        }
+        public async Task Edit(int id, EditOfferDto dto)
+        {
+            var offer = await _databaseContext.Offers
+                .Where(item => item.Id == id && item.IsActive)
+                .Include(item => item.Product)
+                    .ThenInclude(item => item.ProductImages)
+                .Include(item => item.OfferDeliveryTypes)
+                    .ThenInclude(item => item.DeliveryType)
+                .FirstAsync();
+
+            offer.IsOfferPrivate = dto.IsOfferPrivate;
+            offer.StockQuantity = dto.StockQuantity;
+            offer.Price = dto.Price;
+
+            var product = offer.Product;
+            product.ProductName = dto.ProductName;
+            product.Description = dto.Description;
+            product.ConditionId = dto.SelectedProductCondition;
+            product.ProductCategoryId = dto.SelectedProductCategory;
+
+            //deletes images checked by user
+            if(dto.ImagesToDelete?.Count > 0 && dto.ImagesToDelete != null)
+            {
+                await DeleteImagesFromOffer(id, dto.ImagesToDelete);
+            }
+
+            if (dto.UploadedImagesUrls != null && dto.UploadedImagesUrls.Count > 0)
+            {
+                foreach (var url in dto.UploadedImagesUrls)
+                {
+                    product.ProductImages.Add(new ProductImage
+                    {
+                        ImagePath = url,
+                        IsActive = true,
+                        DateCreated = DateTime.Now
+                    });
+                }
+            }
+
+            //clear all existing delivery types
+            offer.OfferDeliveryTypes.Clear();
+
+            if (dto.SelectedParcelLocker.HasValue)
+            {
+                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
+                {
+                    DeliveryTypeId = dto.SelectedParcelLocker.Value,
+                    DateCreated = DateTime.Now,
+                    Offer = offer,
+                    IsActive = true,
+                });
+            }
+
+            foreach (var deliveryId in dto.SelectedOtherDeliveries)
+            {
+                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
+                {
+                    DeliveryTypeId = deliveryId,
+                    Offer = offer,
+                    IsActive = true,
+                    DateCreated = DateTime.Now
+                });
+            }
+
+            await _databaseContext.SaveChangesAsync();
+        }
+        public async Task<List<UserOffersResponseDto>> GetUserOffers()
+        {
+            Guid userId = _accountService.GetLoggedUserId();
+            return await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => item.SellerId == userId)
+                .Include(item => item.Product)
+                .ThenInclude(item => item.ProductImages)
+                .Select(item => new UserOffersResponseDto()
+                {
+                    Id = item.Id,
+                    DateCreated = item.DateCreated,
+                    ProductCondition = item.Product.Condition.ConditionTitle,
+                    Price = item.Price,
+                    StockQuantity = item.StockQuantity,
+                    ProductCategory = item.Product.ProductCategory.Name,
+                    ProductStatus = item.IsOfferPrivate,
+                    ProductName = item.Product.ProductName,
+                    ImageUrl = item.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .First().ImagePath
+                })
+                .ToListAsync();
+        }
+        public async Task<List<UserOffersResponseDto>> GetFilteredUserOffers(string? title)
+        {
+            Guid userId = _accountService.GetLoggedUserId();
+
+            var query =  _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => item.SellerId == userId)
+                .Include(item => item.Product)
+                .ThenInclude(item => item.ProductImages)
+                .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(title))
+                    query = query.Where(item => item.Product.ProductName.Contains(title));
+
+                var items = await query.Select(item => new UserOffersResponseDto()
+                {
+                    Id = item.Id,
+                    DateCreated = item.DateCreated,
+                    ProductCondition = item.Product.Condition.ConditionTitle,
+                    Price = item.Price,
+                    StockQuantity = item.StockQuantity,
+                    ProductCategory = item.Product.ProductCategory.Name,
+                    ProductStatus = item.IsOfferPrivate,
+                    ProductName = item.Product.ProductName,
+                    ImageUrl = item.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .First().ImagePath
+                })
+                .ToListAsync();
+
+            return items;
+        }
+        public async Task<SingleOfferResponseDto> GetOffer(int id)
+        {
+            return await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => item.Id == id)
+                .Include(item => item.Product)
+                .Include(item => item.Seller)
+                .Include(item => item.OfferDeliveryTypes)
+                    .ThenInclude(item => item.DeliveryType)
+                .Select(item => new SingleOfferResponseDto()
+                {
+                    Id = item.Id,
+                    Condition = item.Product.Condition.ConditionTitle,
+                    DateCreated = item.DateCreated.Date,
+                    Seller = item.Seller.UserName!,
+                    Description = item.Product.Description,
+                    Price = item.Price,
+                    StockQuantity = item.StockQuantity,
+                    Title = item.Product.ProductName,
+                    isSellerCompany = (string.IsNullOrEmpty(item.Seller.NIP)) ? false : true,
+                    Place = item.Seller.Address.Place,
+                    PostalCity = item.Seller.Address.PostalCity,
+                    PostalCode = item.Seller.Address.PostalCode,
+                    ProductImages = item.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .Select(item => item.ImagePath)
+                        .ToList(),
+                    AvaliableDeliveryTypes = item.OfferDeliveryTypes
+                    .Select(item => new DeliveryTypeResponseDto()
+                    {
+                        Title = item.DeliveryType.Title,
+                        Price = item.DeliveryType.Price,
+                        Id = item.DeliveryType.Id
+                    }).ToList()
+                })
+                .FirstAsync();
+        }
+        public async Task<EditOfferResponseDto> GetOfferForEdit(int id)
+        {
+            Guid userId = _accountService.GetLoggedUserId();
+            return await _databaseContext.Offers
+                .Where(item => item.IsActive)
+                .Where(item => item.SellerId == userId)
+                .Where(item => item.Id == id)
+                .Include(item => item.Product)
+                .Select(item => new EditOfferResponseDto()
+                {
+                    Id = item.Id,
+                    ProductName = item.Product.ProductName,
+                    Price = item.Price,
+                    ExistingImagesUrls = item.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .Select(item => new SelectListItemDto()
+                        {
+                            Value = item.ImagePath,
+                            Text = item.ImagePath,
+                        })
+                        .ToList(),
+                    Description = item.Product.Description,
+                    SelectedProductCondition = item.Product.Condition.Id.ToString(),
+                    SelectedProductCategory = item.Product.ProductCategory.Id.ToString(),
+                    IsOfferPrivate = item.IsOfferPrivate,
+                    StockQuantity = item.StockQuantity,
+                    SelectedOtherDeliveries = item.OfferDeliveryTypes
+                        .Where(item => !item.DeliveryType.Title.Contains("Locker"))
+                        .Select(item => item.DeliveryTypeId)
+                        .ToList(),
+                    SelectedParcelLocker = item.OfferDeliveryTypes
+                        .Where(item => item.DeliveryType.Title.Contains("Locker"))
+                        .Select(item => item.DeliveryTypeId)
+                        .FirstOrDefault(),
+                })
+                .FirstAsync();
+        }
+        public async Task<List<SelectListItemDto>> GetOfferPictures(int id)
+        {
+            var imagePaths = await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => item.Id == id)
+                .Include(item => item.Product)
+                    .ThenInclude(item => item.ProductImages)
+                .SelectMany(item => item.Product.ProductImages
+                    .Where(img => img.IsActive)
+                    .Select(img => img.ImagePath))
+                .ToListAsync();
+
+            var imageSelectList = imagePaths.Select(path => new SelectListItemDto
+            {
+                Value = path,
+                Text = path,
+            }).ToList();
+
+            return imageSelectList;
+        }
+        public async Task DeleteOffer(int id)
+        {
+            var userId = _accountService.GetLoggedUserId();
+            var offer = await _databaseContext.Offers.Where(item => item.Id == id && item.SellerId == userId)
+                .FirstOrDefaultAsync();
+
+            if(offer == null)
+            {
+                throw new UnauthorizedAccessException("Offer not found or you are not the owner");
+            }
+
+            offer.IsActive = false;
+            offer.DateDeleted = DateTime.Now;
+
+            await _databaseContext.SaveChangesAsync();
+        }
+
+        public async Task<OfferBrowserResponseDto> GetAllOffers()
+        {
+            var offerItems = await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => !item.IsOfferPrivate)
+                .Include(item => item.Seller)
+                .Include(item => item.Product)
+                .Select(item => new OfferBrowserItemResponseDto()
+                {
+                    Title = item.Product.ProductName,
+                    Category = item.Product.ProductCategory.Name,
+                    Condition = item.Product.Condition.ConditionTitle,
+                    DateCreated = item.DateCreated.Date,
+                    Price = item.Price,
+                    SellerName = item.Seller.UserName!,
+                    Description = item.Product.Description,
+                    QuantityAvailable = item.StockQuantity,
+                    ImageUrl = item.Product.ProductImages.First().ImagePath,
+                }).ToListAsync();
+
+                return new OfferBrowserResponseDto()
+                {
+                    Items = offerItems
+                };
+        }
+        public async Task<OfferBrowserResponseDto> GetFilteredOffers(OfferFilter filter)
+        {
+            var query = _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => !item.IsOfferPrivate)
+                .Include(item => item.Seller)
+                .Include(item => item.Product)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter.SearchPhrase))
+                query = query.Where(item => item.Product.ProductName.Contains(filter.SearchPhrase) || item.Product.Description.Contains(filter.SearchPhrase));
+
+            if (filter.CategoryId != null)
+                query = query.Where(item => item.Product.ProductCategoryId == filter.CategoryId);
+
+            if (filter.PriceFrom.HasValue)
+                query = query.Where(item => item.Price >= filter.PriceFrom);
+
+            if (filter.PriceTo.HasValue)
+                query = query.Where(item => item.Price <= filter.PriceTo);
+
+            if (filter.SortOption == "price_desc")
+                query = query.OrderByDescending(item => item.Price);
+
+            if (filter.SortOption == "price_asc")
+                query = query.OrderBy(item => item.Price);
+
+
+            if (!string.IsNullOrWhiteSpace(filter.DeliveryOption))
+            {
+                if (int.TryParse(filter.DeliveryOption, out int deliveryId))
+                {
+                    query = query.Where(item =>
+                        item.OfferDeliveryTypes.Any(dt => dt.DeliveryTypeId == deliveryId));
+                }
+            }
+            
+            var items = await query.Select(item => new OfferBrowserItemResponseDto()
+            {
+                Id = item.Id,
+                Title = item.Product.ProductName,
+                Category = item.Product.ProductCategory.Name,
+                Condition = item.Product.Condition.ConditionTitle,
+                DateCreated = item.DateCreated.Date,
+                Price = item.Price,
+                SellerName = item.Seller.UserName!,
+                Description = item.Product.Description,
+                QuantityAvailable = item.StockQuantity,
+                ImageUrl = item.Product.ProductImages.First().ImagePath,
+            }).ToListAsync();
+
+            return new OfferBrowserResponseDto()
+            {
+                Items = items,
+                Filter = filter,
+                SortingOptions = GetSortingOptions(),
+                DeliveryOptions = await GetAllDeliveryTypes(),
+            };
+        }
+        public async Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers()
+        {
+            return await _databaseContext.Offers.Where(item => item.IsActive)
+                .Where(item => !item.IsOfferPrivate)
+                .Include(item => item.Product)
+                .ThenInclude(item => item.ProductImages)
+                .OrderByDescending(item => item.DateCreated)
+                .Take(12)
+                .Select(item => new MainPageCardResponseDto()
+                {
+                    Id = item.Id,
+                    Price = item.Price,
+                    Title = item.Product.ProductName,
+                    ImagePath = item.Product.ProductImages
+                    .Where(item => item.IsActive).
+                    First().ImagePath,
+                })
+                .ToListAsync();
+        }
+        public async Task<bool> DoesOfferExist(int id)
+        {
+            return await _databaseContext.Offers
+                .AnyAsync(item => item.Id == id && item.IsActive);
+        }
+        public async Task DeleteImagesFromOffer(int offerId, List<string> imageUrls)
+        {
+            var productImages = await _databaseContext.Offers
+                .Where(item => item.IsActive && item.Id == offerId)
+                .Include(item => item.Product)
+                    .ThenInclude(item => item.ProductImages)
+                    .SelectMany(item => item.Product.ProductImages)
+                    .Where(item => imageUrls.Contains(item.ImagePath) && item.IsActive)
+                    .ToListAsync();
+
+            foreach (var image in productImages)
+            {
+                image.IsActive = false;
+                image.DateDeleted = DateTime.Now;
+            }
+            await _databaseContext.SaveChangesAsync();
+        }
+        public async Task<List<SelectListItemDto>> GetProductConditions()
+        {
+            return await _databaseContext.Conditions
+              .Where(item => item.IsActive)
+              .Select(item => new SelectListItemDto { Text = item.ConditionTitle, Value = item.Id.ToString() })
+              .ToListAsync();
+        }
+        public async Task<List<SelectListItemDto>> GetProductCategoriesAsSelectList()
+        {
+            return await _databaseContext.ProductCategories
+                .Where(item => item.IsActive)
+                .Select(item => new SelectListItemDto { Text = item.Name, Value = item.Id.ToString() })
+                .ToListAsync();
+        }
+        public async Task<List<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes()
+        {
+            return await _databaseContext.DeliveryTypes
+                .Where(item => item.IsActive)
+                .Where(item => item.Title.Contains("Locker"))
+                .Select(item => new DeliveryTypeResponseDto()
+                {
+                    Id = item.Id,
+                    Price = item.Price,
+                    Title = item.Title,
+                })
+                .ToListAsync();
+        }
+        public async Task<List<SelectListItemDto>> GetOtherDeliveryTypes()
+        {
+            return await _databaseContext.DeliveryTypes
+                .Where(item => item.IsActive)
+                .Where(item => !item.Title.Contains("Locker"))
+                .Select(item => new SelectListItemDto { Text = item.Title, Value = item.Id.ToString() })
+                .ToListAsync();
+        }
+
+        //Just for testing
+        //Later create table in db for filtering options
+        public List<SelectListItemDto> GetSortingOptions()
+        {
+            return new List<SelectListItemDto>()
+            {
+                new SelectListItemDto()
+                {
+                    Text = "Price - from highest",
+                    Value = "price_desc",
+                },
+                new SelectListItemDto()
+                {
+                    Text = "Price - from lowest",
+                    Value = "price_asc",
+                }
+            };
+        }
+
+        public async Task<List<SelectListItemDto>> GetAllDeliveryTypes()
+        {
+            return await _databaseContext.DeliveryTypes.Where(item => item.IsActive)
+                .Select(item => new SelectListItemDto
+                {
+                    Text = item.Title,
+                    Value = item.Id.ToString(),
+
+                }).ToListAsync();
+        }
+
+        public async Task<List<MainPageCardResponseDto>> GetProductCategories()
+        {
+            return await _databaseContext.ProductCategories.Where(item => item.IsActive)
+                .Select(item => new MainPageCardResponseDto
+                {
+                    Id = item.Id,
+                    ImagePath = item.CategoryImage,
+                    Title = item.Name,
+                }).ToListAsync();
+        }
+
+        public async Task<List<MainPageCardResponseDto>> GetDealsOfTheDay()
+        {
+            //add daily reshuffle logic
+            var count = await _databaseContext.Offers.CountAsync(item => item.IsActive && !item.IsOfferPrivate);
+            if (count == 0)
+                return new();
+
+            var take = Math.Min(count, 7);
+
+            return await _databaseContext.Offers.Where(item => item.IsActive && !item.IsOfferPrivate)
+                .OrderBy(item => Guid.NewGuid())
+                .Take(take)
+                .Select(item => new MainPageCardResponseDto
+                {
+                    Id = item.Id,
+                    ImagePath = item.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .First().ImagePath,
+                    Price = item.Price,
+                    Title = item.Product.ProductName,
+
+                }).ToListAsync();
+        }
+    }
+}

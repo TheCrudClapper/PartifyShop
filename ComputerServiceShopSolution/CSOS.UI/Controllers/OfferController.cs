@@ -148,7 +148,20 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> AllUserOffers(string? title)
         {
             List<UserOffersResponseDto> response = await _offerService.GetFilteredUserOffers(title);
-            List<UserOffersViewModel> userOffers = 
+            List<UserOffersViewModel> userOffers = response.Select(item => new UserOffersViewModel()
+            {
+                DateCreated = item.DateCreated,
+                Id = item.Id,
+                ImageUrl = item.ImageUrl,
+                ProductCategory = item.ProductCategory,
+                Price = item.Price,
+                ProductCondition = item.ProductCondition,
+                ProductName = item.ProductName,
+                ProductStatus = item.ProductStatus,
+                StockQuantity = item.StockQuantity,
+            })
+            .ToList();
+
             if (!userOffers.Any())
             {
                 if (string.IsNullOrEmpty(title))
@@ -179,8 +192,17 @@ namespace ComputerServiceOnlineShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> OfferBrowser([FromQuery] OfferFilter filter)
         {
-            OfferBrowserViewModel offers = await _offerService.GetFilteredOffers(filter);
-            return View(offers);
+            OfferBrowserResponseDto response = await _offerService.GetFilteredOffers(filter);
+            OfferBrowserViewModel viewModel = new OfferBrowserViewModel()
+            {
+                DeliveryOptions = response.DeliveryOptions.Select(item => new SelectListItem()
+                {
+                    Value = item.Value,
+                    Text = item.Text,
+                }).ToList(),
+                Filter = response.Filter
+            };
+            return View(viewModel);
         }
         public async Task InitializeViewModelsCollections<ViewModelType>(ViewModelType viewModel) where ViewModelType : BaseOfferViewModel
         {

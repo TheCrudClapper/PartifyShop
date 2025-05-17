@@ -1,4 +1,5 @@
 ﻿using ComputerServiceOnlineShop.ServiceContracts;
+using CSOS.UI.Mappings.ToViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComputerServiceOnlineShop.Controllers
@@ -13,8 +14,8 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Cart()
         {
-            //donwload data from db about cart
-            var cart = await _cartService.GetLoggedUserCart();
+            var response = await _cartService.GetLoggedUserCart();
+            var cart = response.ToViewModel();
             return View(cart);
         }
 

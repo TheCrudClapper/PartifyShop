@@ -1,5 +1,6 @@
 ﻿using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ViewModels.OrderViewModels;
+using CSOS.UI.Mappings.ToViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComputerServiceOnlineShop.Controllers
@@ -13,10 +14,10 @@ namespace ComputerServiceOnlineShop.Controllers
         }
         public async Task<IActionResult> AddOrder()
         {
-            var userAddressDetails = await _addressService.GetUserAddresInfo();
+            var response = await _addressService.GetUserAddresInfo();
             var viewModel = new AddOrderViewModel()
             {
-                UserAddressDetails = userAddressDetails
+                UserAddressDetails = response.ToViewModel()
             };
             return View(viewModel);
         }

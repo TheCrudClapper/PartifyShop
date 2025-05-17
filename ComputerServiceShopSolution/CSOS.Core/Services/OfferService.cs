@@ -5,6 +5,7 @@ using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
+using CSOS.Core.Mappings;
 using Microsoft.EntityFrameworkCore;
 namespace ComputerServiceOnlineShop.Services
 {
@@ -21,21 +22,7 @@ namespace ComputerServiceOnlineShop.Services
         {
             Guid userId = _accountService.GetLoggedUserId();
             var uploadedImagesUrls = dto.UploadedImagesUrls;
-            Product product = new Product()
-            {
-                ProductName = dto.ProductName,
-                Description = dto.Description,
-                ConditionId = dto.SelectedProductCondition,
-                ProductCategoryId = dto.SelectedProductCategory,
-                IsActive = true,
-                DateCreated = DateTime.Now,
-                ProductImages = uploadedImagesUrls!.Select(imageUrl => new ProductImage()
-                {
-                    DateCreated = DateTime.Now,
-                    ImagePath = imageUrl,
-                    IsActive = true
-                }).ToList()
-            };
+            Product product = dto.ToEntity();
             await _databaseContext.Products.AddAsync(product);
 
             Offer offer = new Offer()

@@ -1,4 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
+using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComputerServiceOnlineShop.ViewComponents
@@ -13,7 +14,7 @@ namespace ComputerServiceOnlineShop.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categories = await _offerService.GetProductCategoriesAsSelectList();
+            var categories = (await _offerService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem();
             return View(categories);
         }
     }

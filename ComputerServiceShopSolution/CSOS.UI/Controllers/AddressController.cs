@@ -2,6 +2,10 @@
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Responses.Addresses;
+using CSOS.UI.Mappings.ToDto;
+using CSOS.UI.Mappings.ToViewModel;
+using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComputerServiceOnlineShop.Controllers
@@ -19,28 +23,22 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute]int id)
         {
-            var address = await _addressService.GetAddressForEdit();
-            address.CountriesSelectionList = await _countriesService.GetCountriesSelectionList();
-            return PartialView("_EditAddressPartial", address);
+            EditAddressResponseDto response = await _addressService.GetAddressForEdit();
+            EditAddressViewModel viewModel = response.ToViewModel();
+            return PartialView("_EditAddressPartial", viewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit([FromRoute]int id, EditAddressViewModel viewModel)
         {
+            List<SelectListItemDto> response = await _countriesService.GetCountriesSelectionList();
             if (!ModelState.IsValid)
             {
-                viewModel.CountriesSelectionList = await _countriesService.GetCountriesSelectionList();
+                viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
                 return PartialView("_EditAddressPartial", viewModel);
             }
-            var dto = new AddressDto()
-            {
-                CountryId = int.Parse(viewModel.SelectedCountry),
-                HouseNumber = viewModel.HouseNumber,
-                Place = viewModel.Place,
-                PostalCity = viewModel.PostalCity,
-                PostalCode = viewModel.PostalCode,
-                Street = viewModel.Street,
-            };
+
+            AddressDto dto = viewModel.ToDto();
             await _addressService.Edit(id, dto);
 
             return Ok();

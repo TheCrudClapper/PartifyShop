@@ -1,6 +1,8 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
+using CSOS.UI.Mappings.ToDto;
+using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,39 +23,27 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Register()
         {
+            var response = await _countriesService.GetCountriesSelectionList();
             RegisterViewModel ViewModel = new RegisterViewModel()
             {
-                CountriesSelectionList = await _countriesService.GetCountriesSelectionList()
+                CountriesSelectionList = response.ConvertToSelectListItem()
             };
             return View(ViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel ViewModel)
+        public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
             //initializing list of countries for view
-            ViewModel.CountriesSelectionList = await _countriesService.GetCountriesSelectionList();
+            var response  = await _countriesService.GetCountriesSelectionList();
+            viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
 
             if (!ModelState.IsValid)
             {
-                return View(ViewModel);
+                return View(viewModel);
             }
-            var dto = new RegisterDto()
-            {
-                FirstName = ViewModel.FirstName,
-                Surname = ViewModel.Surname,
-                Email = ViewModel.Email,
-                HouseNumber = ViewModel.HouseNumber,
-                NIP = ViewModel.NIP,
-                Password = ViewModel.Password,
-                PhoneNumber = ViewModel.PhoneNumber,
-                Place = ViewModel.Place,
-                PostalCity = ViewModel.PostalCity,
-                PostalCode = ViewModel.PostalCode,
-                SelectedCountry = int.Parse(ViewModel.SelectedCountry),
-                Street = ViewModel.Street,
-                Title = ViewModel.Title,
-            };
+
+            RegisterDto dto = viewModel.ToDto();
             IdentityResult result = await _accountService.Register(dto);
             if (result.Succeeded)
             {
@@ -65,7 +55,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-                return View(ViewModel);
+                return View(viewModel);
             }
 
         }
@@ -77,23 +67,20 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel viewModel, string? ReturnUrl)
+        public async Task<IActionResult> Login(LoginViewModel viewModel, string? returnUrl)
         {
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
-            var dto = new LoginDto()
-            {
-                Email = viewModel.Email,
-                Password = viewModel.Password,
-            };
+
+            LoginDto dto = viewModel.ToDto();
             var result = await _accountService.Login(dto);
             if (result.Succeeded)
             {
-                if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
-                    return LocalRedirect(ReturnUrl);
+                    return LocalRedirect(returnUrl);
                 }
                 return RedirectToAction("Index", "Home");
             }

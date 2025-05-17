@@ -3,6 +3,8 @@ using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
+using CSOS.UI.Mappings.ToViewModel;
+using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -67,7 +69,8 @@ namespace ComputerServiceOnlineShop.Controllers
             {
                 return View("OfferNotFound", id);
             }
-            var viewModel = await _offerService.GetOfferForEdit(id);
+            var response = await _offerService.GetOfferForEdit(id);
+            var viewModel = response.ToViewModel();
             await InitializeViewModelsCollections(viewModel);
             return View(viewModel);
         }
@@ -83,14 +86,6 @@ namespace ComputerServiceOnlineShop.Controllers
                     ModelState.AddModelError("WrongFileType", response!);
                 }
             }
-
-            //int existingImagesCount = (viewModel.ExistingImagesUrls?.Count ?? 0) - (viewModel.ImagesToDelete?.Count ?? 0);
-            //int newImagesCount = viewModel.UploadedImages?.Count ?? 0;
-
-            //if (existingImagesCount + newImagesCount <= 0)
-            //{
-            //    ModelState.AddModelError("ImagesDeletion", "You must have at least one image for the offer.");
-            //}
 
             if (!ModelState.IsValid)
             {
@@ -148,19 +143,7 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> AllUserOffers(string? title)
         {
             List<UserOffersResponseDto> response = await _offerService.GetFilteredUserOffers(title);
-            List<UserOffersViewModel> userOffers = response.Select(item => new UserOffersViewModel()
-            {
-                DateCreated = item.DateCreated,
-                Id = item.Id,
-                ImageUrl = item.ImageUrl,
-                ProductCategory = item.ProductCategory,
-                Price = item.Price,
-                ProductCondition = item.ProductCondition,
-                ProductName = item.ProductName,
-                ProductStatus = item.ProductStatus,
-                StockQuantity = item.StockQuantity,
-            })
-            .ToList();
+            List<UserOffersViewModel> userOffers = response.ToViewModelCollection();
 
             if (!userOffers.Any())
             {
@@ -184,7 +167,8 @@ namespace ComputerServiceOnlineShop.Controllers
             {
                 return View("OfferNotFound", id);
             }
-            var viewModel = await _offerService.GetOffer(id);
+            var response = await _offerService.GetOffer(id);
+            var viewModel = response.ToViewModel();
             return View(viewModel);
         }
 
@@ -193,23 +177,15 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> OfferBrowser([FromQuery] OfferFilter filter)
         {
             OfferBrowserResponseDto response = await _offerService.GetFilteredOffers(filter);
-            OfferBrowserViewModel viewModel = new OfferBrowserViewModel()
-            {
-                DeliveryOptions = response.DeliveryOptions.Select(item => new SelectListItem()
-                {
-                    Value = item.Value,
-                    Text = item.Text,
-                }).ToList(),
-                Filter = response.Filter
-            };
+            OfferBrowserViewModel viewModel = response.ToViewModel();
             return View(viewModel);
         }
         public async Task InitializeViewModelsCollections<ViewModelType>(ViewModelType viewModel) where ViewModelType : BaseOfferViewModel
         {
-            viewModel.ParcelLockerDeliveriesList = await _offerService.GetParcelLockerDeliveryTypes();
-            viewModel.ProductConditionsSelectList = await _offerService.GetProductConditions();
-            viewModel.ProductCategoriesSelectionList = await _offerService.GetProductCategoriesAsSelectList();
-            viewModel.OtherDeliveriesSelectedList = await _offerService.GetOtherDeliveryTypes();
+            viewModel.ParcelLockerDeliveriesList = (await _offerService.GetParcelLockerDeliveryTypes()).ConvertToDeliveryTypeViewModelList();
+            viewModel.ProductConditionsSelectList = (await _offerService.GetProductConditions()).ConvertToSelectListItem();
+            viewModel.ProductCategoriesSelectionList = (await _offerService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem();
+            viewModel.OtherDeliveriesSelectedList = (await _offerService.GetOtherDeliveryTypes()).ConvertToSelectListItem();
         }
     }
 }

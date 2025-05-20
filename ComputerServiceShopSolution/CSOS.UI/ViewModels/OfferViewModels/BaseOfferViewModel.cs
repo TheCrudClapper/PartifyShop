@@ -1,6 +1,5 @@
-﻿using ComputerServiceOnlineShop.Controllers.CustomValidators;
-using ComputerServiceOnlineShop.Entities.Models;
-using ComputerServiceOnlineShop.ViewModels.SharedViewModels;
+﻿using ComputerServiceOnlineShop.ViewModels.SharedViewModels;
+using CSOS.UI.CustomValidators;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;

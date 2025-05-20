@@ -40,7 +40,7 @@ namespace ComputerServiceOnlineShop.ViewModels.AccountViewModels
 
         [Required(ErrorMessage = "Postal City is required")]
         public string PostalCity { get; set; } = null!;
-
+         
         [Required(ErrorMessage = "Postal Code is required")]
         [DataType(DataType.PostalCode)]
         public string PostalCode { get; set; } = null!;

@@ -1,4 +1,4 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
+﻿using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,15 +6,15 @@ namespace ComputerServiceOnlineShop.ViewComponents
 {
     public class CategoryDropdownViewComponent : ViewComponent
     {
-        private readonly IOfferService _offerService;
-        public CategoryDropdownViewComponent(IOfferService offerService)
+        private readonly ICategoryGetterService _categoryGetterService;
+        public CategoryDropdownViewComponent(ICategoryGetterService categoryGetterService)
         {
-            _offerService = offerService;
+            _categoryGetterService = categoryGetterService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categories = (await _offerService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem();
+            var categories = (await _categoryGetterService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem();
             return View(categories);
         }
     }

@@ -1,7 +1,4 @@
-﻿using ComputerServiceOnlineShop.Controllers.CustomValidators;
-using ComputerServiceOnlineShop.Entities.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels

@@ -1,0 +1,13 @@
+.form-container{
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+.own-link-style{
+    font-weight: 600;
+    text-decoration: none;
+    color: black;
+}
+.own-link-style:hover{
+    color: #0a53be;
+    cursor: pointer;
+}

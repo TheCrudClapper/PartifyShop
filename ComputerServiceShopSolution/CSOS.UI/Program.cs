@@ -4,6 +4,12 @@ using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using ComputerServiceOnlineShop.Models.Services;
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
+using CSOS.Core.Domain;
+using CSOS.Core.Domain.RepositoryContracts;
+using CSOS.Core.ServiceContracts;
+using CSOS.Core.Services;
+using CSOS.Infrastructure.Repositories;
+using CSOS.UI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,18 +17,30 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add DbContext
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ComputerServiceOnlineShop")));
+
+// Add services to the container.
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IPictureHandlerService, PictureHandlerService>();
+builder.Services.AddScoped<OfferViewModelInitializer>();
 builder.Services.AddScoped<ICountriesService, CountriesService>();
+builder.Services.AddScoped<ICategoryGetterService, CategoryGetterService>();
+builder.Services.AddScoped<IDeliveryTypeGetterService, DeliveryTypeGetterService>();
+builder.Services.AddScoped<IConditionGetterService, ConditionGetterService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 
-//enabling identity
+
+//Adding repositories
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+
+
+//Enabling identity
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();

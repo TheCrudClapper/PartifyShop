@@ -3,8 +3,9 @@ using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
+using CSOS.UI.Helpers;
+using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
-using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,23 +16,27 @@ namespace ComputerServiceOnlineShop.Controllers
     {
         private readonly IOfferService _offerService;
         private readonly IPictureHandlerService _pictureHandlerService;
-        public OfferController(IOfferService offerService, IPictureHandlerService pictureHandlerService)
+        private readonly OfferViewModelInitializer _offerViewModelInitializer;
+        
+        public OfferController(IOfferService offerService, IPictureHandlerService pictureHandlerService, OfferViewModelInitializer offerViewModelInitializer)
         {
             _offerService = offerService;
             _pictureHandlerService = pictureHandlerService;
+            _offerViewModelInitializer = offerViewModelInitializer;
         }
 
         [HttpGet]
         public async Task<IActionResult> AddOffer()
         {
             var viewModel = new AddOfferViewModel();
-            await InitializeViewModelsCollections(viewModel);
+            await _offerViewModelInitializer.InitializeAllAsync(viewModel);
             return View(viewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> AddOffer(AddOfferViewModel viewModel)
         {
+            //Checking file extensions
             if (viewModel.UploadedImages != null)
             {
                 string response = _pictureHandlerService.CheckFileExtensions(viewModel.UploadedImages);
@@ -40,26 +45,16 @@ namespace ComputerServiceOnlineShop.Controllers
                     ModelState.AddModelError("WrongFileType", response!);
                 }
             }
+            //Checking fields
             if (!ModelState.IsValid)
             {
-                await InitializeViewModelsCollections(viewModel);
+                await _offerViewModelInitializer.InitializeAllAsync(viewModel);
                 return View(viewModel);
             }
-            var dto = new AddOfferDto()
-            {
-                Description = viewModel.Description,
-                IsOfferPrivate = viewModel.IsOfferPrivate,
-                Price = viewModel.Price,
-                ProductName = viewModel.ProductName,
-                StockQuantity = viewModel.StockQuantity,
-                UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(viewModel.UploadedImages!),
-                SelectedParcelLocker = viewModel.SelectedParcelLocker,
-                SelectedProductCondition = int.Parse(viewModel.SelectedProductCondition),
-                SelectedProductCategory = int.Parse(viewModel.SelectedProductCategory),
-                SelectedOtherDeliveries = viewModel.SelectedOtherDeliveries,
-            };
+
+            AddOfferDto dto = await viewModel.ToDto(_pictureHandlerService);
             await _offerService.Add(dto);
-            return RedirectToAction("AllUserOffers");
+            return RedirectToAction(nameof(AllUserOffers));
         }
 
         [HttpGet]
@@ -71,7 +66,7 @@ namespace ComputerServiceOnlineShop.Controllers
             }
             var response = await _offerService.GetOfferForEdit(id);
             var viewModel = response.ToViewModel();
-            await InitializeViewModelsCollections(viewModel);
+            await _offerViewModelInitializer.InitializeAllAsync(viewModel);
             return View(viewModel);
         }
 
@@ -98,7 +93,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 })
                 .ToList();
 
-                await InitializeViewModelsCollections(viewModel);
+                await _offerViewModelInitializer.InitializeAllAsync(viewModel);
                 return View(viewModel);
             }
 
@@ -179,13 +174,6 @@ namespace ComputerServiceOnlineShop.Controllers
             OfferBrowserResponseDto response = await _offerService.GetFilteredOffers(filter);
             OfferBrowserViewModel viewModel = response.ToViewModel();
             return View(viewModel);
-        }
-        public async Task InitializeViewModelsCollections<ViewModelType>(ViewModelType viewModel) where ViewModelType : BaseOfferViewModel
-        {
-            viewModel.ParcelLockerDeliveriesList = (await _offerService.GetParcelLockerDeliveryTypes()).ConvertToDeliveryTypeViewModelList();
-            viewModel.ProductConditionsSelectList = (await _offerService.GetProductConditions()).ConvertToSelectListItem();
-            viewModel.ProductCategoriesSelectionList = (await _offerService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem();
-            viewModel.OtherDeliveriesSelectedList = (await _offerService.GetOtherDeliveryTypes()).ConvertToSelectListItem();
         }
     }
 }

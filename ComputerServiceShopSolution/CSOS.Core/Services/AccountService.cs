@@ -2,7 +2,6 @@
 using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.Core.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

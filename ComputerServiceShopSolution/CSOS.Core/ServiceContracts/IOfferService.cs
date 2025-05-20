@@ -3,6 +3,7 @@ using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
 
+//put some service method to correspondign services // or create new one !!!!
 namespace ComputerServiceOnlineShop.Abstractions
 {
     public interface IOfferService
@@ -65,7 +66,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         Task<List<SelectListItemDto>> GetOfferPictures(int id);
 
         /// <summary>
-        /// Checks wheater offer exists in database
+        /// Checks wheater offer exists in database and belongs to actually logged in user
         /// </summary>
         /// <param name="id"></param>
         /// <returns>return true if offer exists, false if not</returns>
@@ -85,58 +86,11 @@ namespace ComputerServiceOnlineShop.Abstractions
         Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers();
 
         /// <summary>
-        /// Deprecated! Gets All offers in shop, without any filtration
-        /// </summary>
-        /// <returns>An object of OfferBrowserViewModel with fields used in view</returns>
-        Task<OfferBrowserResponseDto> GetAllOffers();
-
-        /// <summary>
-        /// Gets all active delivery types avaliable in database
-        /// </summary>
-        /// <returns>An List of SelectListItem</returns>
-        Task<List<SelectListItemDto>> GetAllDeliveryTypes();
-
-        /// <summary>
-        /// Deprecated! Get all offer added by user, without any filtration
-        /// </summary>
-        /// <returns>An IEnumerable Collection with all user offers</returns>
-        Task<List<UserOffersResponseDto>> GetUserOffers();
-
-        /// <summary>
-        /// Gets ProductCategories as SelectListItems
-        /// </summary>
-        /// <returns>An List of  all product categories as SelectListType</returns>
-        Task<List<SelectListItemDto>> GetProductCategoriesAsSelectList();
-
-        /// <summary>
-        /// Gets Product Conditions as SelectListItem object
-        /// </summary>
-        /// <returns>An List of SelectListItem</returns>
-        Task<List<SelectListItemDto>> GetProductConditions();
-
-        /// <summary>
-        /// Gets delivery types, without parcel locker deliveries, as SelectListItem obj
-        /// </summary>
-        /// <returns>An List of SelctListItem type</returns>
-        Task<List<SelectListItemDto>> GetOtherDeliveryTypes();
-
-        /// <summary>
-        /// Gets an list of parcel locker delivery types 
-        /// </summary>
-        /// <returns>An list of DeliveryTypeViewModel</returns>
-        Task<List<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes();
-
-        /// <summary>
         /// TODO: Change this shit to have filtering options from db
         /// </summary>
         /// <returns>Returns Sorting options used in OfferBrowser Page</returns>
         List<SelectListItemDto> GetSortingOptions();
 
         Task<List<MainPageCardResponseDto>> GetDealsOfTheDay();
-        /// <summary>
-        /// Gets Product categories to display in main page of application
-        /// </summary>
-        /// <returns>An List of MainPageCardViewModel items</returns>
-        Task<List<MainPageCardResponseDto>> GetProductCategories();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ComputerServiceOnlineShop.Controllers.CustomValidators
+namespace CSOS.UI.CustomValidators
 {
     public class EmptyListValidatorAttribute : ValidationAttribute
     {

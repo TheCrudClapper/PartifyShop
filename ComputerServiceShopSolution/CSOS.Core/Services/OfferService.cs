@@ -1,76 +1,79 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.Domain;
+using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.Exceptions;
 using CSOS.Core.Helpers;
-using CSOS.Core.Mappings;
+using CSOS.Core.Mappings.OfferDeliveryTypeMappings;
+using CSOS.Core.Mappings.OfferMappings;
+using CSOS.Core.Mappings.ProductMappings;
+using CSOS.Core.ServiceContracts;
 using Microsoft.EntityFrameworkCore;
+using System;
 namespace ComputerServiceOnlineShop.Services
 {
     public class OfferService : IOfferService
     {
         private readonly DatabaseContext _databaseContext;
+        private readonly IOfferRepository _offerRepo;
+        private readonly IDeliveryTypeGetterService _deliveryTypeGetterService;
         private readonly IAccountService _accountService;
-        public OfferService(DatabaseContext databaseContext, IAccountService accountService)
+        private readonly IUnitOfWork _unitOfWork;
+        public OfferService(DatabaseContext databaseContext,IAccountService accountService, IDeliveryTypeGetterService deliveryTypeGetterService, IUnitOfWork unitOfWork, IOfferRepository offerRepo)
         {
+            _offerRepo = offerRepo;
             _databaseContext = databaseContext;
             _accountService = accountService;
+            _unitOfWork = unitOfWork;
+            _deliveryTypeGetterService = deliveryTypeGetterService;
         }
         public async Task Add(AddOfferDto dto)
         {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
             Guid userId = _accountService.GetLoggedUserId();
             var uploadedImagesUrls = dto.UploadedImagesUrls;
+
             Product product = dto.ToEntity();
             await _databaseContext.Products.AddAsync(product);
 
-            Offer offer = new Offer()
-            {
-                Product = product,
-                IsActive = true,
-                DateCreated = DateTime.Now,
-                Price = dto.Price,
-                SellerId = userId,
-                StockQuantity = dto.StockQuantity,
-                IsOfferPrivate = dto.IsOfferPrivate,
-            };
+            Offer offer = dto.ToEntity(product, userId);
+            await _offerRepo.AddAsync(offer);
             await _databaseContext.Offers.AddAsync(offer);
 
             //adding one selected parcel locker, it is optional
             if (dto.SelectedParcelLocker.HasValue)
             {
-                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
-                {
-                    DeliveryTypeId = dto.SelectedParcelLocker.Value,
-                    DateCreated = DateTime.Now,
-                    Offer = offer,
-                    IsActive = true,
-                });
+                OfferDeliveryType parcelLockerDelivery = dto.ToEntity(offer);
+                await _databaseContext.OfferDeliveryTypes.AddAsync(parcelLockerDelivery);
             }
 
-            foreach (var deliveryId in dto.SelectedOtherDeliveries)
-            {
-                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
-                {
-                    DeliveryTypeId = deliveryId,
-                    Offer = offer,
-                    IsActive = true,
-                    DateCreated = DateTime.Now
-                });
-            }
+            var deliveryTypes = dto.SelectedOtherDeliveries
+                .Select(deliveryId => deliveryId.ToEntity(offer)).ToList();
+            await _databaseContext.OfferDeliveryTypes.AddRangeAsync(deliveryTypes);
 
-            await _databaseContext.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
         }
         public async Task Edit(int id, EditOfferDto dto)
         {
+            if(dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
             var offer = await _databaseContext.Offers
                 .Where(item => item.Id == id && item.IsActive)
                 .Include(item => item.Product)
                     .ThenInclude(item => item.ProductImages)
                 .Include(item => item.OfferDeliveryTypes)
                     .ThenInclude(item => item.DeliveryType)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
+
+            if (offer == null)
+                throw new EntityNotFoundException("Entity of given id was not found");
 
             offer.IsOfferPrivate = dto.IsOfferPrivate;
             offer.StockQuantity = dto.StockQuantity;
@@ -88,6 +91,7 @@ namespace ComputerServiceOnlineShop.Services
                 await DeleteImagesFromOffer(id, dto.ImagesToDelete);
             }
 
+            //saving new images if any
             if (dto.UploadedImagesUrls != null && dto.UploadedImagesUrls.Count > 0)
             {
                 foreach (var url in dto.UploadedImagesUrls)
@@ -106,28 +110,31 @@ namespace ComputerServiceOnlineShop.Services
 
             if (dto.SelectedParcelLocker.HasValue)
             {
-                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
-                {
-                    DeliveryTypeId = dto.SelectedParcelLocker.Value,
-                    DateCreated = DateTime.Now,
-                    Offer = offer,
-                    IsActive = true,
-                });
+                OfferDeliveryType parcelLockerDelivery = dto.ToEntity(offer);
+                await _databaseContext.OfferDeliveryTypes.AddAsync(parcelLockerDelivery);
             }
 
-            foreach (var deliveryId in dto.SelectedOtherDeliveries)
-            {
-                await _databaseContext.OfferDeliveryTypes.AddAsync(new OfferDeliveryType()
-                {
-                    DeliveryTypeId = deliveryId,
-                    Offer = offer,
-                    IsActive = true,
-                    DateCreated = DateTime.Now
-                });
-            }
+            var deliveryTypes = dto.SelectedOtherDeliveries
+                .Select(deliveryId => deliveryId.ToEntity(offer)).ToList();
+            await _databaseContext.OfferDeliveryTypes.AddRangeAsync(deliveryTypes);
 
             await _databaseContext.SaveChangesAsync();
         }
+        public async Task DeleteOffer(int id)
+        {
+            var userId = _accountService.GetLoggedUserId();
+            var offer = await _databaseContext.Offers.Where(item => item.Id == id && item.SellerId == userId)
+                .FirstOrDefaultAsync();
+
+            if (offer == null)
+                throw new EntityNotFoundException("Entity not found or you are not the owner");
+
+            offer.IsActive = false;
+            offer.DateDeleted = DateTime.Now;
+
+            await _databaseContext.SaveChangesAsync();
+        }
+
         public async Task<List<UserOffersResponseDto>> GetUserOffers()
         {
             Guid userId = _accountService.GetLoggedUserId();
@@ -274,47 +281,7 @@ namespace ComputerServiceOnlineShop.Services
 
             return imageSelectList;
         }
-        public async Task DeleteOffer(int id)
-        {
-            var userId = _accountService.GetLoggedUserId();
-            var offer = await _databaseContext.Offers.Where(item => item.Id == id && item.SellerId == userId)
-                .FirstOrDefaultAsync();
-
-            if(offer == null)
-            {
-                throw new UnauthorizedAccessException("Offer not found or you are not the owner");
-            }
-
-            offer.IsActive = false;
-            offer.DateDeleted = DateTime.Now;
-
-            await _databaseContext.SaveChangesAsync();
-        }
-
-        public async Task<OfferBrowserResponseDto> GetAllOffers()
-        {
-            var offerItems = await _databaseContext.Offers.Where(item => item.IsActive)
-                .Where(item => !item.IsOfferPrivate)
-                .Include(item => item.Seller)
-                .Include(item => item.Product)
-                .Select(item => new OfferBrowserItemResponseDto()
-                {
-                    Title = item.Product.ProductName,
-                    Category = item.Product.ProductCategory.Name,
-                    Condition = item.Product.Condition.ConditionTitle,
-                    DateCreated = item.DateCreated.Date,
-                    Price = item.Price,
-                    SellerName = item.Seller.UserName!,
-                    Description = item.Product.Description,
-                    QuantityAvailable = item.StockQuantity,
-                    ImageUrl = item.Product.ProductImages.First().ImagePath,
-                }).ToListAsync();
-
-                return new OfferBrowserResponseDto()
-                {
-                    Items = offerItems
-                };
-        }
+        
         public async Task<OfferBrowserResponseDto> GetFilteredOffers(OfferFilter filter)
         {
             var query = _databaseContext.Offers.Where(item => item.IsActive)
@@ -370,7 +337,7 @@ namespace ComputerServiceOnlineShop.Services
                 Items = items,
                 Filter = filter,
                 SortingOptions = GetSortingOptions(),
-                DeliveryOptions = await GetAllDeliveryTypes(),
+                DeliveryOptions = await _deliveryTypeGetterService.GetAllDeliveryTypes(),
             };
         }
         public async Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers()
@@ -394,8 +361,9 @@ namespace ComputerServiceOnlineShop.Services
         }
         public async Task<bool> DoesOfferExist(int id)
         {
+            Guid loggedUserId = _accountService.GetLoggedUserId();
             return await _databaseContext.Offers
-                .AnyAsync(item => item.Id == id && item.IsActive);
+                .AnyAsync(item => item.Id == id && item.SellerId == loggedUserId && item.IsActive);
         }
         public async Task DeleteImagesFromOffer(int offerId, List<string> imageUrls)
         {
@@ -413,41 +381,6 @@ namespace ComputerServiceOnlineShop.Services
                 image.DateDeleted = DateTime.Now;
             }
             await _databaseContext.SaveChangesAsync();
-        }
-        public async Task<List<SelectListItemDto>> GetProductConditions()
-        {
-            return await _databaseContext.Conditions
-              .Where(item => item.IsActive)
-              .Select(item => new SelectListItemDto { Text = item.ConditionTitle, Value = item.Id.ToString() })
-              .ToListAsync();
-        }
-        public async Task<List<SelectListItemDto>> GetProductCategoriesAsSelectList()
-        {
-            return await _databaseContext.ProductCategories
-                .Where(item => item.IsActive)
-                .Select(item => new SelectListItemDto { Text = item.Name, Value = item.Id.ToString() })
-                .ToListAsync();
-        }
-        public async Task<List<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes()
-        {
-            return await _databaseContext.DeliveryTypes
-                .Where(item => item.IsActive)
-                .Where(item => item.Title.Contains("Locker"))
-                .Select(item => new DeliveryTypeResponseDto()
-                {
-                    Id = item.Id,
-                    Price = item.Price,
-                    Title = item.Title,
-                })
-                .ToListAsync();
-        }
-        public async Task<List<SelectListItemDto>> GetOtherDeliveryTypes()
-        {
-            return await _databaseContext.DeliveryTypes
-                .Where(item => item.IsActive)
-                .Where(item => !item.Title.Contains("Locker"))
-                .Select(item => new SelectListItemDto { Text = item.Title, Value = item.Id.ToString() })
-                .ToListAsync();
         }
 
         //Just for testing
@@ -468,29 +401,6 @@ namespace ComputerServiceOnlineShop.Services
                 }
             };
         }
-
-        public async Task<List<SelectListItemDto>> GetAllDeliveryTypes()
-        {
-            return await _databaseContext.DeliveryTypes.Where(item => item.IsActive)
-                .Select(item => new SelectListItemDto
-                {
-                    Text = item.Title,
-                    Value = item.Id.ToString(),
-
-                }).ToListAsync();
-        }
-
-        public async Task<List<MainPageCardResponseDto>> GetProductCategories()
-        {
-            return await _databaseContext.ProductCategories.Where(item => item.IsActive)
-                .Select(item => new MainPageCardResponseDto
-                {
-                    Id = item.Id,
-                    ImagePath = item.CategoryImage,
-                    Title = item.Name,
-                }).ToListAsync();
-        }
-
         public async Task<List<MainPageCardResponseDto>> GetDealsOfTheDay()
         {
             //add daily reshuffle logic

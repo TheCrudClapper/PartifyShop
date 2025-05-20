@@ -1,6 +1,7 @@
 using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
+using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Authorization;
@@ -12,10 +13,13 @@ namespace ComputerServiceOnlineShop.Controllers;
 public class HomeController : Controller
 {
     private readonly IOfferService _offerService;
+    private readonly ICategoryGetterService _categoryGetterService;
 
-    public HomeController(IOfferService offerService)
+    public HomeController(IOfferService offerService, ICategoryGetterService categoryGetterService)
     {
         _offerService = offerService;
+        _categoryGetterService = categoryGetterService;
+
     }
 
     public async Task<IActionResult> Index()
@@ -23,8 +27,8 @@ public class HomeController : Controller
         var viewModel = new IndexPageViewModel()
         {
             Cards = (await _offerService.GetIndexPageOffers()).ToViewModel(),
-            Categories = (await _offerService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem(),
-            CategoriesSlider = (await _offerService.GetProductCategories()).ToViewModel(),
+            Categories = (await _categoryGetterService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem(),
+            CategoriesSlider = (await _categoryGetterService.GetProductCategories()).ToViewModel(),
             BestDeals = (await _offerService.GetDealsOfTheDay()).ToViewModel(),
         };
         return View(viewModel);

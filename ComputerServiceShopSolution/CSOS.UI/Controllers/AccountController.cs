@@ -97,5 +97,11 @@ namespace ComputerServiceOnlineShop.Controllers
             await _accountService.Logout();
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AccountDetails()
+        {
+            return View();
+        }
     }
 }

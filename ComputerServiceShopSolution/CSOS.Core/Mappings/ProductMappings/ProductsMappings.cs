@@ -5,7 +5,7 @@ namespace CSOS.Core.Mappings.ProductMappings
 {
     public static class ProductsMappings
     {
-        public static Product ToEntity(this AddOfferDto dto)
+        public static Product ToProductEntity(this AddOfferDto dto)
         {
             return new Product
             {

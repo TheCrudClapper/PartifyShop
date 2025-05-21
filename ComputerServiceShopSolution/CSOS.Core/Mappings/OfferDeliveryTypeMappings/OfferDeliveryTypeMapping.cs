@@ -6,7 +6,7 @@ namespace CSOS.Core.Mappings.OfferDeliveryTypeMappings
     public static class OfferDeliveryTypeMapping
     {
         //For mapping single parcel locker delivery
-        public static OfferDeliveryType ToEntity(this AddOfferDto dto, Offer offer)
+        public static OfferDeliveryType ToOfferDeliveryTypeEntity(this AddOfferDto dto, Offer offer)
         {
             return new OfferDeliveryType()
             {
@@ -17,7 +17,7 @@ namespace CSOS.Core.Mappings.OfferDeliveryTypeMappings
             };
         }
 
-        public static OfferDeliveryType ToEntity(this EditOfferDto dto, Offer offer)
+        public static OfferDeliveryType ToOfferDeliveryTypeEntity(this EditOfferDto dto, Offer offer)
         {
             return new OfferDeliveryType()
             {
@@ -28,7 +28,7 @@ namespace CSOS.Core.Mappings.OfferDeliveryTypeMappings
             };
         }
 
-        public static OfferDeliveryType ToEntity(this int deliveryId, Offer offer)
+        public static OfferDeliveryType ToOfferDeliveryTypeEntity(this int deliveryId, Offer offer)
         {
             return new OfferDeliveryType()
             {

@@ -2,7 +2,7 @@
 
 namespace CSOS.Core.DTO.Responses.Offers
 {
-    public class SingleOfferResponseDto
+    public class OfferResponseDto
     {
         public int Id { get; set; }
         public string Condition { get; set; } = null!;
@@ -10,7 +10,6 @@ namespace CSOS.Core.DTO.Responses.Offers
         public string Title { get; set; } = null!;
         public string Seller { get; set; } = null!;
         public int StockQuantity { get; set; }
-        public bool isSellerCompany { get; set; }
         public string Description { get; set; } = null!;
         public string PostalCity { get; set; } = null!;
         public string PostalCode { get; set; } = null!;

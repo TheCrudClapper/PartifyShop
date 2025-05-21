@@ -4,7 +4,6 @@ using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using ComputerServiceOnlineShop.Models.Services;
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
-using CSOS.Core.Domain;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.ServiceContracts;
 using CSOS.Core.Services;
@@ -21,12 +20,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ComputerServiceOnlineShop")));
 
-// Add services to the container.
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Add Business-Logic Services to the container.
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IPictureHandlerService, PictureHandlerService>();
-builder.Services.AddScoped<OfferViewModelInitializer>();
 builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddScoped<ICategoryGetterService, CategoryGetterService>();
 builder.Services.AddScoped<IDeliveryTypeGetterService, DeliveryTypeGetterService>();
@@ -35,10 +33,19 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 
+//Add Helper Classes
+builder.Services.AddScoped<OfferViewModelInitializer>();
+
+//Add Unit of Work
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Adding repositories
-builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 
+builder.Services.AddScoped<IOfferRepository, OfferRepository>();
+builder.Services.AddScoped<IOfferDeliveryTypeRepository, OfferDeliveryTypeRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 //Enabling identity
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()

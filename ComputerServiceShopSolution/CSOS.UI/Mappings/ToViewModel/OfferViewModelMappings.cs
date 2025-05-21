@@ -55,7 +55,7 @@ namespace CSOS.UI.Mappings.ToViewModel
             };
         }
 
-        public static SingleOfferViewModel ToViewModel(this SingleOfferResponseDto dto)
+        public static SingleOfferViewModel ToViewModel(this OfferResponseDto dto)
         {
             return new SingleOfferViewModel()
             {
@@ -67,7 +67,6 @@ namespace CSOS.UI.Mappings.ToViewModel
                 }).ToList(),
                 Condition = dto.Condition,
                 Id = dto.Id,
-                isSellerCompany = dto.isSellerCompany,
                 Title = dto.Title,
                 Price = dto.Price,
                 DateCreated = dto.DateCreated,

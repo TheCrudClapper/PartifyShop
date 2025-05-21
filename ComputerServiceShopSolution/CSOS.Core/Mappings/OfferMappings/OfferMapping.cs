@@ -5,7 +5,7 @@ namespace CSOS.Core.Mappings.OfferMappings
 {
     public static class OfferMapping
     {
-        public static Offer ToEntity(this AddOfferDto dto, Product product, Guid userId)
+        public static Offer ToOfferEntity(this AddOfferDto dto, Product product, Guid userId)
         {
             return new Offer()
             {

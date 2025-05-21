@@ -1,5 +1,4 @@
 ﻿using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
 
@@ -27,7 +26,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// </summary>
         /// <param name="id">CartiD of offer</param>
         /// <returns>Returns an element from database of type SingleOfferViewModel</returns>
-        Task<SingleOfferResponseDto> GetOffer(int id);
+        Task<OfferResponseDto> GetOffer(int id);
 
         /// <summary>
         /// Gets user's offer with filtering by product name
@@ -83,7 +82,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// Gets items for the main page of application
         /// </summary>
         /// <returns>An IEnumerable collection with objects of MainPageCardViewModel</returns>
-        Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers();
+        Task<List<MainPageCardResponseDto>> GetIndexPageOffers();
 
         /// <summary>
         /// TODO: Change this shit to have filtering options from db

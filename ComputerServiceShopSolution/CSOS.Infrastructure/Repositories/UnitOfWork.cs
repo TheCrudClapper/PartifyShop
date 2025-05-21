@@ -1,5 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Entities.Contexts;
-using CSOS.Core.Domain;
+using CSOS.Core.Domain.RepositoryContracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
-using CSOS.Core.Domain;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Deliveries;
@@ -12,24 +10,29 @@ using CSOS.Core.Mappings.OfferDeliveryTypeMappings;
 using CSOS.Core.Mappings.OfferMappings;
 using CSOS.Core.Mappings.ProductMappings;
 using CSOS.Core.ServiceContracts;
-using Microsoft.EntityFrameworkCore;
-using System;
 namespace ComputerServiceOnlineShop.Services
 {
     public class OfferService : IOfferService
     {
-        private readonly DatabaseContext _databaseContext;
         private readonly IOfferRepository _offerRepo;
+        private readonly IProductRepository _productRepo;
+        private readonly IOfferDeliveryTypeRepository _offerDeliveryTypeRepo;
+        private readonly IProductImageRepository _productImageRepo;
         private readonly IDeliveryTypeGetterService _deliveryTypeGetterService;
         private readonly IAccountService _accountService;
         private readonly IUnitOfWork _unitOfWork;
-        public OfferService(DatabaseContext databaseContext,IAccountService accountService, IDeliveryTypeGetterService deliveryTypeGetterService, IUnitOfWork unitOfWork, IOfferRepository offerRepo)
+        public OfferService(IAccountService accountService, IDeliveryTypeGetterService deliveryTypeGetterService, IUnitOfWork unitOfWork,
+            IOfferRepository offerRepo,
+            IProductRepository productRepo,
+            IOfferDeliveryTypeRepository offerDeliveryTypeRepo, IProductImageRepository productImageRepo)
         {
+            _productRepo = productRepo;
+            _offerDeliveryTypeRepo = offerDeliveryTypeRepo;
             _offerRepo = offerRepo;
-            _databaseContext = databaseContext;
             _accountService = accountService;
             _unitOfWork = unitOfWork;
             _deliveryTypeGetterService = deliveryTypeGetterService;
+            _productImageRepo = productImageRepo;
         }
         public async Task Add(AddOfferDto dto)
         {
@@ -39,38 +42,32 @@ namespace ComputerServiceOnlineShop.Services
             Guid userId = _accountService.GetLoggedUserId();
             var uploadedImagesUrls = dto.UploadedImagesUrls;
 
-            Product product = dto.ToEntity();
-            await _databaseContext.Products.AddAsync(product);
+            Product product = dto.ToProductEntity();
+            await _productRepo.AddAsync(product);
 
-            Offer offer = dto.ToEntity(product, userId);
+            Offer offer = dto.ToOfferEntity(product, userId);
             await _offerRepo.AddAsync(offer);
-            await _databaseContext.Offers.AddAsync(offer);
 
             //adding one selected parcel locker, it is optional
             if (dto.SelectedParcelLocker.HasValue)
             {
-                OfferDeliveryType parcelLockerDelivery = dto.ToEntity(offer);
-                await _databaseContext.OfferDeliveryTypes.AddAsync(parcelLockerDelivery);
+                OfferDeliveryType parcelLockerDelivery = dto.ToOfferDeliveryTypeEntity(offer);
+                await _offerDeliveryTypeRepo.AddAsync(parcelLockerDelivery);
             }
 
             var deliveryTypes = dto.SelectedOtherDeliveries
-                .Select(deliveryId => deliveryId.ToEntity(offer)).ToList();
-            await _databaseContext.OfferDeliveryTypes.AddRangeAsync(deliveryTypes);
+                .Select(deliveryId => deliveryId.ToOfferDeliveryTypeEntity(offer)).ToList();
+            await _offerDeliveryTypeRepo.AddRangeAsync(deliveryTypes);
 
             await _unitOfWork.SaveChangesAsync();
         }
         public async Task Edit(int id, EditOfferDto dto)
         {
-            if(dto == null)
+            if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            var offer = await _databaseContext.Offers
-                .Where(item => item.Id == id && item.IsActive)
-                .Include(item => item.Product)
-                    .ThenInclude(item => item.ProductImages)
-                .Include(item => item.OfferDeliveryTypes)
-                    .ThenInclude(item => item.DeliveryType)
-                .FirstOrDefaultAsync();
+            Guid userId = _accountService.GetLoggedUserId();
+            var offer = await _offerRepo.GetOfferWithDetailsToEdit(id, userId);
 
             if (offer == null)
                 throw new EntityNotFoundException("Entity of given id was not found");
@@ -86,7 +83,7 @@ namespace ComputerServiceOnlineShop.Services
             product.ProductCategoryId = dto.SelectedProductCategory;
 
             //deletes images checked by user
-            if(dto.ImagesToDelete?.Count > 0 && dto.ImagesToDelete != null)
+            if (dto.ImagesToDelete?.Count > 0 && dto.ImagesToDelete != null)
             {
                 await DeleteImagesFromOffer(id, dto.ImagesToDelete);
             }
@@ -110,215 +107,99 @@ namespace ComputerServiceOnlineShop.Services
 
             if (dto.SelectedParcelLocker.HasValue)
             {
-                OfferDeliveryType parcelLockerDelivery = dto.ToEntity(offer);
-                await _databaseContext.OfferDeliveryTypes.AddAsync(parcelLockerDelivery);
+                OfferDeliveryType parcelLockerDelivery = dto.ToOfferDeliveryTypeEntity(offer);
+                await _offerDeliveryTypeRepo.AddAsync(parcelLockerDelivery);
             }
 
             var deliveryTypes = dto.SelectedOtherDeliveries
-                .Select(deliveryId => deliveryId.ToEntity(offer)).ToList();
-            await _databaseContext.OfferDeliveryTypes.AddRangeAsync(deliveryTypes);
+                .Select(deliveryId => deliveryId.ToOfferDeliveryTypeEntity(offer)).ToList();
+            await _offerDeliveryTypeRepo.AddRangeAsync(deliveryTypes);
 
-            await _databaseContext.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
         }
         public async Task DeleteOffer(int id)
         {
-            var userId = _accountService.GetLoggedUserId();
-            var offer = await _databaseContext.Offers.Where(item => item.Id == id && item.SellerId == userId)
-                .FirstOrDefaultAsync();
+            Guid userId = _accountService.GetLoggedUserId();
+            var offer = await _offerRepo.GetUserOffersByIdAsync(id, userId);
 
             if (offer == null)
                 throw new EntityNotFoundException("Entity not found or you are not the owner");
 
-            offer.IsActive = false;
-            offer.DateDeleted = DateTime.Now;
+            _offerRepo.SoftDelete(offer);
 
-            await _databaseContext.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<List<UserOffersResponseDto>> GetUserOffers()
-        {
-            Guid userId = _accountService.GetLoggedUserId();
-            return await _databaseContext.Offers.Where(item => item.IsActive)
-                .Where(item => item.SellerId == userId)
-                .Include(item => item.Product)
-                .ThenInclude(item => item.ProductImages)
-                .Select(item => new UserOffersResponseDto()
-                {
-                    Id = item.Id,
-                    DateCreated = item.DateCreated,
-                    ProductCondition = item.Product.Condition.ConditionTitle,
-                    Price = item.Price,
-                    StockQuantity = item.StockQuantity,
-                    ProductCategory = item.Product.ProductCategory.Name,
-                    ProductStatus = item.IsOfferPrivate,
-                    ProductName = item.Product.ProductName,
-                    ImageUrl = item.Product.ProductImages
-                        .Where(item => item.IsActive)
-                        .First().ImagePath
-                })
-                .ToListAsync();
-        }
         public async Task<List<UserOffersResponseDto>> GetFilteredUserOffers(string? title)
         {
             Guid userId = _accountService.GetLoggedUserId();
+            var offers = await _offerRepo.GetFilteredUserOffersAsync(title, userId);
 
-            var query =  _databaseContext.Offers.Where(item => item.IsActive)
-                .Where(item => item.SellerId == userId)
-                .Include(item => item.Product)
-                .ThenInclude(item => item.ProductImages)
-                .AsQueryable();
-
-                if (!string.IsNullOrWhiteSpace(title))
-                    query = query.Where(item => item.Product.ProductName.Contains(title));
-
-                var items = await query.Select(item => new UserOffersResponseDto()
-                {
-                    Id = item.Id,
-                    DateCreated = item.DateCreated,
-                    ProductCondition = item.Product.Condition.ConditionTitle,
-                    Price = item.Price,
-                    StockQuantity = item.StockQuantity,
-                    ProductCategory = item.Product.ProductCategory.Name,
-                    ProductStatus = item.IsOfferPrivate,
-                    ProductName = item.Product.ProductName,
-                    ImageUrl = item.Product.ProductImages
-                        .Where(item => item.IsActive)
-                        .First().ImagePath
-                })
-                .ToListAsync();
-
+            var items = offers.Select(item => new UserOffersResponseDto()
+            {
+                Id = item.Id,
+                DateCreated = item.DateCreated,
+                ProductCondition = item.Product.Condition.ConditionTitle,
+                Price = item.Price,
+                StockQuantity = item.StockQuantity,
+                ProductCategory = item.Product.ProductCategory.Name,
+                ProductStatus = item.IsOfferPrivate,
+                ProductName = item.Product.ProductName,
+                ImageUrl = item.Product.ProductImages
+                       .Where(item => item.IsActive)
+                       .First().ImagePath
+            })
+            .ToList();
             return items;
+
         }
-        public async Task<SingleOfferResponseDto> GetOffer(int id)
-        {
-            return await _databaseContext.Offers.Where(item => item.IsActive)
-                .Where(item => item.Id == id)
-                .Include(item => item.Product)
-                .Include(item => item.Seller)
-                .Include(item => item.OfferDeliveryTypes)
-                    .ThenInclude(item => item.DeliveryType)
-                .Select(item => new SingleOfferResponseDto()
-                {
-                    Id = item.Id,
-                    Condition = item.Product.Condition.ConditionTitle,
-                    DateCreated = item.DateCreated.Date,
-                    Seller = item.Seller.UserName!,
-                    Description = item.Product.Description,
-                    Price = item.Price,
-                    StockQuantity = item.StockQuantity,
-                    Title = item.Product.ProductName,
-                    isSellerCompany = (string.IsNullOrEmpty(item.Seller.NIP)) ? false : true,
-                    Place = item.Seller.Address.Place,
-                    PostalCity = item.Seller.Address.PostalCity,
-                    PostalCode = item.Seller.Address.PostalCode,
-                    ProductImages = item.Product.ProductImages
-                        .Where(item => item.IsActive)
-                        .Select(item => item.ImagePath)
-                        .ToList(),
-                    AvaliableDeliveryTypes = item.OfferDeliveryTypes
-                    .Select(item => new DeliveryTypeResponseDto()
-                    {
-                        Title = item.DeliveryType.Title,
-                        Price = item.DeliveryType.Price,
-                        Id = item.DeliveryType.Id
-                    }).ToList()
-                })
-                .FirstAsync();
-        }
+
         public async Task<EditOfferResponseDto> GetOfferForEdit(int id)
         {
             Guid userId = _accountService.GetLoggedUserId();
-            return await _databaseContext.Offers
-                .Where(item => item.IsActive)
-                .Where(item => item.SellerId == userId)
-                .Where(item => item.Id == id)
-                .Include(item => item.Product)
-                .Select(item => new EditOfferResponseDto()
-                {
-                    Id = item.Id,
-                    ProductName = item.Product.ProductName,
-                    Price = item.Price,
-                    ExistingImagesUrls = item.Product.ProductImages
-                        .Where(item => item.IsActive)
-                        .Select(item => new SelectListItemDto()
-                        {
-                            Value = item.ImagePath,
-                            Text = item.ImagePath,
-                        })
-                        .ToList(),
-                    Description = item.Product.Description,
-                    SelectedProductCondition = item.Product.Condition.Id.ToString(),
-                    SelectedProductCategory = item.Product.ProductCategory.Id.ToString(),
-                    IsOfferPrivate = item.IsOfferPrivate,
-                    StockQuantity = item.StockQuantity,
-                    SelectedOtherDeliveries = item.OfferDeliveryTypes
-                        .Where(item => !item.DeliveryType.Title.Contains("Locker"))
-                        .Select(item => item.DeliveryTypeId)
-                        .ToList(),
-                    SelectedParcelLocker = item.OfferDeliveryTypes
-                        .Where(item => item.DeliveryType.Title.Contains("Locker"))
-                        .Select(item => item.DeliveryTypeId)
-                        .FirstOrDefault(),
-                })
-                .FirstAsync();
+            var offer = await _offerRepo.GetOfferWithAllDetailsByUserAsync(id, userId);
+            if (offer == null)
+                throw new EntityNotFoundException("This offer doesn't exist or doesn't belong to you");
+
+            return new EditOfferResponseDto()
+            {
+                Id = offer.Id,
+                ProductName = offer.Product.ProductName,
+                Price = offer.Price,
+                ExistingImagesUrls = offer.Product.ProductImages
+                    .Where(item => item.IsActive)
+                    .Select(item => new SelectListItemDto()
+                    {
+                        Value = item.ImagePath,
+                        Text = item.ImagePath,
+                    })
+                    .ToList(),
+                Description = offer.Product.Description,
+                SelectedProductCondition = offer.Product.Condition.Id.ToString(),
+                SelectedProductCategory = offer.Product.ProductCategory.Id.ToString(),
+                IsOfferPrivate = offer.IsOfferPrivate,
+                StockQuantity = offer.StockQuantity,
+                SelectedOtherDeliveries = offer.OfferDeliveryTypes
+                    .Where(item => !item.DeliveryType.Title.Contains("Locker"))
+                    .Select(item => item.DeliveryTypeId)
+                    .ToList(),
+                SelectedParcelLocker = offer.OfferDeliveryTypes
+                    .Where(item => item.DeliveryType.Title.Contains("Locker"))
+                    .Select(item => item.DeliveryTypeId)
+                    .FirstOrDefault(),
+            };
         }
+
         public async Task<List<SelectListItemDto>> GetOfferPictures(int id)
         {
-            var imagePaths = await _databaseContext.Offers.Where(item => item.IsActive)
-                .Where(item => item.Id == id)
-                .Include(item => item.Product)
-                    .ThenInclude(item => item.ProductImages)
-                .SelectMany(item => item.Product.ProductImages
-                    .Where(img => img.IsActive)
-                    .Select(img => img.ImagePath))
-                .ToListAsync();
-
-            var imageSelectList = imagePaths.Select(path => new SelectListItemDto
-            {
-                Value = path,
-                Text = path,
-            }).ToList();
-
-            return imageSelectList;
+            return (await _offerRepo.GetOfferPicturesAsSelectListDto(id)).ToList();
         }
-        
+
+        //OK
         public async Task<OfferBrowserResponseDto> GetFilteredOffers(OfferFilter filter)
         {
-            var query = _databaseContext.Offers.Where(item => item.IsActive)
-                .Where(item => !item.IsOfferPrivate)
-                .Include(item => item.Seller)
-                .Include(item => item.Product)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(filter.SearchPhrase))
-                query = query.Where(item => item.Product.ProductName.Contains(filter.SearchPhrase) || item.Product.Description.Contains(filter.SearchPhrase));
-
-            if (filter.CategoryId != null)
-                query = query.Where(item => item.Product.ProductCategoryId == filter.CategoryId);
-
-            if (filter.PriceFrom.HasValue)
-                query = query.Where(item => item.Price >= filter.PriceFrom);
-
-            if (filter.PriceTo.HasValue)
-                query = query.Where(item => item.Price <= filter.PriceTo);
-
-            if (filter.SortOption == "price_desc")
-                query = query.OrderByDescending(item => item.Price);
-
-            if (filter.SortOption == "price_asc")
-                query = query.OrderBy(item => item.Price);
-
-
-            if (!string.IsNullOrWhiteSpace(filter.DeliveryOption))
-            {
-                if (int.TryParse(filter.DeliveryOption, out int deliveryId))
-                {
-                    query = query.Where(item =>
-                        item.OfferDeliveryTypes.Any(dt => dt.DeliveryTypeId == deliveryId));
-                }
-            }
-            
-            var items = await query.Select(item => new OfferBrowserItemResponseDto()
+            var offers = await _offerRepo.GetFilteredOffersAsync(filter);
+            var items = offers.Select(item => new OfferBrowserItemResponseDto()
             {
                 Id = item.Id,
                 Title = item.Product.ProductName,
@@ -330,7 +211,8 @@ namespace ComputerServiceOnlineShop.Services
                 Description = item.Product.Description,
                 QuantityAvailable = item.StockQuantity,
                 ImageUrl = item.Product.ProductImages.First().ImagePath,
-            }).ToListAsync();
+            })
+            .ToList();
 
             return new OfferBrowserResponseDto()
             {
@@ -340,47 +222,35 @@ namespace ComputerServiceOnlineShop.Services
                 DeliveryOptions = await _deliveryTypeGetterService.GetAllDeliveryTypes(),
             };
         }
-        public async Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers()
+        //OK
+        public async Task<List<MainPageCardResponseDto>> GetIndexPageOffers()
         {
-            return await _databaseContext.Offers.Where(item => item.IsActive)
-                .Where(item => !item.IsOfferPrivate)
-                .Include(item => item.Product)
-                .ThenInclude(item => item.ProductImages)
-                .OrderByDescending(item => item.DateCreated)
-                .Take(12)
-                .Select(item => new MainPageCardResponseDto()
-                {
-                    Id = item.Id,
-                    Price = item.Price,
-                    Title = item.Product.ProductName,
-                    ImagePath = item.Product.ProductImages
-                    .Where(item => item.IsActive).
-                    First().ImagePath,
-                })
-                .ToListAsync();
+            var offers = await _offerRepo.GetOffersByTakeAsync();
+            return offers.Select(item => new MainPageCardResponseDto()
+            {
+                Id = item.Id,
+                ImagePath = item.Product.ProductImages.First().ImagePath,
+                Price = item.Price,
+                Title = item.Product.ProductName,
+            })
+            .ToList();
         }
+        //OK
         public async Task<bool> DoesOfferExist(int id)
         {
-            Guid loggedUserId = _accountService.GetLoggedUserId();
-            return await _databaseContext.Offers
-                .AnyAsync(item => item.Id == id && item.SellerId == loggedUserId && item.IsActive);
+            return await _offerRepo.IsOfferInDb(id);
         }
         public async Task DeleteImagesFromOffer(int offerId, List<string> imageUrls)
         {
-            var productImages = await _databaseContext.Offers
-                .Where(item => item.IsActive && item.Id == offerId)
-                .Include(item => item.Product)
-                    .ThenInclude(item => item.ProductImages)
-                    .SelectMany(item => item.Product.ProductImages)
-                    .Where(item => imageUrls.Contains(item.ImagePath) && item.IsActive)
-                    .ToListAsync();
+            var productImages = await _productImageRepo.GetImagesFromOffer(offerId, imageUrls);
 
             foreach (var image in productImages)
             {
                 image.IsActive = false;
                 image.DateDeleted = DateTime.Now;
             }
-            await _databaseContext.SaveChangesAsync();
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         //Just for testing
@@ -404,25 +274,57 @@ namespace ComputerServiceOnlineShop.Services
         public async Task<List<MainPageCardResponseDto>> GetDealsOfTheDay()
         {
             //add daily reshuffle logic
-            var count = await _databaseContext.Offers.CountAsync(item => item.IsActive && !item.IsOfferPrivate);
+            var count = await _offerRepo.GetNonPrivateOfferCount();
             if (count == 0)
                 return new();
 
             var take = Math.Min(count, 7);
 
-            return await _databaseContext.Offers.Where(item => item.IsActive && !item.IsOfferPrivate)
-                .OrderBy(item => Guid.NewGuid())
-                .Take(take)
-                .Select(item => new MainPageCardResponseDto
-                {
-                    Id = item.Id,
-                    ImagePath = item.Product.ProductImages
-                        .Where(item => item.IsActive)
-                        .First().ImagePath,
-                    Price = item.Price,
-                    Title = item.Product.ProductName,
+            var offers = await _offerRepo.GetOffersByTakeAsync(take);
+            return offers.Select(item => new MainPageCardResponseDto()
+            {
+                Id = item.Id,
+                ImagePath = item.Product.ProductImages.FirstOrDefault()?.ImagePath ?? "sex",
+                Price = item.Price,
+                Title = item.Product.ProductName,
+            })
+            .ToList();
 
-                }).ToListAsync();
+        }
+
+        public async Task<OfferResponseDto> GetOffer(int id)
+        {
+            var offer = await _offerRepo.GetOfferWithAllDetailsAsync(id);
+            if (offer == null)
+                throw new EntityNotFoundException("Item of given ID not found");
+
+            var dto = new OfferResponseDto()
+            {
+                Id = offer.Id,
+                Condition = offer.Product.Condition.ConditionTitle,
+                DateCreated = offer.DateCreated.Date,
+                Seller = offer.Seller.UserName!,
+                Description = offer.Product.Description,
+                Price = offer.Price,
+                StockQuantity = offer.StockQuantity,
+                Title = offer.Product.ProductName,
+                Place = offer.Seller.Address.Place,
+                PostalCity = offer.Seller.Address.PostalCity,
+                PostalCode = offer.Seller.Address.PostalCode,
+                ProductImages = offer.Product.ProductImages
+                        .Where(item => item.IsActive)
+                        .Select(item => item.ImagePath)
+                        .ToList(),
+                AvaliableDeliveryTypes = offer.OfferDeliveryTypes
+                    .Select(item => new DeliveryTypeResponseDto()
+                    {
+                        Title = item.DeliveryType.Title,
+                        Price = item.DeliveryType.Price,
+                        Id = item.DeliveryType.Id
+                    }).ToList()
+            };
+
+            return dto;
         }
     }
 }

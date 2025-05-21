@@ -1,81 +1,59 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
+using CSOS.Core.Mappings.AddressMappings;
+using CSOS.Core.Mappings.ApplicationUserMappings;
+using CSOS.Core.Mappings.CartMappings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace ComputerServiceOnlineShop.Models.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly DatabaseContext _databaseContext;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public AccountService(DatabaseContext databaseContext, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor)
+        private readonly IAccountRepository _accountRepo;
+        public AccountService
+            (UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IHttpContextAccessor httpContextAccessor,
+            IAccountRepository accountRepository,
+            IUnitOfWork unitOfWork)
         {
-            _databaseContext = databaseContext;
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _accountRepo = accountRepository;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
         }
         public async Task<IdentityResult> Register(RegisterDto dto)
         {
-            var address = new Address()
-            {
-                Place = dto.Place,
-                Street = dto.Street,
-                PostalCity = dto.PostalCity,
-                PostalCode = dto.PostalCode,
-                HouseNumber = dto.HouseNumber,
-                CountryId = dto.SelectedCountry,
-                IsActive = true,
-                DateCreated = DateTime.Now,
-            };
-            await _databaseContext.Addresses.AddAsync(address);
+            Address address = dto.ToAddressEntity();
 
-            var cart = new Cart()
-            {
-                IsActive = true,
-                DateCreated = DateTime.Now,
-            };
-            await _databaseContext.Carts.AddAsync(cart);
-            await _databaseContext.SaveChangesAsync();
+            Cart cart = dto.ToCartEntity();
 
-            var user = new ApplicationUser()
-            {
-                UserName = dto.Email,
-                Address = address,
-                FirstName = dto.FirstName,
-                Title = dto.Title,
-                Surname = dto.Surname,
-                PhoneNumber = dto.PhoneNumber,
-                Cart = cart,
-                DateCreated = DateTime.Now,
-                IsActive = true,
-                Email = dto.Email,
-                NIP = dto.NIP,
-            };
+            await _unitOfWork.SaveChangesAsync();
+
+            ApplicationUser user = dto.ToApplicationUserEntity(address, cart);
             var result =  await _userManager.CreateAsync(user, dto.Password);
+
             if (result.Succeeded)
-            {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-            }
+
             return result;
         }
         public async Task<SignInResult> Login(LoginDto dto)
         {
-            var response = await _databaseContext.Users
-                .AnyAsync(item => item.UserName == dto.Email && item.IsActive);
+            var response = await _accountRepo.IsUserByEmailInDatabaseAsync(dto.Email);
 
             if (!response)
-            {
                 return SignInResult.Failed;
-            }
 
             return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: false, lockoutOnFailure:false);
         }

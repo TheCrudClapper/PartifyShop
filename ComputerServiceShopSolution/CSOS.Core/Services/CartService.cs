@@ -160,7 +160,7 @@ namespace ComputerServiceOnlineShop.Services
                 .Include(item => item.Offer)
                 .FirstOrDefaultAsync(item => item.Id == cartItemId && item.IsActive);
 
-            if (existingItem?.Offer == null)
+            if (existingItem == null || existingItem.Offer == null)
                 throw new InvalidOperationException("Something went wrong");
 
             if (existingItem == null)

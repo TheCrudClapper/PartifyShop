@@ -34,7 +34,7 @@ namespace CSOS.UI.Helpers
         public async Task PopulateConditions<TViewModel>(TViewModel viewModel) where TViewModel : BaseOfferViewModel
         {
             viewModel.ProductConditionsSelectList =
-                (await _conditionGetterService.GetProductConditions()).ConvertToSelectListItem();
+                (await _conditionGetterService.GetProductConditionsAsSelectList()).ConvertToSelectListItem();
         }
 
         public async Task PopulateCategories<TViewModel>(TViewModel viewModel) where TViewModel : BaseOfferViewModel

@@ -1,50 +1,57 @@
-﻿using ComputerServiceOnlineShop.Entities.Contexts;
-using CSOS.Core.DTO;
+﻿using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.ServiceContracts;
-using Microsoft.EntityFrameworkCore;
+using CSOS.Core.Domain.RepositoryContracts;
 
 namespace CSOS.Core.Services
 {
     public class DeliveryTypeGetterService : IDeliveryTypeGetterService
     {
-        public readonly DatabaseContext _databaseContext;
-        public DeliveryTypeGetterService(DatabaseContext databaseContext)
+        private readonly IDeliveryTypeRepository _deliveryTypeRepository;
+
+        public DeliveryTypeGetterService(IDeliveryTypeRepository deliveryTypeRepository)
         {
-            _databaseContext = databaseContext;
+            _deliveryTypeRepository = deliveryTypeRepository;
         }
+
         public async Task<List<SelectListItemDto>> GetAllDeliveryTypes()
         {
-            return await _databaseContext.DeliveryTypes.Where(item => item.IsActive)
-                .Select(item => new SelectListItemDto
-                {
-                    Text = item.Title,
-                    Value = item.Id.ToString(),
+            var types = await _deliveryTypeRepository.GetActiveDeliveryTypesAsync();
 
-                }).ToListAsync();
+            return types.Select(item => new SelectListItemDto
+            {
+                Text = item.Title,
+                Value = item.Id.ToString()
+            }).ToList();
         }
 
         public async Task<List<SelectListItemDto>> GetOtherDeliveryTypes()
         {
-            return await _databaseContext.DeliveryTypes
-                .Where(item => item.IsActive)
+            var types = await _deliveryTypeRepository.GetActiveDeliveryTypesAsync();
+
+            return types
                 .Where(item => !item.Title.Contains("Locker"))
-                .Select(item => new SelectListItemDto { Text = item.Title, Value = item.Id.ToString() })
-                .ToListAsync();
+                .Select(item => new SelectListItemDto
+                {
+                    Text = item.Title,
+                    Value = item.Id.ToString()
+                })
+                .ToList();
         }
 
         public async Task<List<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes()
         {
-            return await _databaseContext.DeliveryTypes
-                .Where(item => item.IsActive)
+            var types = await _deliveryTypeRepository.GetActiveDeliveryTypesAsync();
+
+            return types
                 .Where(item => item.Title.Contains("Locker"))
-                .Select(item => new DeliveryTypeResponseDto()
+                .Select(item => new DeliveryTypeResponseDto
                 {
                     Id = item.Id,
                     Price = item.Price,
-                    Title = item.Title,
+                    Title = item.Title
                 })
-                .ToListAsync();
+                .ToList();
         }
     }
 }

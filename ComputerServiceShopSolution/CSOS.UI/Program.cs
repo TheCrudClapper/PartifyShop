@@ -9,6 +9,7 @@ using CSOS.Core.ServiceContracts;
 using CSOS.Core.Services;
 using CSOS.Infrastructure.Repositories;
 using CSOS.UI.Helpers;
+using CSOS.UI.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,7 @@ builder.Services.AddScoped<IConditionRepository, ConditionRepository>();
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IDeliveryTypeRepository, DeliveryTypeRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 //Enabling identity
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
@@ -92,10 +94,15 @@ builder.Services.AddControllersWithViews(options =>
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseDeveloperExceptionPage();
+    app.UseHsts();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandlingMiddleware();
     app.UseHsts();
 }
 

@@ -5,6 +5,7 @@ using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 namespace ComputerServiceOnlineShop.Controllers;
@@ -45,9 +46,14 @@ public class HomeController : Controller
     {
         return View();
     }
+    [Route("/Error")]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
+        IExceptionHandlerFeature? handler = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+        if (handler != null && handler.Error != null)
+            ViewBag.Error = handler.Error.Message;
+
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

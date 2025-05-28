@@ -47,71 +47,75 @@
                     </div>
                 </div>
             </div>
-           
+
         </div>
-        <div class="col-12 col-lg-4 midesection-style">
-            <p>
-                Sells and sends:
-                <br />
-                <span class="fw-bold">@Model.Seller</span>
-            </p>
-            <hr />
-            <h3 class="fw-bold">@Model.Price PLN</h3>
-            <div class="row">
-                @if (User.Identity!.Name != Model.Seller)
-                {
-                    <form method="post" asp-action="AddToCart" asp-controller="Cart" asp-route-id = "@Model.Id" class="row">
-                        @Html.AntiForgeryToken()
-                        <div class="col-4">
-                            <input type="number"
-                                value="1"
-                                name="quantity"
-                                class="form-control text-center"
-                                min="1"
-                                max="@Model.StockQuantity"
-                                title="Max available: @Model.StockQuantity"/>
+        <div class="col-12 col-lg-4">
+            <div class="midesection-style shadow">
+                <p>
+                    Sells and sends:
+                    <br />
+                    <span class="fw-bold">@Model.Seller</span>
+                </p>
+                <hr />
+                <h3 class="fw-bold">@Model.Price PLN</h3>
+                <div class="row">
+                    @if (User.Identity!.Name != Model.Seller)
+                    {
+                        <form method="post" asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Id" class="row">
+                            @Html.AntiForgeryToken()
+                            <div class="col-4">
+                                <input type="number"
+                                       value="1"
+                                       name="quantity"
+                                       class="form-control text-center"
+                                       min="1"
+                                       max="@Model.StockQuantity"
+                                       title="Max available: @Model.StockQuantity" />
+                            </div>
+                            <div class="col-8">
+                                <button type="submit" class="btn custom-button w-100">To Cart</button>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="col-9">
+                            <a class="btn custom-button w-100" href="@Url.Action("EditOffer", "Offer", new { id = Model.Id })">Edit</a>
                         </div>
-                        <div class="col-8">
-                            <button type="submit" class="btn custom-button w-100">To Cart</button>
-                        </div>
-                    </form>
-                }
-                else
+                    }
+
+                </div>
+                <p class="mt-2">Available: @Model.StockQuantity</p>
+                <hr />
+                <p>
+                    <strong>Delivery Types</strong>
+                </p>
+                @foreach (var item in Model.AvaliableDeliveryTypes)
                 {
-                    <div class="col-9">
-                        <a class="btn custom-button w-100" href="@Url.Action("EditOffer", "Offer", new {id = Model.Id})">Edit</a>
+                    <div>
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            @item.Title - <span class="text-dark">@item.Price PLN</span>
+                        </label>
                     </div>
                 }
+                <hr />
 
+                <p>
+                    <strong>Sender Location</strong>
+                </p>
+                <strong>Place:</strong> @Model.Place <br />
+                <strong>Postal City:</strong> @Model.PostalCity <br />
+                <strong>Postal Code:</strong> @Model.PostalCode
             </div>
-            <p class="mt-2">Available: @Model.StockQuantity</p>
-            <hr />
-            <p>
-                <strong>Delivery Types</strong>
-            </p>
-            @foreach (var item in Model.AvaliableDeliveryTypes)
-            {
-                <div>
-                    <label class="form-check-label" for="flexRadioDefault1">
-                        @item.Title - <span class="text-dark">@item.Price PLN</span>
-                    </label>
-                </div>
-            }
-            <hr />
-
-            <p>
-                <strong>Sender Location</strong>
-            </p>
-            <strong>Place:</strong> @Model.Place <br />
-            <strong>Postal City:</strong> @Model.PostalCity <br />
-            <strong>Postal Code:</strong> @Model.PostalCode
         </div>
     </div>
     <div class="row g-2 mt-2">
-        <div class="col-12 col-lg-8 midesection-style">
-            <h6 class="mb-2 fw-bold">Product Description</h6>
-            <div class="description-preview">
-                @Html.Raw(Model.Description.Replace("\n", "<br />"))
+        <div class="col-12 col-lg-8">
+            <div class="midesection-style shadow">
+                <h6 class="mb-2 fw-bold">Product Description</h6>
+                <div class="description-preview">
+                    @Html.Raw(Model.Description.Replace("\n", "<br />"))
+                </div>
             </div>
         </div>
     </div>

@@ -2,7 +2,7 @@
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.DTO;
 
-namespace CSOS.Core.Mappings.ApplicationUserMappings
+namespace CSOS.Core.Mappings.ToEntity.ApplicationUserMappings
 {
     public static class ApplicationUserMappings
     {

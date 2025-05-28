@@ -1,6 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
 
 namespace CSOS.Core.Domain.RepositoryContracts

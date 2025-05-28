@@ -11,12 +11,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DTO\Responses\Category\" />
+    <Folder Include="Mappings\ToEntity\CartItemMappings\" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
 
-namespace CSOS.Core.Mappings.OfferMappings
+namespace CSOS.Core.Mappings.ToEntity.OfferMappings
 {
     public static class OfferMapping
     {

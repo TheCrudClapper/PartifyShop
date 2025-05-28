@@ -1,7 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
 
-namespace CSOS.Core.Mappings.OfferDeliveryTypeMappings
+namespace CSOS.Core.Mappings.ToEntity.OfferDeliveryTypeMappings
 {
     public static class OfferDeliveryTypeMapping
     {

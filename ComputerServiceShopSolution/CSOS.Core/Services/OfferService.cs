@@ -6,9 +6,9 @@ using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Exceptions;
 using CSOS.Core.Helpers;
-using CSOS.Core.Mappings.OfferDeliveryTypeMappings;
-using CSOS.Core.Mappings.OfferMappings;
-using CSOS.Core.Mappings.ProductMappings;
+using CSOS.Core.Mappings.ToEntity.OfferDeliveryTypeMappings;
+using CSOS.Core.Mappings.ToEntity.OfferMappings;
+using CSOS.Core.Mappings.ToEntity.ProductMappings;
 using CSOS.Core.ServiceContracts;
 namespace ComputerServiceOnlineShop.Services
 {

@@ -1,8 +1,6 @@
-﻿using ComputerServiceOnlineShop.Entities.Contexts;
-using CSOS.Core.Domain.RepositoryContracts;
+﻿using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.ServiceContracts;
-using Microsoft.EntityFrameworkCore;
 
 namespace CSOS.Core.Services
 {

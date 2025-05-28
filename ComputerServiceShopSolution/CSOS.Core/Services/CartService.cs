@@ -1,53 +1,53 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ServiceContracts;
+using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.Responses.Cart;
-using CSOS.Core.DTO.Responses.CartItem;
-using Microsoft.EntityFrameworkCore;
+using CSOS.Core.Exceptions;
+using CSOS.Core.Mappings.ToDto;
 
 namespace ComputerServiceOnlineShop.Services
 {
     public class CartService : ICartService
     {
-        private readonly DatabaseContext _databaseContext;
+        private readonly ICartRepository _cartRepo;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IAccountService _accountService;
-        public CartService(DatabaseContext databaseContext, IAccountService accountService)
+        private readonly IOfferRepository _offerRepo;
+        public CartService(IAccountService accountService, IOfferRepository offerRepository, ICartRepository cartRepository, IUnitOfWork unitOfWork)
         {
-            _databaseContext = databaseContext;
+            _cartRepo = cartRepository;
+            _offerRepo = offerRepository;
             _accountService = accountService;
+            _unitOfWork = unitOfWork;
         }
         public async Task AddToCart(int offerId, int quantity = 1)
         {
-            if(quantity <= 0)
+            if (quantity <= 0)
                 throw new InvalidOperationException("Quantity must be greater that zero !");
 
-            //downloading offer
-            var offer = await _databaseContext.Offers
-                .Where(item => item.Id == offerId && item.IsActive)
-                .FirstOrDefaultAsync();
+            var offer = await _offerRepo.GetOfferByIdAsync(offerId);
 
             if (offer == null)
                 throw new InvalidOperationException("Couldn't find offer of given id");
 
             int cartId = await GetLoggedUserCartId();
 
-            var existingItem = await _databaseContext.CartItems
-                .Where(item => item.CartId == cartId && item.OfferId == offer.Id && item.IsActive)
-                .FirstOrDefaultAsync();
-            
-            if(existingItem != null)
+            var existingCartItem = await _cartRepo.GetCartItemAsync(cartId, offer.Id);
+
+            if (existingCartItem != null)
             {
-                if(existingItem.Quantity + quantity <= offer.StockQuantity) {
-                    existingItem.Quantity += quantity;
-                    existingItem.DateCreated = DateTime.Now;
+                if (existingCartItem.Quantity + quantity <= offer.StockQuantity)
+                {
+                    existingCartItem.Quantity += quantity;
+                    existingCartItem.DateCreated = DateTime.Now;
                 }
                 else
                     throw new InvalidOperationException("Cannot add more than is in shop");
             }
             else
             {
-                if(quantity > offer.StockQuantity)
+                if (quantity > offer.StockQuantity)
                     throw new InvalidOperationException("Invalid quantity. Please try again.");
 
                 CartItem cartItem = new CartItem()
@@ -57,17 +57,17 @@ namespace ComputerServiceOnlineShop.Services
                     IsActive = true,
                     Offer = offer,
                     Quantity = quantity,
-                }; 
-                await _databaseContext.CartItems.AddAsync(cartItem);
+                };
+
+                await _cartRepo.AddAsync(cartItem);
             }
-            await _databaseContext.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
             await UpdateTotalCartValue(cartId);
         }
 
         public async Task DeleteFromCart(int cartItemId)
         {
-            var cartItem = await _databaseContext.CartItems.Where(item => item.Id == cartItemId)
-                .FirstOrDefaultAsync();
+            var cartItem = await _cartRepo.GetCartItemAsync(cartItemId);
 
             if (cartItem == null)
                 throw new InvalidOperationException("Couldn't find such item in cart");
@@ -78,7 +78,7 @@ namespace ComputerServiceOnlineShop.Services
             cartItem.IsActive = false;
             cartItem.DateDeleted = DateTime.Now;
 
-            await _databaseContext.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
             await UpdateTotalCartValue(cartId);
         }
 
@@ -86,85 +86,56 @@ namespace ComputerServiceOnlineShop.Services
         {
             var cartId = await GetLoggedUserCartId();
 
-            return await _databaseContext.Carts
-                .Where(item => item.Id == cartId)
-                .Include(item => item.CartItems)
-                    .ThenInclude(item => item.Offer)
-                        .ThenInclude(item => item.Product)
-                            .ThenInclude(item => item.ProductImages)
-                .Select(item => new CartResponseDto
-                {
-                    CartItems = item.CartItems.Where(item => item.IsActive)
-                    .Select(item => new CartItemResponseDto
-                    {
-                        Category = item.Offer.Product.ProductCategory.Name,
-                        Condition = item.Offer.Product.Condition.ConditionTitle,
-                        DateAdded = item.DateCreated,
-                        Id = item.Id,
-                        Price = item.Offer.Price,
-                        Quantity = item.Quantity,
-                        Title = item.Offer.Product.ProductName,
-                        ImageUrl = item.Offer.Product.ProductImages.FirstOrDefault().ImagePath,
-                        OfferId = item.OfferId,
+            var cart = await _cartRepo.GetCartWithAllDetailsAsync(cartId);
 
-                    }).ToList(),
-                    TotalCartValue = item.TotalCartValue ?? 0,
-                    TotalDeliveryValue = item.MinimalDeliveryValue ?? 0,
-                    TotalItemsValue = item.TotalItemsValue ?? 0,
+            if (cart == null)
+                throw new EntityNotFoundException("User don't have a cart");
 
-                }).FirstAsync();
+            var dto = cart.ToCartResponseDto();
+
+            return dto;
         }
 
         public async Task<int> GetLoggedUserCartId()
         {
             Guid userId = _accountService.GetLoggedUserId();
 
-            return await _databaseContext.Users
-                .Where(user => user.IsActive && user.Id == userId && user.Cart.IsActive)
-                .Select(item => item.Cart.Id)
-                .FirstAsync();
+            var cartId = await _cartRepo.GetLoggedUserCartIdAsync(userId);
+            if (cartId == null)
+                throw new EntityNotFoundException("User don't have a cart");
+
+            return cartId.Value;
         }
 
         public async Task UpdateTotalCartValue(int cartId)
         {
-            var query = _databaseContext.CartItems
-                .Where(cartItem => cartItem.CartId == cartId && cartItem.IsActive)
-                .Include(offer => offer.Offer)
-                    .ThenInclude(item => item.OfferDeliveryTypes)
-                        .ThenInclude(item => item.DeliveryType)
-                .AsQueryable();
+            var cartItems = await _cartRepo.GetCartItemsForCostsUpdate(cartId);
 
-            var totalValue = await query.SumAsync(item => item.Quantity * item.Offer.Price);
+            if (cartItems == null || cartItems.Count() == 0)
+                return;
 
-            var cartItems = await query.ToListAsync();
+            var totalValue = CalculateItemsTotal(cartItems);
 
-            var minimalDeliveryValue = cartItems.Select(item => item.Offer.OfferDeliveryTypes
-                    .Select(item => item.DeliveryType.Price)
-                    .DefaultIfEmpty(0)
-                    .Min())
-                .Sum();
-            
-            var cart = await _databaseContext.Carts.FirstOrDefaultAsync(item => item.Id == cartId && item.IsActive);
-            if (cart != null)
-            {
-                cart.TotalItemsValue = totalValue;
-                cart.TotalCartValue = totalValue + minimalDeliveryValue;
-                cart.MinimalDeliveryValue = minimalDeliveryValue;
-                await _databaseContext.SaveChangesAsync();
-            }
+            var minimalDeliveryValue = CalculateMinimalDeliveryCost(cartItems);
+
+            var cart = await _cartRepo.GetCartByIdAsync(cartId);
+
+            if (cart == null)
+                throw new EntityNotFoundException("Couldnt find user cart");
+
+            cart.TotalItemsValue = totalValue;
+            cart.TotalCartValue = totalValue + minimalDeliveryValue;
+            cart.MinimalDeliveryValue = minimalDeliveryValue;
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task UpdateCartItemQuantity(int cartItemId, int quantity)
         {
-            var existingItem = await _databaseContext.CartItems
-                .Include(item => item.Offer)
-                .FirstOrDefaultAsync(item => item.Id == cartItemId && item.IsActive);
+            var existingItem = await _cartRepo.GetCartItemWithOfferAsync(cartItemId);
 
             if (existingItem == null || existingItem.Offer == null)
                 throw new InvalidOperationException("Something went wrong");
-
-            if (existingItem == null)
-                throw new InvalidOperationException("Couldn't find this item in db");
 
             if (quantity <= 0)
             {
@@ -180,15 +151,28 @@ namespace ComputerServiceOnlineShop.Services
             else
                 existingItem.Quantity = existingItem.Offer.StockQuantity;
 
-            await _databaseContext.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
             await UpdateTotalCartValue(existingItem.CartId);
         }
 
         public async Task<int> GetCartItemsQuantity()
         {
             var cartId = await GetLoggedUserCartId();
-            return await _databaseContext.CartItems.Where(item => item.CartId == cartId && item.IsActive)
-                .SumAsync(item => item.Quantity);
+            return await _cartRepo.GetCartItemsQuantityAsync(cartId);
+        }
+
+        private decimal CalculateItemsTotal(IEnumerable<CartItem> items)
+        {
+            return items.Sum(item => item.Quantity * item.Offer.Price);
+        }
+
+        private decimal CalculateMinimalDeliveryCost(IEnumerable<CartItem> items)
+        {
+            return items.Select(item => item.Offer.OfferDeliveryTypes
+                    .Select(item => item.DeliveryType.Price)
+                    .DefaultIfEmpty(0)
+                    .Min())
+                .Sum();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
 
-namespace CSOS.Core.Mappings.ProductMappings
+namespace CSOS.Core.Mappings.ToEntity.ProductMappings
 {
     public static class ProductsMappings
     {

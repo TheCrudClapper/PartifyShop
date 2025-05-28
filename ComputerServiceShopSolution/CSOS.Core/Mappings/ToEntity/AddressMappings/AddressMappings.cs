@@ -1,7 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
 
-namespace CSOS.Core.Mappings.AddressMappings
+namespace CSOS.Core.Mappings.ToEntity.AddressMappings
 {
     public static class AddressMappings
     {

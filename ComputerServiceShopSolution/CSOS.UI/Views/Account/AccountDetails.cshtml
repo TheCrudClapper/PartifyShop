@@ -1,0 +1,68 @@
+﻿@{
+    Layout = "_AccountSettingsLayout";
+    ViewBag.Title = "AccountSettings";
+}
+<div class="bg-white shadow py-3 mb-4 rounded-2">
+    <h4 class="fw-bold px-3">Account Details</h4>
+
+    @* Account Details Form Fields *@
+    <form action="/account/update" class="pt-3" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-4 px-3">
+            <label for="nameInput" class="form-label">Name*</label>
+            <input name="Name" type="text"class="form-control is-invalid" id="nameInput" placeholder="Enter name">
+        </div>
+        <div class="mb-4 px-3">
+            <label for="emailInput" class="form-label">Email*</label>
+            <input name="Email" type="text" class="form-control is-invalid" id="emailInput" placeholder="Enter email">
+        </div>
+        <div class="mb-4 px-3">
+            <label for="phoneInput" class="form-label">PhoneNumber</label>
+            <input name="PhoneNumber" type="text" class="form-control is-invalid" id="phoneInput" placeholder="Enter phone number">
+        </div>
+        <div class="mb-4 px-3">
+            <label for="bioInput" class="form-label">Bio</label>
+            <textarea rows="5" name="Bio" id="bioInput" class="form-control is-invalid" placeholder="Enter your bio here"></textarea>
+        </div>
+        <div class="mb-4">
+            <button type="submit" class="btn btn-primary text-white ms-3 mt-2">Update</button>
+        </div>
+    </form>
+</div>
+
+@* Password Change Fields *@
+<div class="bg-white shadow py-3 mb-4 rounded-2">
+    <h4 class="fw-bold px-3">Password Change</h4>
+    <form action="/account/changePassword" class="pt-3" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-4 px-3">
+            <label for="currentPasswordInput" class="form-label">Current Password*</label>
+            <input name="CurrentPassword" type="password" class="form-control is-invalid" id="currentPasswordInput" placeholder="Enter current password">
+        </div>
+        <div class="mb-4 px-3">
+            <label for="newPasswordInput" class="form-label">New Password*</label>
+            <input name="NewPassword" type="password" class="form-control is-invalid" id="newPasswordInput" placeholder="Enter new password">
+        </div>
+        <div class="mb-4 px-3">
+            <label for="confirmPasswordInput" class="form-label">Confirm Password*</label>
+            <input name="ConfirmPassword" type="password" class="form-control is-invalid" id="confirmPasswordInput" placeholder="Enter confirmation password">
+        </div>
+        <div class="mb-4">
+            <button type="submit" class="btn btn-primary text-white ms-3 mt-2">Update</button>
+        </div>
+    </form>
+</div>
+
+@* Account Deletion Option *@
+<div class="bg-white shadow py-3 mb-4 rounded-2">
+    <h4 class="fw-bold px-3">Delete Account</h4>
+    <div class="mb-4 px-3">
+        <span class="text-secondary">
+            Deleting Account means your account will become <b>inactive</b> any sent applications or post application will be also invalidated.
+            You can always reactivate your account if you wish.
+        </span>
+    </div>
+    <div class="mb-4">
+        <a href="/account/deleteAccount" class="btn btn-danger text-white ms-3 mt-2">Delete Account</a>
+    </div>
+</div>

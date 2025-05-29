@@ -32,7 +32,6 @@ public class HomeController : Controller
             CategoriesSlider = (await _categoryGetterService.GetProductCategories()).ToViewModel(),
             BestDeals = (await _offerService.GetDealsOfTheDay()).ToViewModel(),
         };
-        throw new NotImplementedException("Not implemented exception idot");
         return View(viewModel);
     }
     public IActionResult Privacy()

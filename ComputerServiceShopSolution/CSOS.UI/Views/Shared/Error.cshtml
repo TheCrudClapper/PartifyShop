@@ -3,29 +3,19 @@
 @{
     ViewData["Title"] = "Error";
 }
-
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-    
+@section Styles{
+    <link rel="stylesheet" href="~/css/error-styles.css" />
 }
+<div class="container error-container">
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    Error Message:
-</p>
-<span>@ViewBag.Error</span>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+    <div class="row text-center">
+        <div class="col-3"></div>
+        <div class="col-6 midesection-style">
+            <i class="fa-solid fa-6x fa-triangle-exclamation"></i>
+            <h1 class="purple-text fw-bold mt-2">Ooops !</h1>
+            <h2>An error occurred while processing your request.</h2>
+            <span>Try searching or go to <a href="/home" class="purple-text">Marketplace home page</a></span>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>

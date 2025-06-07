@@ -11,11 +11,12 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             _cartService = cartService;
         }
+
         [HttpGet]
         public async Task<IActionResult> Cart()
         {
-            var response = await _cartService.GetLoggedUserCart();
-            var cart = response.ToViewModel();
+            var result = await _cartService.GetLoggedUserCart();
+            var cart = result.Value.ToViewModel();
             return View(cart);
         }
 
@@ -24,40 +25,26 @@ namespace ComputerServiceOnlineShop.Controllers
         //default quantity always 1
         public async Task<IActionResult> AddToCart(int id, int quantity = 1)
         {
-            try
-            {
-                await _cartService.AddToCart(id, quantity);
-                return Json(new { success = true, message = "Item added to cart successfully!" });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
-            }
-            catch (Exception)
-            {
-                return Json(new { success = false, message = "Unexpected server error. Please try again later." });
-            }
+            var result = await _cartService.AddToCart(id, quantity);
+
+            if (result.IsFailure)
+                return Json(new { success = false, message = $"Error: {result.Error.Description}" });
+
+            return Json(new { success = true, message = "Item added to cart successfully!" });
 
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteFromCart(int id)
         {
-            try
-            {
-                await _cartService.DeleteFromCart(id);
-                TempData["SuccessMessage"] = "Item removed from cart successfully";
-                return Json(new { success = true, message = "Item removed from cart successfully!" });
-            }
-            catch(InvalidOperationException ex)
-            { 
-                TempData["ErrorMessage"] = $"Error: {ex.Message}";
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
-            }
-            catch (Exception)
-            {
-                return Json(new { success = false, message = "Unexpected server error. Please try again later." });
-            }
+            var result = await _cartService.DeleteFromCart(id);
+
+            if (result.IsFailure)
+                return Json(new { success = false, message = $"Error: {result.Error.Description}" });
+
+            return Json(new { success = true, message = "Item removed from cart successfully!" });
+
+            //handle message not showing affter last item is deleted from cart. The page chagnes
         }
 
         [HttpPost]

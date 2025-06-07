@@ -3,6 +3,7 @@ using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.Responses.Cart;
+using CSOS.Core.ErrorHandling;
 using CSOS.Core.Exceptions;
 using CSOS.Core.Mappings.ToDto;
 
@@ -21,15 +22,15 @@ namespace ComputerServiceOnlineShop.Services
             _accountService = accountService;
             _unitOfWork = unitOfWork;
         }
-        public async Task AddToCart(int offerId, int quantity = 1)
+        public async Task<Result> AddToCart(int offerId, int quantity = 1)
         {
             if (quantity <= 0)
-                throw new InvalidOperationException("Quantity must be greater that zero !");
+                return Result.Failure(CartItemErrors.QuantityLowerThanZero);
 
             var offer = await _offerRepo.GetOfferByIdAsync(offerId);
 
             if (offer == null)
-                throw new InvalidOperationException("Couldn't find offer of given id");
+                return Result.Failure(CartItemErrors.CartItemDoesNotExists);
 
             int cartId = await GetLoggedUserCartId();
 
@@ -43,12 +44,12 @@ namespace ComputerServiceOnlineShop.Services
                     existingCartItem.DateCreated = DateTime.Now;
                 }
                 else
-                    throw new InvalidOperationException("Cannot add more than is in shop");
+                    return Result.Failure(CartItemErrors.CannotAddMoreToCartException);
             }
             else
             {
                 if (quantity > offer.StockQuantity)
-                    throw new InvalidOperationException("Invalid quantity. Please try again.");
+                    return Result.Failure(CartItemErrors.InvalidItemQuantity);
 
                 CartItem cartItem = new CartItem()
                 {
@@ -63,14 +64,16 @@ namespace ComputerServiceOnlineShop.Services
             }
             await _unitOfWork.SaveChangesAsync();
             await UpdateTotalCartValue(cartId);
+
+            return Result.Success();
         }
 
-        public async Task DeleteFromCart(int cartItemId)
+        public async Task<Result> DeleteFromCart(int cartItemId)
         {
             var cartItem = await _cartRepo.GetCartItemAsync(cartItemId);
 
             if (cartItem == null)
-                throw new InvalidOperationException("Couldn't find such item in cart");
+                return Result.Failure(CartItemErrors.CartItemDoesNotExists);
 
             var cartId = cartItem.CartId;
 
@@ -80,16 +83,18 @@ namespace ComputerServiceOnlineShop.Services
 
             await _unitOfWork.SaveChangesAsync();
             await UpdateTotalCartValue(cartId);
+
+            return Result.Success();
         }
 
-        public async Task<CartResponseDto> GetLoggedUserCart()
+        public async Task<Result<CartResponseDto>> GetLoggedUserCart()
         {
             var cartId = await GetLoggedUserCartId();
 
             var cart = await _cartRepo.GetCartWithAllDetailsAsync(cartId);
 
             if (cart == null)
-                throw new EntityNotFoundException("User don't have a cart");
+                return Result.Failure<CartResponseDto>(CartErrors.CartDoesNotExist(cartId));
 
             var dto = cart.ToCartResponseDto();
 

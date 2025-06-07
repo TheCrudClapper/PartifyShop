@@ -6,6 +6,7 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
 }
+
 @if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
 {
     @await Html.PartialAsync("_ToastMessagePartial", TempData)
@@ -61,7 +62,7 @@
                 <div class="row">
                     @if (User.Identity!.Name != Model.Seller)
                     {
-                        <form method="post" asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Id" class="row">
+                        <form method="post" id="cartForm" asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Id" class="row">
                             @Html.AntiForgeryToken()
                             <div class="col-4">
                                 <input type="number"
@@ -73,7 +74,7 @@
                                        title="Max available: @Model.StockQuantity" />
                             </div>
                             <div class="col-8">
-                                <button type="submit" class="btn custom-button w-100">To Cart</button>
+                                <button type="submit" class="btn custom-button w-100 toCartButton" data-id="@Model.Id"> To Cart</button>
                             </div>
                         </form>
                     }
@@ -120,3 +121,37 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        $(document).on('click', '.toCartButton', function(e){
+            e.preventDefault();
+
+            var $form = $("#cartForm");
+            var offerId = $(this).data('id');
+            var quantity = $form.find('input[name="quantity"]').val();
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                url: '/Cart/AddToCart/' + offerId,
+                type: 'POST',
+                headers: {
+                     'RequestVerificationToken': token
+                },
+                data: {
+                    quantity: quantity
+                },
+                success: function(response){
+                    showToast(response.message, response.success);
+                    if(response.success){
+                         $('#navbarCart').load(location.href + ' #navbarCart');
+                    }
+                },
+                error: function(xhr){
+                    const response = xhr.responseJSON;
+                    const message = response?.message ?? 'Unexpected error occurred. Try again later.';
+                    showToast(message, false);
+                }
+            });
+        });
+    </script>
+}

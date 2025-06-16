@@ -15,7 +15,7 @@
         document.getElementById(rightBtnId)?.addEventListener('click', () => {
             container.scrollBy({ left: itemWidth, behavior: 'smooth' });
         });
-    };    
+    };
     setupScroll('featuredCarousel', 'featuredScrollLeft', 'featuredScrollRight');
     setupScroll('freshCarousel', 'freshScrollLeft', 'freshScrollRight');
     setupScroll('categoryCarousel', 'categoryScrollLeft', 'categoryScrollRight');

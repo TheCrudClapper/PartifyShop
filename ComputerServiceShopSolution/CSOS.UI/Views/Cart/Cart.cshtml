@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
 }
 
-@if (TempData["SuccessMessage"] != null || TempData["ErrorMessage"] != null)
-{
-    @await Html.PartialAsync("_ToastMessagePartial", TempData)
-}
 <div class="container mt-3">
     <div class="row g-3">
         @if (Model.CartItems.Count() > 0)
@@ -60,9 +56,8 @@
                                         </p>
                                         <div class="d-flex justify-content-between">
                                             <div class="w-25">
-                                                <form method="post" asp-action="UpdateQuantityInCart" asp-route-cartItemId="@item.Id">
+                                                 <form method="post" asp-action="UpdateQuantityInCart" asp-route-cartItemId="@item.Id">
                                                     @Html.AntiForgeryToken()
-                                                    <input type="hidden" />
                                                     <input type="number"
                                                     name="quantity"
                                                     data-original-value = "@item.Quantity"
@@ -126,48 +121,5 @@
     </div>
 </div>
 @section Scripts {
-    <script>
-
-        function storeOriginalValue(input){
-            input.dataset.originalValue = input.value;
-        }
-        function submitIfChanged(input){
-            if(input.value !== input.dataset.originalValue){  
-                //write request in ajax
-
-                input.form.submit();
-            }
-        }
-
-        $(document).on('click', '.deleteButton', function(e){
-            e.preventDefault();
-            var offerId = $(this).data('id');
-            var token = $('input[name="__RequestVerificationToken"]').val();
-
-            $.ajax({
-                url: '/Cart/DeleteFromCart/' + offerId,
-                type: 'POST',
-                headers:{
-                    'RequestVerificationToken': token
-                },
-                success: function(response){
-                    if(response.success)
-                    {
-                        if($('#cartItemsContainer .card').length == 1){
-                            location.reload();
-                        } else {
-                            $('#cartItemsContainer').load(location.href + ' #cartItemsContainer');
-                            $('#priceSummaryContainer').load(location.href + ' #priceSummaryContainer > *');
-                        }
-                    showToast(response.message, true);
-                    } else {
-                        showToast(response.message, false);
-                    }
-                },
-                error:function(xhr){
-                      showToast('Unexpected error occurred. Please try again.', false);
-                }
-            });
-        });
-    </script>
+  <script src="~/js/cart-script.js"></script>
 }

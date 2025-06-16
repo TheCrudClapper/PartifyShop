@@ -7,16 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModels\LayoutViewModels\**" />
+    <Content Remove="ViewModels\LayoutViewModels\**" />
+    <EmbeddedResource Remove="ViewModels\LayoutViewModels\**" />
+    <None Remove="ViewModels\LayoutViewModels\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Properties\launchSettings.json" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CSOS.Core\CSOS.Core.csproj" />
     <ProjectReference Include="..\CSOS.Infrastructure\CSOS.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\LayoutViewModels\" />
   </ItemGroup>
 
   <ItemGroup>

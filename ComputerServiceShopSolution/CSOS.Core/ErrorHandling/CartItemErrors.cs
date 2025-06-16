@@ -14,8 +14,8 @@ namespace CSOS.Core.ErrorHandling
         public static readonly Error QuantityLowerThanZero = new Error(
             "CartItem.QuantityLowerThanZero", "Quantity must be greater that zero !");
 
-        public static readonly Error CannotAddMoreToCartException = new Error(
-            "CartItem.CannotAddMoreToCartException", "Cannot add more than is in shop");
+        public static readonly Error CannotAddMoreToCart = new Error(
+            "CartItem.CannotAddMoreToCart", "Cannot add more than is in shop");
 
         public static readonly Error InvalidItemQuantity = new Error(
             "CartItem.InvalidItemQuantity", "Invalid item quantity");

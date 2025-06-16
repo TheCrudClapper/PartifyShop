@@ -1,6 +1,7 @@
 ﻿using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ComputerServiceOnlineShop.Controllers
 {
@@ -43,8 +44,6 @@ namespace ComputerServiceOnlineShop.Controllers
                 return Json(new { success = false, message = $"Error: {result.Error.Description}" });
 
             return Json(new { success = true, message = "Item removed from cart successfully!" });
-
-            //handle message not showing affter last item is deleted from cart. The page chagnes
         }
 
         [HttpPost]
@@ -53,10 +52,15 @@ namespace ComputerServiceOnlineShop.Controllers
             var result = await _cartService.UpdateCartItemQuantity(cartItemId, quantity);
 
             if(result.IsFailure)
-                  TempData["ErrorMessage"] = $"Error: {result.Error}";
+                return Json(new { success = false, message = $"Error: {result.Error.Description}" });
 
-            TempData["SuccessMessage"] = "Updated cart successfully !";
-            return RedirectToAction("Cart");
+             return Json(new { success = true, message = "Updated cart successfully!" });
+        }
+
+        [HttpGet]
+        public IActionResult GetCartItemsCount()
+        {
+            return ViewComponent("NavbarCart");
         }
     }
 }

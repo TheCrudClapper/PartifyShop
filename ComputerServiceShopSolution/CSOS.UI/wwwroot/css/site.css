@@ -187,3 +187,7 @@ body {
     max-height: 750px;
     object-fit: cover;
 }
+.site-checkbox{
+    height: 17px;
+    width: 17px;
+}

@@ -44,7 +44,7 @@ namespace ComputerServiceOnlineShop.Services
                     existingCartItem.DateCreated = DateTime.Now;
                 }
                 else
-                    return Result.Failure(CartItemErrors.CannotAddMoreToCartException);
+                    return Result.Failure(CartItemErrors.CannotAddMoreToCart);
             }
             else
             {
@@ -82,6 +82,7 @@ namespace ComputerServiceOnlineShop.Services
             cartItem.DateDeleted = DateTime.Now;
 
             await _unitOfWork.SaveChangesAsync();
+            await UpdateTotalCartValue(cartId);
 
             return Result.Success();
         }
@@ -154,8 +155,11 @@ namespace ComputerServiceOnlineShop.Services
                 existingItem.DateEdited = DateTime.Now;
             }
             else
+            {
                 existingItem.Quantity = existingItem.Offer.StockQuantity;
-
+                return Result.Failure(CartItemErrors.CannotAddMoreToCart);
+            }
+                
             await _unitOfWork.SaveChangesAsync();
             await UpdateTotalCartValue(existingItem.CartId);
 

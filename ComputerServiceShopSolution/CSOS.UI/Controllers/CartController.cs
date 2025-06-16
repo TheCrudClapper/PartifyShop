@@ -50,15 +50,12 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateQuantityInCart(int cartItemId, int quantity)
         {
-            try
-            {
-                await _cartService.UpdateCartItemQuantity(cartItemId, quantity);
-                TempData["SuccessMessage"] = "Updated cart successfully !";
-            }
-            catch(InvalidOperationException ex)
-            {
-                TempData["ErrorMessage"] = $"Error: {ex.Message}";
-            }
+            var result = await _cartService.UpdateCartItemQuantity(cartItemId, quantity);
+
+            if(result.IsFailure)
+                  TempData["ErrorMessage"] = $"Error: {result.Error}";
+
+            TempData["SuccessMessage"] = "Updated cart successfully !";
             return RedirectToAction("Cart");
         }
     }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace CSOS.Core.ErrorHandling
 {
@@ -18,7 +13,7 @@ namespace CSOS.Core.ErrorHandling
         }
 
         
-        public Result(bool isSuccess, Error error)
+        protected Result(bool isSuccess, Error error)
         {
             if(isSuccess && error != Error.None ||
                 !isSuccess && error == Error.None)
@@ -47,6 +42,7 @@ namespace CSOS.Core.ErrorHandling
         {
             return new Result<TValue>(default, false, error);
         }
+
     }
 
     public class Result<TValue> : Result 

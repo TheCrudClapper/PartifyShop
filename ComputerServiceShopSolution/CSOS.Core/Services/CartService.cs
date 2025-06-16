@@ -82,7 +82,6 @@ namespace ComputerServiceOnlineShop.Services
             cartItem.DateDeleted = DateTime.Now;
 
             await _unitOfWork.SaveChangesAsync();
-            await UpdateTotalCartValue(cartId);
 
             return Result.Success();
         }
@@ -135,17 +134,18 @@ namespace ComputerServiceOnlineShop.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateCartItemQuantity(int cartItemId, int quantity)
+        public async Task<Result> UpdateCartItemQuantity(int cartItemId, int quantity)
         {
             var existingItem = await _cartRepo.GetCartItemWithOfferAsync(cartItemId);
 
             if (existingItem == null || existingItem.Offer == null)
-                throw new InvalidOperationException("Something went wrong");
+                return Result.Failure(CartItemErrors.CartItemDoesNotExists);
 
             if (quantity <= 0)
             {
                 await DeleteFromCart(cartItemId);
-                return;
+                await UpdateTotalCartValue(existingItem.CartId);
+                return Result.Success();
             }
 
             if (quantity <= existingItem.Offer.StockQuantity)
@@ -158,6 +158,8 @@ namespace ComputerServiceOnlineShop.Services
 
             await _unitOfWork.SaveChangesAsync();
             await UpdateTotalCartValue(existingItem.CartId);
+
+            return Result.Success();
         }
 
         public async Task<int> GetCartItemsQuantity()

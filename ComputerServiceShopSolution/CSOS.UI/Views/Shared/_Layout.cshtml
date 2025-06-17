@@ -22,8 +22,9 @@
                     @* Clickable logo and name *@
                     <div class="col-12 col-lg-2 my-auto">
                         <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center gap-2 logo">
-                            <i class="fa-solid fa-store logo-link"></i>
-                            <span class="fw-bold fs-4 logo-link ">Marketplace</span>
+                            <img src="~/images/partify-gray.png" height="40" />
+                           @*  <i class="fa-solid fa-store logo-link"></i>
+                            <span class="fw-bold fs-4 logo-link ">Partify</span> *@
                         </a>
                     </div>
 
@@ -31,7 +32,7 @@
                     <div class="col-lg-7 my-auto">
                         <form role="search" asp-controller="Offer" asp-action="OfferBrowser" method="get">
                             <div class="input-group">
-                                <input type="search" name="SearchPhrase" value="@Context.Request.Query["SearchPhrase"]" placeholder="Search your product" class="form-control" />
+                                <input type="search" name="SearchPhrase" value="@Context.Request.Query["SearchPhrase"]" placeholder="Explore Partify" class="form-control" />
                                 @await Component.InvokeAsync("CategoryDropdown")
                                 <button class="btn bg-white search-button" type="submit">
                                     <i class="fa fa-search"></i>

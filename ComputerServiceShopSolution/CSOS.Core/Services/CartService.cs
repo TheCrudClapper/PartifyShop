@@ -22,6 +22,8 @@ namespace ComputerServiceOnlineShop.Services
             _accountService = accountService;
             _unitOfWork = unitOfWork;
         }
+        //later delete taht and provide mocks
+        public CartService() { }
         public async Task<Result> AddToCart(int offerId, int quantity = 1)
         {
             if (quantity <= 0)
@@ -172,14 +174,20 @@ namespace ComputerServiceOnlineShop.Services
             return await _cartRepo.GetCartItemsQuantityAsync(cartId);
         }
 
-        private decimal CalculateItemsTotal(IEnumerable<CartItem> items)
+        public decimal CalculateItemsTotal(IEnumerable<CartItem> cartItems)
         {
-            return items.Sum(item => item.Quantity * item.Offer.Price);
+            if(cartItems == null || cartItems.Count() == 0)
+                return 0;
+
+            return cartItems.Sum(item => item.Quantity * item.Offer.Price);
         }
 
-        private decimal CalculateMinimalDeliveryCost(IEnumerable<CartItem> items)
+        public decimal CalculateMinimalDeliveryCost(IEnumerable<CartItem> cartItems)
         {
-            return items.Select(item => item.Offer.OfferDeliveryTypes
+            if (cartItems == null || cartItems.Count() == 0)
+                return 0;
+
+            return cartItems.Select(item => item.Offer.OfferDeliveryTypes
                     .Select(item => item.DeliveryType.Price)
                     .DefaultIfEmpty(0)
                     .Min())

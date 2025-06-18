@@ -43,7 +43,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 return View(viewModel);
             }
 
-            RegisterDto dto = viewModel.ToDto();
+            RegisterDto dto = viewModel.ToRegisterDto();
             IdentityResult result = await _accountService.Register(dto);
             if (result.Succeeded)
             {
@@ -74,7 +74,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 return View(viewModel);
             }
 
-            LoginDto dto = viewModel.ToDto();
+            LoginDto dto = viewModel.ToLoginDto();
             var result = await _accountService.Login(dto);
             if (result.Succeeded)
             {

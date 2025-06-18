@@ -20,9 +20,9 @@
                 <div class="row">
 
                     @* Clickable logo and name *@
-                    <div class="col-12 col-lg-2 my-auto">
-                        <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center gap-2 logo">
-                            <img src="~/images/partify-gray.png" height="40" />
+                    <div class="col-12 mb-2 mb-lg-0 col-lg-2">
+                        <a asp-controller="Home" asp-action="Index" class="logo">
+                            <img src="~/images/partify-gray.png" class=" mt-lg-3 mt-xl-0" height="40"/>
                         </a>
                     </div>
 
@@ -43,7 +43,7 @@
                     @if (User.Identity!.IsAuthenticated)
                     {
                         @* For authenticated users select with options *@
-                        <div class="col-lg-3 my-auto">
+                        <div class="col-lg-3 ps-0 my-auto">
                             <ul class="nav justify-content-start">
                                 <li class="nav-item">
                                     @await Component.InvokeAsync("NavbarCart")
@@ -66,9 +66,9 @@
                     else
                     {
                         @* For non authenticated user login and register buttons *@
-                        <div class="col-lg-3 my-auto">
-                            <ul class="nav justify-content-end">
-                                <li class="nav-item">
+                        <div class="col-lg-3 ps-0 my-auto">
+                            <ul class="nav justify-content-start justify-content-lg-end">
+                                <li class="nav-item ">
                                     <a class="nav-link fw-bold" asp-controller="Account" asp-action="Login">
                                         <i class="fa-solid fa-right-to-bracket me-1"></i>
                                         Login

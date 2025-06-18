@@ -5,7 +5,7 @@ namespace CSOS.UI.Mappings.ToDto
 {
     public static class AccountDtoMappings
     {
-        public static RegisterDto ToDto(this RegisterViewModel ViewModel)
+        public static RegisterDto ToRegisterDto(this RegisterViewModel ViewModel)
         {
             return new RegisterDto()
             {
@@ -24,12 +24,13 @@ namespace CSOS.UI.Mappings.ToDto
                 Title = ViewModel.Title,
             };
         }
-        public static LoginDto ToDto(this LoginViewModel ViewModel)
+        public static LoginDto ToLoginDto(this LoginViewModel ViewModel)
         {
             return new LoginDto()
             {
                 Email = ViewModel.Email,
                 Password = ViewModel.Password,
+                isPersistent = ViewModel.isPersistent,
             };
         }
     }

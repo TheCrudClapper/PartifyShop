@@ -55,7 +55,7 @@ namespace ComputerServiceOnlineShop.Models.Services
             if (!response)
                 return SignInResult.Failed;
 
-            return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: false, lockoutOnFailure:false);
+            return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: dto.isPersistent, lockoutOnFailure:false);
         }
 
         public async Task Logout()

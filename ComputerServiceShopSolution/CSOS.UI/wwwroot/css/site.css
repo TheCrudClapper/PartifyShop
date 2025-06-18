@@ -187,7 +187,8 @@ body {
     max-height: 750px;
     object-fit: cover;
 }
-.site-checkbox{
+.site-checkbox {
     height: 17px;
     width: 17px;
+    accent-color: #863cb0;
 }

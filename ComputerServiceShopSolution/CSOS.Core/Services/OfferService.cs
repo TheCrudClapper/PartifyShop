@@ -19,17 +19,23 @@ namespace ComputerServiceOnlineShop.Services
         private readonly IOfferDeliveryTypeRepository _offerDeliveryTypeRepo;
         private readonly IProductImageRepository _productImageRepo;
         private readonly IDeliveryTypeGetterService _deliveryTypeGetterService;
-        private readonly IAccountService _accountService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
-        public OfferService(IAccountService accountService, IDeliveryTypeGetterService deliveryTypeGetterService, IUnitOfWork unitOfWork,
+        public OfferService(
+            IAccountService accountService,
+            IDeliveryTypeGetterService deliveryTypeGetterService,
+            IUnitOfWork unitOfWork,
             IOfferRepository offerRepo,
             IProductRepository productRepo,
-            IOfferDeliveryTypeRepository offerDeliveryTypeRepo, IProductImageRepository productImageRepo)
+            IOfferDeliveryTypeRepository offerDeliveryTypeRepo,
+            IProductImageRepository productImageRepo,
+            ICurrentUserService currentUserService
+            )
         {
             _productRepo = productRepo;
             _offerDeliveryTypeRepo = offerDeliveryTypeRepo;
             _offerRepo = offerRepo;
-            _accountService = accountService;
+            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
             _deliveryTypeGetterService = deliveryTypeGetterService;
             _productImageRepo = productImageRepo;
@@ -39,7 +45,7 @@ namespace ComputerServiceOnlineShop.Services
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            Guid userId = _accountService.GetLoggedUserId();
+            Guid userId = _currentUserService.GetUserId();
             var uploadedImagesUrls = dto.UploadedImagesUrls;
 
             Product product = dto.ToProductEntity();
@@ -66,7 +72,7 @@ namespace ComputerServiceOnlineShop.Services
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
-            Guid userId = _accountService.GetLoggedUserId();
+            Guid userId = _currentUserService.GetUserId();
             var offer = await _offerRepo.GetOfferWithDetailsToEdit(id, userId);
 
             if (offer == null)
@@ -119,7 +125,7 @@ namespace ComputerServiceOnlineShop.Services
         }
         public async Task DeleteOffer(int id)
         {
-            Guid userId = _accountService.GetLoggedUserId();
+            Guid userId = _currentUserService.GetUserId();
             var offer = await _offerRepo.GetUserOffersByIdAsync(id, userId);
 
             if (offer == null)
@@ -132,7 +138,7 @@ namespace ComputerServiceOnlineShop.Services
 
         public async Task<List<UserOffersResponseDto>> GetFilteredUserOffers(string? title)
         {
-            Guid userId = _accountService.GetLoggedUserId();
+            Guid userId = _currentUserService.GetUserId();
             var offers = await _offerRepo.GetFilteredUserOffersAsync(title, userId);
 
             var items = offers.Select(item => new UserOffersResponseDto()
@@ -156,7 +162,7 @@ namespace ComputerServiceOnlineShop.Services
 
         public async Task<EditOfferResponseDto> GetOfferForEdit(int id)
         {
-            Guid userId = _accountService.GetLoggedUserId();
+            Guid userId = _currentUserService.GetUserId();
             var offer = await _offerRepo.GetOfferWithAllDetailsByUserAsync(id, userId);
             if (offer == null)
                 throw new EntityNotFoundException("This offer doesn't exist or doesn't belong to you");

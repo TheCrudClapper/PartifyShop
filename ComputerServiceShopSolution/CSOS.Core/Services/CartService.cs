@@ -6,6 +6,7 @@ using CSOS.Core.DTO.Responses.Cart;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Exceptions;
 using CSOS.Core.Mappings.ToDto;
+using CSOS.Core.ServiceContracts;
 
 namespace ComputerServiceOnlineShop.Services
 {
@@ -13,13 +14,13 @@ namespace ComputerServiceOnlineShop.Services
     {
         private readonly ICartRepository _cartRepo;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IAccountService _accountService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IOfferRepository _offerRepo;
-        public CartService(IAccountService accountService, IOfferRepository offerRepository, ICartRepository cartRepository, IUnitOfWork unitOfWork)
+        public CartService(ICurrentUserService currentUserService, IOfferRepository offerRepository, ICartRepository cartRepository, IUnitOfWork unitOfWork)
         {
             _cartRepo = cartRepository;
             _offerRepo = offerRepository;
-            _accountService = accountService;
+            _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
         //later delete taht and provide mocks
@@ -105,7 +106,7 @@ namespace ComputerServiceOnlineShop.Services
 
         public async Task<int> GetLoggedUserCartId()
         {
-            Guid userId = _accountService.GetLoggedUserId();
+            Guid userId = _currentUserService.GetUserId();
 
             var cartId = await _cartRepo.GetLoggedUserCartIdAsync(userId);
             if (cartId == null)

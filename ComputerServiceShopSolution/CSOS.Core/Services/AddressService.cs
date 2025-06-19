@@ -3,18 +3,20 @@ using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Addresses;
+using CSOS.Core.ErrorHandling;
 using CSOS.Core.Exceptions;
+using CSOS.Core.ServiceContracts;
 
 namespace ComputerServiceOnlineShop.Services
 {
     public class AddressService : IAddressService
     {
-        private readonly IAccountService _accountService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IAddressRepository _addressRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public AddressService(IAccountService accountService, IAddressRepository addressRepository, IUnitOfWork unitOfWork)
+        public AddressService(ICurrentUserService currentUserService, IAddressRepository addressRepository, IUnitOfWork unitOfWork)
         {
-            _accountService = accountService;
+            _currentUserService = currentUserService;
             _addressRepository = addressRepository;
             _unitOfWork = unitOfWork;
         }
@@ -37,13 +39,13 @@ namespace ComputerServiceOnlineShop.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<EditAddressResponseDto> GetAddressForEdit()
+        public async Task<Result<EditAddressResponseDto>> GetAddressForEdit()
         {
-            var userId = _accountService.GetLoggedUserId();
+            var userId = _currentUserService.GetUserId();
             var userAndAddress = await _addressRepository.GetUserWithAddress(userId);
 
             if (userAndAddress == null)
-                throw new EntityNotFoundException("Enitity not found");
+                return Result.Failure<EditAddressResponseDto>(AddressErrors.AddressNotFound);
 
             return new EditAddressResponseDto()
             {
@@ -59,7 +61,7 @@ namespace ComputerServiceOnlineShop.Services
 
         public async Task<UserAddresDetailsResponseDto> GetUserAddresInfo()
         {
-            var userId = _accountService.GetLoggedUserId();
+            var userId = _currentUserService.GetUserId();
             var userAndAddress = await _addressRepository.GetUserWithAddress(userId);
 
             if (userAndAddress == null)

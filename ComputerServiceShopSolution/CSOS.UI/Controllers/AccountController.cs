@@ -1,26 +1,34 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
+using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
 using CSOS.UI.Mappings.ToDto;
+using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
+using CSOS.UI.ViewModels.AccountViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ComputerServiceOnlineShop.Controllers
 {
-    [AllowAnonymous]
+
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IAddressService _addressService;
         private readonly ICountriesService _countriesService;
-        public AccountController(IAccountService accountService, ICountriesService countriesService)
+        public AccountController(IAccountService accountService, ICountriesService countriesService, IAddressService addressService)
         {
             _accountService = accountService;
             _countriesService = countriesService;
+            _addressService = addressService;
         }
 
+
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Register()
         {
             var response = await _countriesService.GetCountriesSelectionList();
@@ -31,11 +39,13 @@ namespace ComputerServiceOnlineShop.Controllers
             return View(ViewModel);
         }
 
+
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
             //initializing list of countries for view
-            var response  = await _countriesService.GetCountriesSelectionList();
+            var response = await _countriesService.GetCountriesSelectionList();
             viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
 
             if (!ModelState.IsValid)
@@ -61,12 +71,14 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel viewModel, string? returnUrl)
         {
             if (!ModelState.IsValid)
@@ -101,7 +113,32 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpGet]
         public async Task<IActionResult> AccountDetails()
         {
-            return View();
+            var result = await _accountService.GetAccountDetailsAsync();
+            if (result.IsFailure)
+                return View("Error", result.Error);
+
+            var viewModel = new AccountDetailsViewModel
+            {
+                EditAddress = result.Value.EditAddressResponseDto.ToViewModel(),
+                UserDetails = result.Value.AccountDto.ToUserDetailsViewModel()
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UserDetailsViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(PasswordChangeViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction();
+
+            return RedirectToAction();
         }
     }
 }

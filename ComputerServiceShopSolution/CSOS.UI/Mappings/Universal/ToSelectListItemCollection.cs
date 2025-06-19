@@ -8,6 +8,9 @@ namespace CSOS.UI.Mappings.Universal
     {
         public static List<SelectListItem> ConvertToSelectListItem(this IEnumerable<SelectListItemDto> items)
         {
+            if (items == null)
+                return new List<SelectListItem>();
+
             return items.Select(item => new SelectListItem
             {
                 Text = item.Text,

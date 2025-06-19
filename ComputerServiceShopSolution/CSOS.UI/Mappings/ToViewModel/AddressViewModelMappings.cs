@@ -32,5 +32,6 @@ namespace CSOS.UI.Mappings.ToViewModel
                 SelectedCountry = dto.SelectedCountry,
             };
         }
+        
     }
 }

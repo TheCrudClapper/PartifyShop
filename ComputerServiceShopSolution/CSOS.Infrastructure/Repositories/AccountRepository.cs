@@ -18,10 +18,17 @@ namespace CSOS.Infrastructure.Repositories
             await _dbContext.Users.AddAsync(entity);
         }
 
+        public async Task<ApplicationUser?> GetUserByIdAsync(Guid id)
+        {
+            return await _dbContext.Users
+                .FirstOrDefaultAsync(item => item.IsActive && item.Id == id);
+        }
+
         public async Task<bool> IsUserByEmailInDatabaseAsync(string Email)
         {
             return await _dbContext.Users
                  .AnyAsync(item => item.UserName == Email && item.IsActive);
         }
+
     }
 }

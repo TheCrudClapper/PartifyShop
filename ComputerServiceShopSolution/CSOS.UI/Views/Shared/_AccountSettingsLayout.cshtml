@@ -10,35 +10,28 @@
     <div class="row">
         <div class="col-12 col-lg-3 mb-4 mb-lg-0">
             <div class="bg-white shadow p-3 mb-4 text-center rounded-2">
-                <div class="rounded-1">
-                    <img height="150" class="rounded-circle" width="150" src="">
-                </div>
+                <i class="fa-solid fa-user fa-6x mb-3 d-block"></i>
                 <span>@User.Identity!.Name</span>
-                <span class="fw-bold fs-4"></span>
-                <p class="mt-1">
-                    <a href="#"  class="btn btn-primary ">Change Profile Picture</a>
-                </p>
-
             </div>
             <div class="bg-white shadow rounded-2">
                 <div class="px-3 py-3">
-                    <a class="own-link-style" href="/account/profile">Account Settings</a>
+                    <a class="own-link-style" asp-controller="Account" asp-action="AccountDetails" >Account Settings</a>
                 </div>
                 <hr class="w-100 p-0 m-0">
                 <div class="px-3 py-3">
-                    <a class="own-link-style" href="/job/create">Post Job Listing</a>
+                    <a class="own-link-style" asp-controller="Offer" asp-action="AddOffer">Add Offer</a>
                 </div>
                 <hr class="w-100 p-0 m-0">
                 <div class="px-3 py-3">
-                    <a class="own-link-style" href="/job/user-jobs">My Job Listings</a>
+                    <a class="own-link-style" asp-controller="Offer" asp-action="AllUserOffers">My Offers</a>
                 </div>
                 <hr class="w-100 p-0 m-0">
                 <div class="px-3 py-3">
-                    <a class="own-link-style">Job Application</a>
+                    <a class="own-link-style">Purchase History</a>
                 </div>
                 <hr class="w-100 p-0 m-0">
                 <div class="px-3 py-3">
-                    <a class="own-link-style" href="/account/logout">Logout</a>
+                    <a class="own-link-style" asp-controller="Account" asp-action="Logout">Logout</a>
                 </div>
             </div>
         </div>

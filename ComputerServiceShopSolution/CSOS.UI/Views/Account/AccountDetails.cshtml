@@ -1,54 +1,111 @@
-﻿@{
+﻿@model AccountDetailsViewModel
+@{
     Layout = "_AccountSettingsLayout";
     ViewBag.Title = "AccountSettings";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/registration-style.css" />
 }
 <div class="bg-white shadow py-3 mb-4 rounded-2">
     <h4 class="fw-bold px-3">Account Details</h4>
 
     @* Account Details Form Fields *@
-    <form action="/account/update" class="pt-3" method="post">
+    <form asp-controller="Account" asp-action="Edit" class="pt-3" method="post">
         @Html.AntiForgeryToken()
         <div class="mb-4 px-3">
-            <label for="nameInput" class="form-label">Name*</label>
-            <input name="Name" type="text"class="form-control is-invalid" id="nameInput" placeholder="Enter name">
+            <label asp-for="UserDetails.FirstName" class="form-label">First Name</label>
+            <input asp-for="UserDetails.FirstName" type="text" class="form-control" placeholder="Enter first name">
         </div>
         <div class="mb-4 px-3">
-            <label for="emailInput" class="form-label">Email*</label>
-            <input name="Email" type="text" class="form-control is-invalid" id="emailInput" placeholder="Enter email">
+            <label asp-for="UserDetails.Surname" class="form-label">Surname</label>
+            <input asp-for="UserDetails.Surname" type="text" class="form-control" placeholder="Enter surname">
         </div>
         <div class="mb-4 px-3">
-            <label for="phoneInput" class="form-label">PhoneNumber</label>
-            <input name="PhoneNumber" type="text" class="form-control is-invalid" id="phoneInput" placeholder="Enter phone number">
+            <label asp-for="UserDetails.PhoneNumber" class="form-label">Phone Number</label>
+            <input asp-for=UserDetails.PhoneNumber" type="text" class="form-control" placeholder="Enter phone number">
         </div>
         <div class="mb-4 px-3">
-            <label for="bioInput" class="form-label">Bio</label>
-            <textarea rows="5" name="Bio" id="bioInput" class="form-control is-invalid" placeholder="Enter your bio here"></textarea>
+            <label asp-for="UserDetails.Title" class="form-label">Title</label>
+            <input asp-for="UserDetails.Title" type="text" class="form-control" placeholder="Enter phone title of company">
+        </div>
+        <div class="mb-4 px-3">
+            <label asp-for="UserDetails.NIP" class="form-label">NIP</label>
+            <input asp-for="UserDetails.NIP" type="text" class="form-control" placeholder="Enter phone NIP">
         </div>
         <div class="mb-4">
-            <button type="submit" class="btn btn-primary text-white ms-3 mt-2">Update</button>
+            <button type="submit" class="btn purple-background text-white ms-3 mt-2">Update</button>
         </div>
     </form>
 </div>
 
+
+<div class="bg-white shadow py-3 mb-4 rounded-2">
+    <h4 class="fw-bold px-3">Address Details</h4>
+
+    @* Address fields *@
+    <form asp-controller="Address" asp-action="Edit" class="pt-3" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-4 px-3">
+            <label asp-for="EditAddress.Place" class="form-label">Place</label>
+            <input asp-for="EditAddress.Place" type="text" class="form-control" placeholder="Enter Place">
+            <span class="text-danger" asp-validation-for="EditAddress.Place"></span>
+        </div>
+        <div class="mb-4 px-3">
+            <label asp-for="EditAddress.Street" class="form-label">Street</label>
+            <input asp-for="EditAddress.Street" type="text" class="form-control" placeholder="Enter email">
+            <span class="text-danger" asp-validation-for="EditAddress.Street"></span>
+        </div>
+        <div class="mb-4 px-3">
+            <label asp-for="EditAddress.HouseNumber" class="form-label">House Number</label>
+            <input asp-for="EditAddress.HouseNumber" type="text" class="form-control" placeholder="Enter house number">
+            <span class="text-danger" asp-validation-for="EditAddress.HouseNumber"></span>
+        </div>
+        <div class="mb-4 px-3">
+            <label asp-for="EditAddress.PostalCity" class="form-label">Postal City</label>
+            <input asp-for="EditAddress.PostalCity" type="text" class="form-control" placeholder="Enter postal city">
+            <span class="text-danger" asp-validation-for="EditAddress.PostalCity"></span>
+        </div>
+        <div class="mb-4 px-3">
+            <label asp-for="EditAddress.PostalCode" class="form-label">Postal Code</label>
+            <input asp-for="EditAddress.PostalCode" type="text" class="form-control" placeholder="Enter postal code">
+            <span class="text-danger" asp-validation-for="EditAddress.PostalCode"></span>
+        </div>
+        <div class="mb-4 px-3">
+            <label for="phoneInput" class="form-label">Country</label>
+            <select class="form-select" asp-for="EditAddress.SelectedCountry" asp-items="Model.EditAddress.CountriesSelectionList">
+                <option disabled selected>Select Country</option>
+            </select>
+            <span class="text-danger" asp-validation-for="EditAddress.SelectedCountry"></span>
+        </div>
+        <div class="mb-4">
+            <button type="submit" class="btn purple-background text-white ms-3 mt-2">Update</button>
+        </div>
+    </form>
+</div>
+
+
 @* Password Change Fields *@
 <div class="bg-white shadow py-3 mb-4 rounded-2">
     <h4 class="fw-bold px-3">Password Change</h4>
-    <form action="/account/changePassword" class="pt-3" method="post">
+    <form asp-controller="Account" asp-action="ChangePassword" class="pt-3" method="post">
         @Html.AntiForgeryToken()
         <div class="mb-4 px-3">
-            <label for="currentPasswordInput" class="form-label">Current Password*</label>
-            <input name="CurrentPassword" type="password" class="form-control is-invalid" id="currentPasswordInput" placeholder="Enter current password">
+            <label asp-for="PasswordChange.CurrentPassword" class="form-label">Current Password</label>
+            <input asp-for="PasswordChange.CurrentPassword" type="password" class="form-control" placeholder="Enter current password">
+            <span class="text-danger" asp-validation-for="PasswordChange.CurrentPassword""></span>
         </div>
         <div class="mb-4 px-3">
-            <label for="newPasswordInput" class="form-label">New Password*</label>
-            <input name="NewPassword" type="password" class="form-control is-invalid" id="newPasswordInput" placeholder="Enter new password">
+            <label asp-for="PasswordChange.NewPassword" class="form-label">New Password</label>
+            <input asp-for="PasswordChange.NewPassword" type="password" class="form-control" placeholder="Enter new password">
+            <span class="text-danger" asp-validation-for="PasswordChange.NewPassword"></span>
         </div>
         <div class="mb-4 px-3">
-            <label for="confirmPasswordInput" class="form-label">Confirm Password*</label>
-            <input name="ConfirmPassword" type="password" class="form-control is-invalid" id="confirmPasswordInput" placeholder="Enter confirmation password">
+            <label asp-for="PasswordChange.ConfirmPassword" class="form-label">Confirm Password</label>
+            <input asp-for="PasswordChange.ConfirmPassword" type="password" class="form-control" placeholder="Enter confirmation password">
+            <span class="text-danger" asp-validation-for="PasswordChange.ConfirmPassword"></span>
         </div>
         <div class="mb-4">
-            <button type="submit" class="btn btn-primary text-white ms-3 mt-2">Update</button>
+            <button type="submit" class="btn purple-background text-white ms-3 mt-2">Change</button>
         </div>
     </form>
 </div>
@@ -63,6 +120,6 @@
         </span>
     </div>
     <div class="mb-4">
-        <a href="/account/deleteAccount" class="btn btn-danger text-white ms-3 mt-2">Delete Account</a>
+        <a href="/account/deleteAccount" class="btn btn-danger text-white ms-3 mt-2 disabled">Delete Account</a>
     </div>
 </div>

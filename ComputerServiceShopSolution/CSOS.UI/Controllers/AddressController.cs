@@ -23,8 +23,12 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute]int id)
         {
-            EditAddressResponseDto response = await _addressService.GetAddressForEdit();
-            EditAddressViewModel viewModel = response.ToViewModel();
+            var result = await _addressService.GetAddressForEdit();
+
+            if (result.IsFailure)
+                return View("Error", result.Error.Description);
+
+            EditAddressViewModel viewModel = result.Value.ToViewModel();
             return PartialView("_EditAddressPartial", viewModel);
         }
 

@@ -7,7 +7,7 @@ namespace ComputerServiceOnlineShop.ViewModels.AddressViewModels
     public class EditAddressViewModel
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "Palce is required")]
+        [Required(ErrorMessage = "Place is required")]
         public string Place { get; set; } = null!;
 
         [Required(ErrorMessage = "Street is required")]

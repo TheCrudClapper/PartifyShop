@@ -6,5 +6,6 @@ namespace CSOS.Core.Domain.RepositoryContracts
     {
         Task Add(ApplicationUser entity);
         Task<bool> IsUserByEmailInDatabaseAsync(string Email);
+        Task<ApplicationUser?> GetUserByIdAsync(Guid id);
     }
 }

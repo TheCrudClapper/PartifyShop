@@ -1,4 +1,7 @@
-﻿using CSOS.Core.ServiceContracts;
+﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+using CSOS.Core.Domain.RepositoryContracts;
+using CSOS.Core.ErrorHandling;
+using CSOS.Core.ServiceContracts;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -8,11 +11,23 @@ namespace CSOS.Core.Services
     {
 
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAccountRepository _accountRepo;
 
-        public CurrentUserService(IHttpContextAccessor httpContextAccessor)
+        public CurrentUserService(IHttpContextAccessor httpContextAccessor,
+            IAccountRepository accountRepo)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _accountRepo = accountRepo;
         }
+
+        public async Task<Result<ApplicationUser>> GetCurrentUserAsync()
+        {
+            var userId = GetUserId();
+            var user = await _accountRepo.GetUserByIdAsync(userId);
+
+            return user != null ? Result.Success(user) : Result.Failure<ApplicationUser>(AccountErrors.AccountNotFound);
+        }
+
         public Guid GetUserId()
         {
             var httpContext = _httpContextAccessor.HttpContext;
@@ -30,5 +45,6 @@ namespace CSOS.Core.Services
 
             return userId;
         }
+
     }
 }

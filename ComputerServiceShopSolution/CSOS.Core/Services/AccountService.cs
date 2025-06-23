@@ -78,26 +78,24 @@ namespace ComputerServiceOnlineShop.Models.Services
 
         public async Task<Result<AccountDto>> GetAccountForEdit()
         {
-            var userId = _currentUserService.GetUserId();
+            var userResult = await _currentUserService.GetCurrentUserAsync();
 
-            ApplicationUser? user = await _accountRepo.GetUserByIdAsync(userId);
-
-            if (user == null)
+            if (userResult.IsFailure)
                 return Result.Failure<AccountDto>(AccountErrors.AccountNotFound);
 
-            var dto = user.ToAccountResponseDto();
+            var dto = userResult.Value.ToAccountResponseDto();
 
             return dto;
         }
 
         public async Task<Result> Edit(AccountDto dto)
         {
-            var userId = _currentUserService.GetUserId();
+            var userResult = await _currentUserService.GetCurrentUserAsync();
 
-            ApplicationUser? user = await _accountRepo.GetUserByIdAsync(userId);
+            if (userResult.IsFailure)
+                return Result.Failure(userResult.Error);
 
-            if (user == null)
-                return Result.Failure(AccountErrors.AccountNotFound);
+            var user = userResult.Value;
 
             //updating fields
             user.Title = dto.Title;
@@ -113,18 +111,14 @@ namespace ComputerServiceOnlineShop.Models.Services
 
         public async Task<Result> ChangePassword(PasswordDto dto)
         {
-            var userId = _currentUserService.GetUserId();
-
-            ApplicationUser? user = await _accountRepo.GetUserByIdAsync(userId);
-
-            if (user == null)
+            var userResult = await _currentUserService.GetCurrentUserAsync();
+            if(userResult.IsFailure)
                 return Result.Failure(AccountErrors.AccountNotFound);
 
-            if (!await _userManager.CheckPasswordAsync(user, dto.ConfirmPassword))
-                return Result.Failure(AccountErrors.WrongPassword);
+            var user = userResult.Value;
 
-            if (dto.ConfirmPassword != dto.NewPassword)
-                return Result.Failure(AccountErrors.PasswordsDoestMatch);
+            if (!await _userManager.CheckPasswordAsync(user, dto.CurrentPassword))
+                return Result.Failure(AccountErrors.WrongPassword);
 
             IdentityResult result = await _userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
 
@@ -158,5 +152,6 @@ namespace ComputerServiceOnlineShop.Models.Services
                 AccountDto = accountDto,
             };
         }
+
     }
 }

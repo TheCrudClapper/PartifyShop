@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+using CSOS.Core.ErrorHandling;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +15,11 @@ namespace CSOS.Core.ServiceContracts
        /// </summary>
        /// <returns>Returns GUID of currently logged in user</returns>
         Guid GetUserId();
+
+        /// <summary>
+        /// Return currenty logged in application user object
+        /// </summary>
+        /// <returns>Returns currently logged in user</returns>
+        Task<Result<ApplicationUser>> GetCurrentUserAsync();
     }
 }

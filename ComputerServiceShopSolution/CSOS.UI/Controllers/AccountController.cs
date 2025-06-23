@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ComputerServiceOnlineShop.Controllers
 {
-
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;

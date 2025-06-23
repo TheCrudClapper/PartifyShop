@@ -2,14 +2,15 @@
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Addresses;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComputerServiceOnlineShop.Controllers
 {
+    [Authorize]
     public class AddressController : Controller
     {
         private readonly IAddressService _addressService;
@@ -24,28 +25,32 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> Edit([FromRoute]int id)
         {
             var result = await _addressService.GetAddressForEdit();
-
+            
             if (result.IsFailure)
                 return View("Error", result.Error.Description);
 
             EditAddressViewModel viewModel = result.Value.ToViewModel();
+            viewModel.CountriesSelectionList = (await _countriesService.GetCountriesSelectionList()).ConvertToSelectListItem();
             return PartialView("_EditAddressPartial", viewModel);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromRoute]int id, EditAddressViewModel viewModel)
         {
-            List<SelectListItemDto> response = await _countriesService.GetCountriesSelectionList();
             if (!ModelState.IsValid)
             {
-                viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
+                viewModel.CountriesSelectionList = (await _countriesService.GetCountriesSelectionList()).ConvertToSelectListItem();
                 return PartialView("_EditAddressPartial", viewModel);
             }
 
             AddressDto dto = viewModel.ToDto();
-            await _addressService.Edit(id, dto);
+            var result = await _addressService.Edit(id, dto);
 
-            return Ok();
+            if (result.IsFailure)
+                return View("Error", result.Error.Description);
+
+            return NoContent();
         }
 
     }

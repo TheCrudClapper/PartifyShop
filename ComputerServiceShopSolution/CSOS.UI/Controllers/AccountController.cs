@@ -2,6 +2,7 @@
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Responses.Account;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
@@ -129,7 +130,22 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(UserDetailsViewModel viewModel)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+                return PartialView("AccountPartials/_UserDetailsForm", viewModel);
+
+            AccountDto dto = viewModel.ToAccountDto();
+            var result = await _accountService.Edit(dto);
+
+            if (result.IsFailure)
+            {
+                //find a way to handle errors
+                ModelState.AddModelError("Error", result.Error.Description);
+                return PartialView("AccountPartials/_UserDetailsForm", viewModel);
+            }
+                
+
+            return PartialView("AccountPartials/_UserDetailsForm", viewModel);
+
         }
 
         [HttpPost]

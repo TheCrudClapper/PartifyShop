@@ -12,12 +12,19 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             _addressService = addressService;
         }
+
+        [HttpGet]
         public async Task<IActionResult> AddOrder()
         {
             var response = await _addressService.GetUserAddresInfo();
+
+            if(response.IsFailure)
+                return View("Error", response.Error.Description);
+
+
             var viewModel = new AddOrderViewModel()
             {
-                UserAddressDetails = response.ToViewModel()
+                UserAddressDetails = response.Value.ToViewModel()
             };
             return View(viewModel);
         }

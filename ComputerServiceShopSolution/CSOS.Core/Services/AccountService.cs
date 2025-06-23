@@ -137,6 +137,7 @@ namespace ComputerServiceOnlineShop.Models.Services
         public async Task<Result<AccountDetailsDto>> GetAccountDetailsAsync()
         {
             var addressResult = await _addressService.GetAddressForEdit();
+
             if (addressResult.IsFailure)
                 return Result.Failure<AccountDetailsDto>(AddressErrors.AddressNotFound);
 

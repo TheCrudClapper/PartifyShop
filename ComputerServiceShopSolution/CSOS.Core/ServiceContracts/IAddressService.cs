@@ -6,9 +6,8 @@ namespace ComputerServiceOnlineShop.ServiceContracts
 {
     public interface IAddressService
     {
-        Task Edit(int id, AddressDto dto);
+        Task<Result> Edit(int id, AddressDto dto);
         Task<Result<EditAddressResponseDto>> GetAddressForEdit();
-
-        Task<UserAddresDetailsResponseDto> GetUserAddresInfo();
+        Task<Result<UserAddresDetailsResponseDto>> GetUserAddresInfo();
     }
 }

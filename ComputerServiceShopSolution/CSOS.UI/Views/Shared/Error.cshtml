@@ -1,7 +1,7 @@
 ﻿@using ComputerServiceOnlineShop.Entities.Models
 @model ErrorViewModel
 @{
-    ViewData["Title"] = "Error";
+    ViewBag.Title = "Error";
 }
 @section Styles{
     <link rel="stylesheet" href="~/css/error-styles.css" />
@@ -12,9 +12,11 @@
         <div class="col-3"></div>
         <div class="col-6 midesection-style">
             <i class="fa-solid fa-6x fa-triangle-exclamation"></i>
-            <h1 class="purple-text fw-bold mt-2">Ooops !</h1>
-            <h2>An error occurred while processing your request.</h2>
-            <span>Try searching or go to <a href="/home" class="purple-text">Marketplace home page</a></span>
+            <h1 class="purple-text fw-bold mt-2">Ooops!</h1>
+            <h2>
+                @(Model.Message ?? "An error occurred while processing your request.")
+            </h2>
+            <span>Try searching or go to <a asp-controller="Home" asp-action="Index" class="purple-text">Partify home page</a></span>
         </div>
         <div class="col-3"></div>
     </div>

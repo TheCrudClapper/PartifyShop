@@ -1,36 +1,50 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Responses.Account;
+using CSOS.UI.ViewModels.AccountViewModels;
 
 namespace CSOS.UI.Mappings.ToDto
 {
     public static class AccountDtoMappings
     {
-        public static RegisterDto ToRegisterDto(this RegisterViewModel ViewModel)
+        public static RegisterDto ToRegisterDto(this RegisterViewModel viewModel)
         {
             return new RegisterDto()
             {
-                FirstName = ViewModel.FirstName,
-                Surname = ViewModel.Surname,
-                Email = ViewModel.Email,
-                HouseNumber = ViewModel.HouseNumber,
-                NIP = ViewModel.NIP,
-                Password = ViewModel.Password,
-                PhoneNumber = ViewModel.PhoneNumber,
-                Place = ViewModel.Place,
-                PostalCity = ViewModel.PostalCity,
-                PostalCode = ViewModel.PostalCode,
-                SelectedCountry = int.Parse(ViewModel.SelectedCountry),
-                Street = ViewModel.Street,
-                Title = ViewModel.Title,
+                FirstName = viewModel.FirstName,
+                Surname = viewModel.Surname,
+                Email = viewModel.Email,
+                HouseNumber = viewModel.HouseNumber,
+                NIP = viewModel.NIP,
+                Password = viewModel.Password,
+                PhoneNumber = viewModel.PhoneNumber,
+                Place = viewModel.Place,
+                PostalCity = viewModel.PostalCity,
+                PostalCode = viewModel.PostalCode,
+                SelectedCountry = int.Parse(viewModel.SelectedCountry),
+                Street = viewModel.Street,
+                Title = viewModel.Title,
             };
         }
-        public static LoginDto ToLoginDto(this LoginViewModel ViewModel)
+        public static LoginDto ToLoginDto(this LoginViewModel viewModel)
         {
             return new LoginDto()
             {
-                Email = ViewModel.Email,
-                Password = ViewModel.Password,
-                isPersistent = ViewModel.isPersistent,
+                Email = viewModel.Email,
+                Password = viewModel.Password,
+                isPersistent = viewModel.isPersistent,
+            };
+        }
+
+        public static AccountDto ToAccountDto(this UserDetailsViewModel viewModel)
+        {
+            return new AccountDto()
+            {
+                FirstName = viewModel.FirstName,
+                Surname = viewModel.Surname,
+                NIP = viewModel.NIP,
+                PhoneNumber = viewModel.PhoneNumber,
+                Title = viewModel.Title,
             };
         }
     }

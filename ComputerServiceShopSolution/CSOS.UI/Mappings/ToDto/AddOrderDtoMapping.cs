@@ -1,6 +1,6 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Services;
+﻿using ComputerServiceOnlineShop.Services;
 using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
+using CSOS.Core.Domain.ExternalServicesContracts;
 using CSOS.Core.DTO;
 using System.Threading.Tasks;
 
@@ -8,7 +8,7 @@ namespace CSOS.UI.Mappings.ToDto
 {
     public static  class AddOrderDtoMapping
     {
-        public static async Task<AddOfferDto> ToDto(this AddOfferViewModel viewModel, IPictureHandlerService pictureHandlerService)
+        public static AddOfferDto ToAddOfferDto(this AddOfferViewModel viewModel)
         {
             return new AddOfferDto()
             {
@@ -18,12 +18,10 @@ namespace CSOS.UI.Mappings.ToDto
                 ProductName = viewModel.ProductName,
                 SelectedOtherDeliveries = viewModel.SelectedOtherDeliveries,
                 SelectedParcelLocker = viewModel.SelectedParcelLocker,
+                UploadedImages = viewModel.UploadedImages,
                 SelectedProductCategory = int.Parse(viewModel.SelectedProductCategory),
                 SelectedProductCondition = int.Parse(viewModel.SelectedProductCondition),
                 StockQuantity = viewModel.StockQuantity,
-                UploadedImagesUrls = viewModel.UploadedImages != null && viewModel.UploadedImages.Count > 0
-                    ? await pictureHandlerService.SavePicturesToDirectory(viewModel.UploadedImages)
-                    : new List<string>()
             };
         }
     }

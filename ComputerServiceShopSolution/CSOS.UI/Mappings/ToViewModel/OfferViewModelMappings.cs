@@ -8,7 +8,7 @@ namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class OfferViewModelMappings
     {
-        public static EditOfferViewModel ToViewModel(this EditOfferResponseDto dto)
+        public static EditOfferViewModel ToEditOfferViewModel(this EditOfferResponseDto dto)
         {
             return new EditOfferViewModel()
             {
@@ -33,7 +33,7 @@ namespace CSOS.UI.Mappings.ToViewModel
         }
 
         //OK
-        public static OfferBrowserViewModel ToViewModel(this OfferBrowserResponseDto dto)
+        public static OfferBrowserViewModel ToOfferBrowserViewModel(this OfferBrowserResponseDto dto)
         {
             return new OfferBrowserViewModel()
             {
@@ -56,7 +56,7 @@ namespace CSOS.UI.Mappings.ToViewModel
             };
         }
 
-        public static SingleOfferViewModel ToViewModel(this OfferResponseDto dto)
+        public static SingleOfferViewModel ToSingleOfferViewModel(this OfferResponseDto dto)
         {
             return new SingleOfferViewModel()
             {
@@ -81,7 +81,7 @@ namespace CSOS.UI.Mappings.ToViewModel
             };
         }
 
-        public static UserOffersViewModel ToViewModel(this UserOffersResponseDto dto)
+        public static UserOffersViewModel ToUserOffersViewModel(this UserOffersResponseDto dto)
         {
             return new UserOffersViewModel()
             {
@@ -98,7 +98,7 @@ namespace CSOS.UI.Mappings.ToViewModel
         }
         public static List<UserOffersViewModel> ToViewModelCollection(this List<UserOffersResponseDto> dtos)
         {
-            return dtos.Select(dto => dto.ToViewModel()).ToList();
+            return dtos.Select(dto => dto.ToUserOffersViewModel()).ToList();
         }
 
     }

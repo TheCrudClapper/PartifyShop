@@ -1,11 +1,13 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.Domain.ExternalServicesContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
+using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.Mappings.ToEntity.OfferDeliveryTypeMappings;
 using CSOS.Core.Mappings.ToEntity.OfferMappings;
 using CSOS.Core.Mappings.ToEntity.ProductMappings;
@@ -16,6 +18,7 @@ namespace ComputerServiceOnlineShop.Services
     public class OfferService : IOfferService
     {
         private readonly IOfferRepository _offerRepo;
+        private readonly IPictureHandlerService _pictureHandlerService;
         private readonly IProductRepository _productRepo;
         private readonly IOfferDeliveryTypeRepository _offerDeliveryTypeRepo;
         private readonly IProductImageRepository _productImageRepo;
@@ -30,7 +33,8 @@ namespace ComputerServiceOnlineShop.Services
             IProductRepository productRepo,
             IOfferDeliveryTypeRepository offerDeliveryTypeRepo,
             IProductImageRepository productImageRepo,
-            ICurrentUserService currentUserService
+            ICurrentUserService currentUserService,
+            IPictureHandlerService pictureHandlerService
             )
         {
             _productRepo = productRepo;
@@ -40,6 +44,7 @@ namespace ComputerServiceOnlineShop.Services
             _unitOfWork = unitOfWork;
             _deliveryTypeGetterService = deliveryTypeGetterService;
             _productImageRepo = productImageRepo;
+            _pictureHandlerService = pictureHandlerService;
         }
         public async Task<Result> Add(AddOfferDto dto)
         {
@@ -47,7 +52,8 @@ namespace ComputerServiceOnlineShop.Services
                 return Result.Failure(OfferErrors.OfferIsNull);
 
             Guid userId = _currentUserService.GetUserId();
-            var uploadedImagesUrls = dto.UploadedImagesUrls;
+
+            dto.UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(dto.UploadedImages);
 
             Product product = dto.ToProductEntity();
             await _productRepo.AddAsync(product);
@@ -97,6 +103,8 @@ namespace ComputerServiceOnlineShop.Services
             {
                 await DeleteImagesFromOffer(id, dto.ImagesToDelete);
             }
+
+            dto.UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(dto.UploadedImages);
 
             //saving new images if any
             if (dto.UploadedImagesUrls != null && dto.UploadedImagesUrls.Count > 0)
@@ -151,23 +159,8 @@ namespace ComputerServiceOnlineShop.Services
             Guid userId = _currentUserService.GetUserId();
             var offers = await _offerRepo.GetFilteredUserOffersAsync(title, userId);
 
-            var items = offers.Select(item => new UserOffersResponseDto()
-            {
-                Id = item.Id,
-                DateCreated = item.DateCreated,
-                ProductCondition = item.Product.Condition.ConditionTitle,
-                Price = item.Price,
-                StockQuantity = item.StockQuantity,
-                ProductCategory = item.Product.ProductCategory.Name,
-                ProductStatus = item.IsOfferPrivate,
-                ProductName = item.Product.ProductName,
-                ImageUrl = item.Product.ProductImages
-                       .Where(item => item.IsActive)
-                       .First().ImagePath
-            })
-            .ToList();
+            var items = offers.ToListUserOffersResponseDto();
             return items;
-
         }
 
         public async Task<Result<EditOfferResponseDto>> GetOfferForEdit(int id)
@@ -177,33 +170,8 @@ namespace ComputerServiceOnlineShop.Services
             if (offer == null)
                 return Result.Failure<EditOfferResponseDto>(OfferErrors.OfferNotFound);
 
-            return new EditOfferResponseDto()
-            {
-                Id = offer.Id,
-                ProductName = offer.Product.ProductName,
-                Price = offer.Price,
-                ExistingImagesUrls = offer.Product.ProductImages
-                    .Where(item => item.IsActive)
-                    .Select(item => new SelectListItemDto()
-                    {
-                        Value = item.ImagePath,
-                        Text = item.ImagePath,
-                    })
-                    .ToList(),
-                Description = offer.Product.Description,
-                SelectedProductCondition = offer.Product.Condition.Id.ToString(),
-                SelectedProductCategory = offer.Product.ProductCategory.Id.ToString(),
-                IsOfferPrivate = offer.IsOfferPrivate,
-                StockQuantity = offer.StockQuantity,
-                SelectedOtherDeliveries = offer.OfferDeliveryTypes
-                    .Where(item => !item.DeliveryType.Title.Contains("Locker"))
-                    .Select(item => item.DeliveryTypeId)
-                    .ToList(),
-                SelectedParcelLocker = offer.OfferDeliveryTypes
-                    .Where(item => item.DeliveryType.Title.Contains("Locker"))
-                    .Select(item => item.DeliveryTypeId)
-                    .FirstOrDefault(),
-            };
+            var dto = offer.ToEditOfferResponseDto();
+            return dto;
         }
 
         public async Task<List<SelectListItemDto>> GetOfferPictures(int id)
@@ -211,24 +179,11 @@ namespace ComputerServiceOnlineShop.Services
             return (await _offerRepo.GetOfferPicturesAsSelectListDto(id)).ToList();
         }
 
-        //OK
         public async Task<OfferBrowserResponseDto> GetFilteredOffers(OfferFilter filter)
         {
             var offers = await _offerRepo.GetFilteredOffersAsync(filter);
-            var items = offers.Select(item => new OfferBrowserItemResponseDto()
-            {
-                Id = item.Id,
-                Title = item.Product.ProductName,
-                Category = item.Product.ProductCategory.Name,
-                Condition = item.Product.Condition.ConditionTitle,
-                DateCreated = item.DateCreated.Date,
-                Price = item.Price,
-                SellerName = item.Seller.UserName!,
-                Description = item.Product.Description,
-                QuantityAvailable = item.StockQuantity,
-                ImageUrl = item.Product.ProductImages.First().ImagePath,
-            })
-            .ToList();
+
+            var items = offers.ToListOfferItemBrowserResponseDto();
 
             return new OfferBrowserResponseDto()
             {
@@ -238,20 +193,13 @@ namespace ComputerServiceOnlineShop.Services
                 DeliveryOptions = await _deliveryTypeGetterService.GetAllDeliveryTypes(),
             };
         }
-        //OK
+
         public async Task<List<MainPageCardResponseDto>> GetIndexPageOffers()
         {
             var offers = await _offerRepo.GetOffersByTakeAsync();
-            return offers.Select(item => new MainPageCardResponseDto()
-            {
-                Id = item.Id,
-                ImagePath = item.Product.ProductImages.First().ImagePath,
-                Price = item.Price,
-                Title = item.Product.ProductName,
-            })
-            .ToList();
+            return offers.ToListMainPageCardDto();
         }
-        //OK
+        
         public async Task<bool> DoesOfferExist(int id)
         {
             return await _offerRepo.IsOfferInDb(id);
@@ -297,48 +245,18 @@ namespace ComputerServiceOnlineShop.Services
             var take = Math.Min(count, 7);
 
             var offers = await _offerRepo.GetOffersByTakeAsync(take);
-            return offers.Select(item => new MainPageCardResponseDto()
-            {
-                Id = item.Id,
-                ImagePath = item.Product.ProductImages.FirstOrDefault()?.ImagePath ?? "sex",
-                Price = item.Price,
-                Title = item.Product.ProductName,
-            })
-            .ToList();
 
+            return offers.ToListMainPageCardDto();
         }
 
         public async Task<Result<OfferResponseDto>> GetOffer(int id)
         {
             var offer = await _offerRepo.GetOfferWithAllDetailsAsync(id);
+
             if (offer == null)
                 return Result.Failure<OfferResponseDto>(OfferErrors.OfferNotFound);
 
-            var dto = new OfferResponseDto()
-            {
-                Id = offer.Id,
-                Condition = offer.Product.Condition.ConditionTitle,
-                DateCreated = offer.DateCreated.Date,
-                Seller = offer.Seller.UserName!,
-                Description = offer.Product.Description,
-                Price = offer.Price,
-                StockQuantity = offer.StockQuantity,
-                Title = offer.Product.ProductName,
-                Place = offer.Seller.Address.Place,
-                PostalCity = offer.Seller.Address.PostalCity,
-                PostalCode = offer.Seller.Address.PostalCode,
-                ProductImages = offer.Product.ProductImages
-                        .Where(item => item.IsActive)
-                        .Select(item => item.ImagePath)
-                        .ToList(),
-                AvaliableDeliveryTypes = offer.OfferDeliveryTypes
-                    .Select(item => new DeliveryTypeResponseDto()
-                    {
-                        Title = item.DeliveryType.Title,
-                        Price = item.DeliveryType.Price,
-                        Id = item.DeliveryType.Id
-                    }).ToList()
-            };
+            var dto = offer.ToOfferResponseDto();
 
             return dto;
         }

@@ -4,6 +4,7 @@ using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using ComputerServiceOnlineShop.Models.Services;
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
+using CSOS.Core.Domain.ExternalServicesContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.ServiceContracts;
 using CSOS.Core.Services;

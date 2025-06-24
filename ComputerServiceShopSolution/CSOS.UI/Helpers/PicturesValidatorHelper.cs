@@ -1,4 +1,4 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
+﻿using CSOS.Core.Domain.ExternalServicesContracts;
 
 namespace CSOS.UI.Helpers
 {

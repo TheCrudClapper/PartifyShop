@@ -1,4 +1,4 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
+﻿using CSOS.Core.Domain.ExternalServicesContracts;
 using Microsoft.AspNetCore.Http;
 namespace ComputerServiceOnlineShop.Services
 {

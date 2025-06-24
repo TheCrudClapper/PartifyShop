@@ -4,7 +4,7 @@ using CSOS.Core.DTO.Responses.CartItem;
 
 namespace CSOS.Core.Mappings.ToDto
 {
-    public static class CartResponseDtoMappings
+    public static class CartMappings
     {
         public static CartResponseDto ToCartResponseDto(this Cart cart)
         {

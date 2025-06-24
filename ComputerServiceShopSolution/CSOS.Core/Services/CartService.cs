@@ -122,7 +122,7 @@ namespace ComputerServiceOnlineShop.Services
             var cartId = await _cartRepo.GetLoggedUserCartIdAsync(userId);
 
             if (!cartId.HasValue)
-                return Result.Failure<int>(CartErrors.CartDoesNotExists());
+                return Result.Failure<int>(CartErrors.CartDoesNotExists);
 
             return cartId.Value;
         }

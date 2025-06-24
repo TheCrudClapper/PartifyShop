@@ -61,11 +61,6 @@ namespace CSOS.Infrastructure.Repositories
                 .AnyAsync(item => item.Id == id && item.IsActive);
         }
 
-        public void SoftDelete(Offer offer)
-        {
-            offer.DateDeleted = DateTime.Now;
-            offer.IsActive = false;
-        }
         public async Task<List<Offer>> GetFilteredUserOffersAsync(string? title, Guid userId)
         {
             var query = _dbContext.Offers.Where(item => item.IsActive)

@@ -10,7 +10,7 @@ namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
         public int Id { get; set; }
 
         //Uploaded images by user
-        public List<IFormFile>? UploadedImages { get; set; }
+        public List<IFormFile> UploadedImages { get; set; } = null!;
 
         //Uploaded images by user processed to urls (already saved on drive)
         public List<string>? UploadedImagesUrls { get; set; }

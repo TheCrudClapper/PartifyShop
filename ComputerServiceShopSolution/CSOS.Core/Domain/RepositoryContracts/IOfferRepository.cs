@@ -9,7 +9,6 @@ namespace CSOS.Core.Domain.RepositoryContracts
         Task AddAsync(Offer entity);
         Task<Offer?> GetOfferWithDetailsToEdit(int id, Guid userId);
         Task UpdateAsync(Offer entity, int id);
-        void SoftDelete(Offer offer);
         Task<Offer?> GetOfferByIdAsync(int id);
         Task<List<Offer>> GetOffersByTakeAsync(int take = 12);
         Task<List<Offer>> GetFilteredUserOffersAsync(string? title, Guid userId);

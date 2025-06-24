@@ -14,7 +14,7 @@
         <form method="get" asp-action="AllUserOffers">
             <div class="row">
                 <div class="col-12 col-md-10">
-                    <input type="text" name="title" class="form-control" id="searchPhrase" placeholder="search for listing">
+                    <input type="text" name="title" class="form-control" id="searchPhrase" value= "@Context.Request.Query["title"]" placeholder="Search for listing">
                 </div>
                 <div class="col-12 col-md-2 mt-2 mt-md-0 ">
                     <button type="submit" class="btn custom-button w-100">Search</button>
@@ -22,7 +22,7 @@
             </div>
         </form>
     </div>
-    @if (Model.Count != 0)
+    @if (Model.Any())
     {
         <div class="midesection-style mb-3" id="offersContainer">
             <div class="row g-4">
@@ -70,9 +70,13 @@
             </div>
         </div>
     }
+    else if (!string.IsNullOrEmpty(Context.Request.Query["title"]) && !Model.Any())
+    {
+        @await Html.PartialAsync("_EmptyUserOffersPartialView", "No offers found with this search phrase")
+    }
     else
     {
-        @await Html.PartialAsync("_EmptyUserOffersPartialView");
+        @await Html.PartialAsync("_EmptyUserOffersPartialView", "You don't have any active offers yet");
     }
 
 

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ComputerServiceOnlineShop.Controllers
 {
+    [Authorize]
     public class OfferController : Controller
     {
         private readonly IOfferService _offerService;
@@ -25,6 +26,7 @@ namespace ComputerServiceOnlineShop.Controllers
             _offerViewModelInitializer = offerViewModelInitializer;
         }
 
+        //OK
         [HttpGet]
         public async Task<IActionResult> AddOffer()
         {
@@ -33,18 +35,15 @@ namespace ComputerServiceOnlineShop.Controllers
             return View(viewModel);
         }
 
+        //Change needed
         [HttpPost]
         public async Task<IActionResult> AddOffer(AddOfferViewModel viewModel)
         {
-            //Checking file extensions
-            if (viewModel.UploadedImages != null)
-            {
-                string response = _pictureHandlerService.CheckFileExtensions(viewModel.UploadedImages);
-                if (response != "OK")
-                {
-                    ModelState.AddModelError("WrongFileType", response!);
-                }
-            }
+            //Checking file extension using helper method
+            var pictureValidationResponse = PicturesValidatorHelper.ValidatePictureExtensions(viewModel.UploadedImages, _pictureHandlerService);
+            if(pictureValidationResponse != null)
+                ModelState.AddModelError("WrongFileType", pictureValidationResponse);
+
             //Checking fields
             if (!ModelState.IsValid)
             {
@@ -53,19 +52,24 @@ namespace ComputerServiceOnlineShop.Controllers
             }
 
             AddOfferDto dto = await viewModel.ToDto(_pictureHandlerService);
-            await _offerService.Add(dto);
+            var result = await _offerService.Add(dto);
+
+            if(result.IsFailure)
+                return View("Error", result.Error.Description);
+
             return RedirectToAction(nameof(AllUserOffers));
         }
 
+        //OK
         [HttpGet]
         public async Task<IActionResult> EditOffer([FromRoute] int id)
         {
-            if (!await _offerService.DoesOfferExist(id))
-            {
-                return View("OfferNotFound", id);
-            }
             var response = await _offerService.GetOfferForEdit(id);
-            var viewModel = response.ToViewModel();
+
+            if(response.IsFailure)
+                return View("OfferNotFound", id);
+
+            var viewModel = response.Value.ToViewModel();
             await _offerViewModelInitializer.InitializeAllAsync(viewModel);
             return View(viewModel);
         }
@@ -73,14 +77,9 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpPost]
         public async Task<IActionResult> EditOffer([FromRoute] int id, EditOfferViewModel viewModel)
         {
-            if (viewModel.UploadedImages != null)
-            {
-                string response = _pictureHandlerService.CheckFileExtensions(viewModel.UploadedImages);
-                if (response != "OK")
-                {
-                    ModelState.AddModelError("WrongFileType", response!);
-                }
-            }
+            var pictureValidationResponse = PicturesValidatorHelper.ValidatePictureExtensions(viewModel.UploadedImages, _pictureHandlerService);
+            if (pictureValidationResponse != null)
+                ModelState.AddModelError("WrongFileType", pictureValidationResponse);
 
             if (!ModelState.IsValid)
             {
@@ -114,43 +113,28 @@ namespace ComputerServiceOnlineShop.Controllers
                 SelectedOtherDeliveries = viewModel.SelectedOtherDeliveries,
             };
             await _offerService.Edit(id, dto);
-            return RedirectToAction("AllUserOffers");
+            return RedirectToAction(nameof(AllUserOffers));
         }
+
+        //Changes needed
         [HttpPost]
         public async Task<IActionResult> DeleteOffer([FromRoute]int id)
         {
-            try
-            {
-                await _offerService.DeleteOffer(id);
-                return Ok();
-            }
-            catch(UnauthorizedAccessException ex)
-            {
-                return Forbid(ex.Message);
-            }
-            catch(Exception)
-            {
+            var result = await _offerService.DeleteOffer(id);
+
+            //or json object
+            if(result.IsFailure)
                 return StatusCode(500);
-            }
+
+            return NoContent();
         }
 
+        //OK
         [HttpGet]
         public async Task<IActionResult> AllUserOffers(string? title)
         {
             List<UserOffersResponseDto> response = await _offerService.GetFilteredUserOffers(title);
             List<UserOffersViewModel> userOffers = response.ToViewModelCollection();
-
-            if (!userOffers.Any())
-            {
-                if (string.IsNullOrEmpty(title))
-                {
-                    ViewBag.Message = "You don't have any active offers yet";
-                }
-                else
-                {
-                    ViewBag.Message = "No offer matched your search phrase";
-                }
-            }
             return View(userOffers);
         }
 
@@ -158,12 +142,12 @@ namespace ComputerServiceOnlineShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ShowOffer([FromRoute] int id)
         {
-            if (!await _offerService.DoesOfferExist(id))
-            {
-                return View("OfferNotFound", id);
-            }
             var response = await _offerService.GetOffer(id);
-            var viewModel = response.ToViewModel();
+
+            if(response.IsFailure)
+                return View("OfferNotFound", id);
+
+            var viewModel = response.Value.ToViewModel();
             return View(viewModel);
         }
 

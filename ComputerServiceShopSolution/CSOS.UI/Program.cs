@@ -26,7 +26,7 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IPictureHandlerService, PictureHandlerService>();
-builder.Services.AddScoped<ICountriesService, CountriesService>();
+builder.Services.AddScoped<ICountriesService, CountryGetterService>();
 builder.Services.AddScoped<ICategoryGetterService, CategoryGetterService>();
 builder.Services.AddScoped<IDeliveryTypeGetterService, DeliveryTypeGetterService>();
 builder.Services.AddScoped<IConditionGetterService, ConditionGetterService>();
@@ -36,6 +36,7 @@ builder.Services.AddScoped<IAddressService, AddressService>();
 
 //Add Helper Classes
 builder.Services.AddScoped<OfferViewModelInitializer>();
+builder.Services.AddScoped<PicturesValidatorHelper>();
 
 //Add Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -58,6 +59,10 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication("Cookies").AddCookie("Cookies", options =>
+{
+    options.LoginPath = "/Account/Login";
+});
 builder.Services.AddAuthorization(options =>
 {
     //enforces authorization policy

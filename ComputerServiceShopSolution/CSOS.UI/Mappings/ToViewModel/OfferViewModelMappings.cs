@@ -31,6 +31,7 @@ namespace CSOS.UI.Mappings.ToViewModel
             };
             
         }
+
         //OK
         public static OfferBrowserViewModel ToViewModel(this OfferBrowserResponseDto dto)
         {

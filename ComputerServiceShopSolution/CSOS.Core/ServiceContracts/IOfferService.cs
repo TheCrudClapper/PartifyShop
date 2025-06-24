@@ -1,5 +1,6 @@
 ﻿using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
 
 //put some service method to correspondign services // or create new one !!!!
@@ -12,21 +13,21 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task Add(AddOfferDto dto);
+        Task<Result> Add(AddOfferDto dto);
 
         /// <summary>
         /// Edit user offer and saves changes in database
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task Edit(int id, EditOfferDto dto);
+        Task<Result> Edit(int id, EditOfferDto dto);
 
         /// <summary>
         /// Method that gets offer of specific id from database
         /// </summary>
         /// <param name="id">CartiD of offer</param>
         /// <returns>Returns an element from database of type SingleOfferViewModel</returns>
-        Task<OfferResponseDto> GetOffer(int id);
+        Task<Result<OfferResponseDto>> GetOffer(int id);
 
         /// <summary>
         /// Gets user's offer with filtering by product name
@@ -40,14 +41,14 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task DeleteOffer(int id);
+        Task<Result> DeleteOffer(int id);
 
         /// <summary>
         /// Gets offer for edit, used to populate forms
         /// </summary>
         /// <param name="id">Offer id</param>
         /// <returns>Object of type EditOfferViewModel</returns>
-        Task<EditOfferResponseDto> GetOfferForEdit(int id);
+        Task<Result<EditOfferResponseDto>> GetOfferForEdit(int id);
 
         /// <summary>
         /// Used with editing, deletes images from offers 

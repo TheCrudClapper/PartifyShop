@@ -4,11 +4,11 @@ using CSOS.Core.DTO;
 
 namespace ComputerServiceOnlineShop.Services
 {
-    public class CountriesService : ICountriesService
+    public class CountryGetterService : ICountriesService
     {
         private readonly ICountryRepository _countryRepository;
 
-        public CountriesService(ICountryRepository countryRepository)
+        public CountryGetterService(ICountryRepository countryRepository)
         {
             _countryRepository = countryRepository;
         }

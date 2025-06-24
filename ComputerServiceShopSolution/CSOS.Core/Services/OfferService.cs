@@ -4,12 +4,13 @@ using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.DTO.Responses.Offers;
-using CSOS.Core.Exceptions;
+using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
 using CSOS.Core.Mappings.ToEntity.OfferDeliveryTypeMappings;
 using CSOS.Core.Mappings.ToEntity.OfferMappings;
 using CSOS.Core.Mappings.ToEntity.ProductMappings;
 using CSOS.Core.ServiceContracts;
+
 namespace ComputerServiceOnlineShop.Services
 {
     public class OfferService : IOfferService
@@ -40,10 +41,10 @@ namespace ComputerServiceOnlineShop.Services
             _deliveryTypeGetterService = deliveryTypeGetterService;
             _productImageRepo = productImageRepo;
         }
-        public async Task Add(AddOfferDto dto)
+        public async Task<Result> Add(AddOfferDto dto)
         {
             if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+                return Result.Failure(OfferErrors.OfferIsNull);
 
             Guid userId = _currentUserService.GetUserId();
             var uploadedImagesUrls = dto.UploadedImagesUrls;
@@ -63,20 +64,23 @@ namespace ComputerServiceOnlineShop.Services
 
             var deliveryTypes = dto.SelectedOtherDeliveries
                 .Select(deliveryId => deliveryId.ToOfferDeliveryTypeEntity(offer)).ToList();
+
             await _offerDeliveryTypeRepo.AddRangeAsync(deliveryTypes);
 
             await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success();
         }
-        public async Task Edit(int id, EditOfferDto dto)
+        public async Task<Result> Edit(int id, EditOfferDto dto)
         {
             if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
+                return Result.Failure(OfferErrors.OfferIsNull);
 
             Guid userId = _currentUserService.GetUserId();
             var offer = await _offerRepo.GetOfferWithDetailsToEdit(id, userId);
 
             if (offer == null)
-                throw new EntityNotFoundException("Entity of given id was not found");
+                return Result.Failure(OfferErrors.OfferNotFound);
 
             offer.IsOfferPrivate = dto.IsOfferPrivate;
             offer.StockQuantity = dto.StockQuantity;
@@ -122,18 +126,24 @@ namespace ComputerServiceOnlineShop.Services
             await _offerDeliveryTypeRepo.AddRangeAsync(deliveryTypes);
 
             await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success();
         }
-        public async Task DeleteOffer(int id)
+
+        public async Task<Result> DeleteOffer(int id)
         {
             Guid userId = _currentUserService.GetUserId();
             var offer = await _offerRepo.GetUserOffersByIdAsync(id, userId);
 
             if (offer == null)
-                throw new EntityNotFoundException("Entity not found or you are not the owner");
+                return Result.Failure(OfferErrors.OfferNotFound);
 
-            _offerRepo.SoftDelete(offer);
+            offer.DateDeleted = DateTime.UtcNow;
+            offer.IsActive = false;
 
             await _unitOfWork.SaveChangesAsync();
+
+            return Result.Success();
         }
 
         public async Task<List<UserOffersResponseDto>> GetFilteredUserOffers(string? title)
@@ -160,12 +170,12 @@ namespace ComputerServiceOnlineShop.Services
 
         }
 
-        public async Task<EditOfferResponseDto> GetOfferForEdit(int id)
+        public async Task<Result<EditOfferResponseDto>> GetOfferForEdit(int id)
         {
             Guid userId = _currentUserService.GetUserId();
             var offer = await _offerRepo.GetOfferWithAllDetailsByUserAsync(id, userId);
             if (offer == null)
-                throw new EntityNotFoundException("This offer doesn't exist or doesn't belong to you");
+                return Result.Failure<EditOfferResponseDto>(OfferErrors.OfferNotFound);
 
             return new EditOfferResponseDto()
             {
@@ -253,7 +263,7 @@ namespace ComputerServiceOnlineShop.Services
             foreach (var image in productImages)
             {
                 image.IsActive = false;
-                image.DateDeleted = DateTime.Now;
+                image.DateDeleted = DateTime.UtcNow;
             }
 
             await _unitOfWork.SaveChangesAsync();
@@ -298,11 +308,11 @@ namespace ComputerServiceOnlineShop.Services
 
         }
 
-        public async Task<OfferResponseDto> GetOffer(int id)
+        public async Task<Result<OfferResponseDto>> GetOffer(int id)
         {
             var offer = await _offerRepo.GetOfferWithAllDetailsAsync(id);
             if (offer == null)
-                throw new EntityNotFoundException("Item of given ID not found");
+                return Result.Failure<OfferResponseDto>(OfferErrors.OfferNotFound);
 
             var dto = new OfferResponseDto()
             {

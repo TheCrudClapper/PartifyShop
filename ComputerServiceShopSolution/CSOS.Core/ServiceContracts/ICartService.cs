@@ -31,14 +31,14 @@ namespace ComputerServiceOnlineShop.ServiceContracts
         /// Gets current logged user cart id
         /// </summary>
         /// <returns>Returns an int representing user cart id</returns>
-        Task<int> GetLoggedUserCartId();
+        Task<Result<int>> GetLoggedUserCartId();
 
         /// <summary>
         /// Updated total cart value after deleting, updating, adding
         /// </summary>
         /// <param name="cartId">Id of cart</param>
         /// <returns></returns>
-        Task UpdateTotalCartValue(int cartId);
+        Task<Result> UpdateTotalCartValue(int cartId);
 
         /// <summary>
         /// Updates quantity of already existing cart item in cart

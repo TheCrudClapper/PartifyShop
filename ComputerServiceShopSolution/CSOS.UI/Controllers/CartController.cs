@@ -17,6 +17,10 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> Cart()
         {
             var result = await _cartService.GetLoggedUserCart();
+
+            if (result.IsFailure)
+                return View("Error", result.Error.Description);
+
             var cart = result.Value.ToViewModel();
             return View(cart);
         }

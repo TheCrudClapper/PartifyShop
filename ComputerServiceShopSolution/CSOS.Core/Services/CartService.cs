@@ -35,9 +35,12 @@ namespace ComputerServiceOnlineShop.Services
             if (offer == null)
                 return Result.Failure(CartItemErrors.CartItemDoesNotExists);
 
-            int cartId = await GetLoggedUserCartId();
+            var cartIdResult = await GetLoggedUserCartId();
 
-            var existingCartItem = await _cartRepo.GetCartItemAsync(cartId, offer.Id);
+            if(cartIdResult.IsFailure)
+                return Result.Failure(cartIdResult.Error);
+
+            var existingCartItem = await _cartRepo.GetCartItemAsync(cartIdResult.Value, offer.Id);
 
             if (existingCartItem != null)
             {
@@ -56,7 +59,7 @@ namespace ComputerServiceOnlineShop.Services
 
                 CartItem cartItem = new CartItem()
                 {
-                    CartId = cartId,
+                    CartId = cartIdResult.Value,
                     DateCreated = DateTime.Now,
                     IsActive = true,
                     Offer = offer,
@@ -65,8 +68,11 @@ namespace ComputerServiceOnlineShop.Services
 
                 await _cartRepo.AddAsync(cartItem);
             }
-            await _unitOfWork.SaveChangesAsync();
-            await UpdateTotalCartValue(cartId);
+
+            var result = await SaveAndUpdateCart(cartIdResult.Value);
+
+            if (result.IsFailure)
+                return Result.Failure(result.Error);
 
             return Result.Success();
         }
@@ -84,43 +90,50 @@ namespace ComputerServiceOnlineShop.Services
             cartItem.IsActive = false;
             cartItem.DateDeleted = DateTime.Now;
 
-            await _unitOfWork.SaveChangesAsync();
-            await UpdateTotalCartValue(cartId);
+            var result = await SaveAndUpdateCart(cartId);
+
+            if (result.IsFailure)
+                return Result.Failure(result.Error);
 
             return Result.Success();
         }
 
         public async Task<Result<CartResponseDto>> GetLoggedUserCart()
         {
-            var cartId = await GetLoggedUserCartId();
+            var cartIdResult = await GetLoggedUserCartId();
 
-            var cart = await _cartRepo.GetCartWithAllDetailsAsync(cartId);
+            if (cartIdResult.IsFailure)
+                return Result.Failure<CartResponseDto>(cartIdResult.Error);
+
+            var cart = await _cartRepo.GetCartWithAllDetailsAsync(cartIdResult.Value);
 
             if (cart == null)
-                return Result.Failure<CartResponseDto>(CartErrors.CartDoesNotExist(cartId));
+                return Result.Failure<CartResponseDto>(CartErrors.CartDoesNotExist(cartIdResult.Value));
 
             var dto = cart.ToCartResponseDto();
 
             return dto;
         }
 
-        public async Task<int> GetLoggedUserCartId()
+        public async Task<Result<int>> GetLoggedUserCartId()
         {
             Guid userId = _currentUserService.GetUserId();
 
             var cartId = await _cartRepo.GetLoggedUserCartIdAsync(userId);
-            if (cartId == null)
-                throw new EntityNotFoundException("User don't have a cart");
+
+            if (!cartId.HasValue)
+                return Result.Failure<int>(CartErrors.CartDoesNotExists());
 
             return cartId.Value;
         }
 
-        public async Task UpdateTotalCartValue(int cartId)
+        public async Task<Result> UpdateTotalCartValue(int cartId)
         {
             var cartItems = await _cartRepo.GetCartItemsForCostsUpdate(cartId);
 
+            //return early, bc nothing to calculate here
             if (cartItems == null || cartItems.Count() == 0)
-                return;
+                return Result.Success();
 
             var totalValue = CalculateItemsTotal(cartItems);
 
@@ -129,13 +142,14 @@ namespace ComputerServiceOnlineShop.Services
             var cart = await _cartRepo.GetCartByIdAsync(cartId);
 
             if (cart == null)
-                throw new EntityNotFoundException("Couldnt find user cart");
+                return Result.Failure(CartErrors.CartDoesNotExist(cartId));
 
             cart.TotalItemsValue = totalValue;
             cart.TotalCartValue = totalValue + minimalDeliveryValue;
             cart.MinimalDeliveryValue = minimalDeliveryValue;
 
             await _unitOfWork.SaveChangesAsync();
+            return Result.Success();
         }
 
         public async Task<Result> UpdateCartItemQuantity(int cartItemId, int quantity)
@@ -147,9 +161,7 @@ namespace ComputerServiceOnlineShop.Services
 
             if (quantity <= 0)
             {
-                await DeleteFromCart(cartItemId);
-                await UpdateTotalCartValue(existingItem.CartId);
-                return Result.Success();
+                return await DeleteFromCart(cartItemId);
             }
 
             if (quantity <= existingItem.Offer.StockQuantity)
@@ -162,17 +174,23 @@ namespace ComputerServiceOnlineShop.Services
                 existingItem.Quantity = existingItem.Offer.StockQuantity;
                 return Result.Failure(CartItemErrors.CannotAddMoreToCart);
             }
-                
-            await _unitOfWork.SaveChangesAsync();
-            await UpdateTotalCartValue(existingItem.CartId);
+
+            var result = await  SaveAndUpdateCart(existingItem.CartId);
+
+            if (result.IsFailure)
+                return Result.Failure(result.Error);
 
             return Result.Success();
         }
 
         public async Task<int> GetCartItemsQuantity()
         {
-            var cartId = await GetLoggedUserCartId();
-            return await _cartRepo.GetCartItemsQuantityAsync(cartId);
+            var cartIdResult = await GetLoggedUserCartId();
+
+            if (cartIdResult.IsFailure)
+                return 0;
+
+            return await _cartRepo.GetCartItemsQuantityAsync(cartIdResult.Value);
         }
 
         public decimal CalculateItemsTotal(IEnumerable<CartItem> cartItems)
@@ -194,5 +212,17 @@ namespace ComputerServiceOnlineShop.Services
                     .Min())
                 .Sum();
         }
+
+        private async Task<Result> SaveAndUpdateCart(int cartId)
+        {
+            await _unitOfWork.SaveChangesAsync();
+
+            var updateResult = await UpdateTotalCartValue(cartId);
+
+            if (updateResult.IsFailure)
+                return Result.Failure(updateResult.Error);
+
+            return Result.Success();
+        } 
     }
 }

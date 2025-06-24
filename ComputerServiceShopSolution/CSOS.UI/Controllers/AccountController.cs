@@ -33,11 +33,9 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> Register()
         {
             var response = await _countriesService.GetCountriesSelectionList();
-            RegisterViewModel ViewModel = new RegisterViewModel()
-            {
-                CountriesSelectionList = response.ConvertToSelectListItem()
-            };
-            return View(ViewModel);
+            RegisterViewModel viewModel = new RegisterViewModel();
+            viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
+            return View(viewModel);
         }
 
 
@@ -45,7 +43,6 @@ namespace ComputerServiceOnlineShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
-            //initializing list of countries for view
             var response = await _countriesService.GetCountriesSelectionList();
             viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
 
@@ -143,7 +140,6 @@ namespace ComputerServiceOnlineShop.Controllers
                 return PartialView("AccountPartials/_UserDetailsForm", viewModel);
             }
                 
-
             return PartialView("AccountPartials/_UserDetailsForm", viewModel);
 
         }

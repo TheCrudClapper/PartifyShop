@@ -2,6 +2,7 @@
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CSOS.UI.Helpers
 {
@@ -48,5 +49,6 @@ namespace CSOS.UI.Helpers
             viewModel.OtherDeliveriesSelectedList =
                 (await _deliveryTypeGetterService.GetOtherDeliveryTypes()).ConvertToSelectListItem();
         }
+
     }
 }

@@ -16,7 +16,7 @@ namespace CSOS.Core.Services
 
         public async Task<List<SelectListItemDto>> GetAllDeliveryTypes()
         {
-            var types = await _deliveryTypeRepository.GetActiveDeliveryTypesAsync();
+            var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 
             return types.Select(item => new SelectListItemDto
             {
@@ -27,7 +27,7 @@ namespace CSOS.Core.Services
 
         public async Task<List<SelectListItemDto>> GetOtherDeliveryTypes()
         {
-            var types = await _deliveryTypeRepository.GetActiveDeliveryTypesAsync();
+            var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 
             return types
                 .Where(item => !item.Title.Contains("Locker"))
@@ -41,7 +41,7 @@ namespace CSOS.Core.Services
 
         public async Task<List<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes()
         {
-            var types = await _deliveryTypeRepository.GetActiveDeliveryTypesAsync();
+            var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 
             return types
                 .Where(item => item.Title.Contains("Locker"))

@@ -14,7 +14,7 @@ namespace CSOS.Core.Services
         }
         public async Task<List<SelectListItemDto>> GetProductConditionsAsSelectList()
         {
-            var conditions = await _conditionRepo.GetAllProductConditions();
+            var conditions = await _conditionRepo.GetAllConditionsAsync();
 
             return conditions.Select(item => new SelectListItemDto()
             {

@@ -1,11 +1,15 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
-using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 
 namespace CSOS.Core.Domain.RepositoryContracts
 {
     public interface IAddressRepository
     {
-        Task<ApplicationUser?> GetUserWithAddress(Guid userId);
-        Task<Address?> GetAddress(int id);
+        
+        /// <summary>
+        /// Gets Addres Domain Model of given id from data store
+        /// </summary>
+        /// <param name="addressId">Addres to search for</param>
+        /// <returns>Returns Addres Domain Model</returns>
+        Task<Address?> GetAddressByIdAsync(int addressId);
     }
 }

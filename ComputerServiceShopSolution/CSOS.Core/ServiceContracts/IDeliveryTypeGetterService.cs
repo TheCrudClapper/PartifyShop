@@ -1,29 +1,26 @@
 ﻿using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Deliveries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSOS.Core.ServiceContracts
 {
     public interface IDeliveryTypeGetterService
     {
         /// <summary>
-        /// Gets an list of parcel locker delivery types 
+        /// Retrieves a list of delivery types that are parcel locker options.
         /// </summary>
-        /// <returns>An list of DeliveryTypeViewModel</returns>
+        /// <returns>A list of <see cref="DeliveryTypeResponseDto"/> representing parcel locker delivery types.</returns>
         Task<List<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes();
+
         /// <summary>
-        /// Gets delivery types, without parcel locker deliveries, as SelectListItem obj
+        /// Retrieves delivery types that are not parcel locker options, returned as select list items.
         /// </summary>
-        /// <returns>An List of SelctListItem type</returns>
+        /// <returns>A list of <see cref="SelectListItemDto"/> representing other delivery types.</returns>
         Task<List<SelectListItemDto>> GetOtherDeliveryTypes();
+
         /// <summary>
-        /// Gets all active delivery types avaliable in database
+        /// Retrieves all active delivery types available in the database.
         /// </summary>
-        /// <returns>An List of SelectListItem</returns>
+        /// <returns>A list of <see cref="SelectListItemDto"/> representing all available delivery types.</returns>
         Task<List<SelectListItemDto>> GetAllDeliveryTypes();
     }
 }

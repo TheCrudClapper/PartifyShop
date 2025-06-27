@@ -15,15 +15,5 @@ namespace CSOS.Infrastructure.Repositories
         {
             await _dbContext.Products.AddAsync(entity);
         }
-
-        public Task RemoveAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Product entity, int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

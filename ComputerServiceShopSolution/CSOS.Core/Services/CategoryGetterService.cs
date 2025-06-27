@@ -15,7 +15,7 @@ namespace CSOS.Core.Services
 
         public async Task<List<MainPageCardResponseDto>> GetProductCategories()
         {
-            var categories = await _productCategoryRepo.GetAllProductCategories();
+            var categories = await _productCategoryRepo.GetAllProductCategoriesAsync();
 
             return categories.Select(item => new MainPageCardResponseDto()
             {
@@ -27,7 +27,7 @@ namespace CSOS.Core.Services
         }
         public async Task<List<SelectListItemDto>> GetProductCategoriesAsSelectList()
         {
-            var categories = await _productCategoryRepo.GetAllProductCategories();
+            var categories = await _productCategoryRepo.GetAllProductCategoriesAsync();
 
             return categories.Select(item => new SelectListItemDto()
             {

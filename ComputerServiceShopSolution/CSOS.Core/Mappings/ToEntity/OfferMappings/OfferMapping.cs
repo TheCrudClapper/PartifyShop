@@ -16,7 +16,6 @@ namespace CSOS.Core.Mappings.ToEntity.OfferMappings
                 SellerId = userId,
                 StockQuantity = dto.StockQuantity,
                 IsOfferPrivate = dto.IsOfferPrivate,
-
             };
         }
     }

@@ -19,13 +19,13 @@ namespace CSOS.Infrastructure.Repositories
             _dbContext = databaseContext;
         }
 
-        public Task<Address?> GetAddress(int id)
+        public Task<Address?> GetAddressByIdAsync(int id)
         {
             return _dbContext.Addresses
                 .FirstOrDefaultAsync(item => item.Id == id && item.IsActive);
         }
 
-        public async Task<ApplicationUser?> GetUserWithAddress(Guid userId)
+        public async Task<ApplicationUser?> GetUserWithAddressAsync(Guid userId)
         {
             return  await _dbContext.Users
                 .Where(item => item.IsActive && item.Id == userId)

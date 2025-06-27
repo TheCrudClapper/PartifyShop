@@ -21,14 +21,5 @@ namespace CSOS.Infrastructure.Repositories
             await _dbContext.OfferDeliveryTypes.AddRangeAsync(entities);
         }
 
-        public Task RemoveAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(OfferDeliveryType entity, int id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

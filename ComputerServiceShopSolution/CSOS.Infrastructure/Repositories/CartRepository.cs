@@ -18,7 +18,7 @@ namespace CSOS.Infrastructure.Repositories
             await _dbContext.CartItems.AddAsync(cartItem);
         }
 
-        public async Task<IEnumerable<CartItem>?> GetCartItemsForCostsUpdate(int cartId)
+        public async Task<IEnumerable<CartItem>?> GetCartItemsForCostsUpdateAsync(int cartId)
         {
             return await _dbContext.CartItems
                 .Where(cartItem => cartItem.CartId == cartId && cartItem.IsActive)
@@ -34,7 +34,7 @@ namespace CSOS.Infrastructure.Repositories
                 .FirstOrDefaultAsync(item => item.CartId == cartId && item.OfferId == offerId && item.IsActive);
         }
 
-        public async Task<CartItem?> GetCartItemAsync(int cartItemId)
+        public async Task<CartItem?> GetCartItemByIdAsync(int cartItemId)
         {
             return await _dbContext.CartItems
                 .FirstOrDefaultAsync(item => item.Id == cartItemId && item.IsActive);

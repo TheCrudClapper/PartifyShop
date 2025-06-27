@@ -4,6 +4,10 @@ namespace CSOS.Core.Domain.RepositoryContracts
 {
     public interface IProductCategoryRepository
     {
-        Task<List<ProductCategory>> GetAllProductCategories();
+        /// <summary>
+        /// Gets active all product categories from databse
+        /// </summary>
+        /// <returns>Returns an list of Product Category Domain Models</returns>
+        Task<List<ProductCategory>> GetAllProductCategoriesAsync();
     }
 }

@@ -13,7 +13,7 @@ namespace CSOS.Infrastructure.Repositories
             _dbContext = databaseContext;
         }
 
-        public async Task Add(ApplicationUser entity)
+        public async Task AddAsync(ApplicationUser entity)
         {
             await _dbContext.Users.AddAsync(entity);
         }
@@ -22,6 +22,14 @@ namespace CSOS.Infrastructure.Repositories
         {
             return await _dbContext.Users
                 .FirstOrDefaultAsync(item => item.IsActive && item.Id == id);
+        }
+
+        public async Task<ApplicationUser?> GetUserWithAddressAsync(Guid userId)
+        {
+            return await _dbContext.Users
+                .Where(item => item.IsActive && item.Id == userId)
+                .Include(item => item.Address)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<bool> IsUserByEmailInDatabaseAsync(string Email)

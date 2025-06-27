@@ -7,7 +7,7 @@ namespace ComputerServiceOnlineShop.ServiceContracts
     public interface ICartService
     {
         /// <summary>
-        /// Add to cart an offer of given id and given quantity
+        /// AddAsync to cart an offer of given id and given quantity
         /// </summary>
         /// <param name="offerId">Offer Id that will be added to cart</param>
         /// <param name="quantity">Quantity of Offer</param>

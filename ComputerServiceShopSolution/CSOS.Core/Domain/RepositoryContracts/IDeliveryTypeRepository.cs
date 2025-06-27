@@ -4,6 +4,10 @@ namespace CSOS.Core.Domain.RepositoryContracts
 {
     public interface IDeliveryTypeRepository
     {
-        Task<List<DeliveryType>> GetActiveDeliveryTypesAsync();
+        /// <summary>
+        /// Gets all active delivery types from db
+        /// </summary>
+        /// <returns>Returns an List of Delivery Type Domain Models</returns>
+        Task<List<DeliveryType>> GetAllDeliveryTypesAsync();
     }
 }

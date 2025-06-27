@@ -19,7 +19,7 @@ namespace CSOS.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<Country>> GetActiveCountriesAsync()
+        public async Task<List<Country>> GetAllCountriesAsync()
         {
             return await _dbContext.Countries
                 .Where(c => c.IsActive)

@@ -1,7 +1,6 @@
 ﻿using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ComputerServiceOnlineShop.Controllers
 {

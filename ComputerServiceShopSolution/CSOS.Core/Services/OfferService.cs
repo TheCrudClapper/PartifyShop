@@ -83,7 +83,7 @@ namespace ComputerServiceOnlineShop.Services
                 return Result.Failure(OfferErrors.OfferIsNull);
 
             Guid userId = _currentUserService.GetUserId();
-            var offer = await _offerRepo.GetOfferWithDetailsToEdit(id, userId);
+            var offer = await _offerRepo.GetOfferWithDetailsToEditAsync(id, userId);
 
             if (offer == null)
                 return Result.Failure(OfferErrors.OfferNotFound);
@@ -174,11 +174,6 @@ namespace ComputerServiceOnlineShop.Services
             return dto;
         }
 
-        public async Task<List<SelectListItemDto>> GetOfferPictures(int id)
-        {
-            return (await _offerRepo.GetOfferPicturesAsSelectListDto(id)).ToList();
-        }
-
         public async Task<OfferBrowserResponseDto> GetFilteredOffers(OfferFilter filter)
         {
             var offers = await _offerRepo.GetFilteredOffersAsync(filter);
@@ -199,19 +194,23 @@ namespace ComputerServiceOnlineShop.Services
             var offers = await _offerRepo.GetOffersByTakeAsync();
             return offers.ToListMainPageCardDto();
         }
-        
+
         public async Task<bool> DoesOfferExist(int id)
         {
-            return await _offerRepo.IsOfferInDb(id);
+            return await _offerRepo.IsOfferInDbAsync(id);
         }
+
         public async Task DeleteImagesFromOffer(int offerId, List<string> imageUrls)
         {
-            var productImages = await _productImageRepo.GetImagesFromOffer(offerId, imageUrls);
+            var productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
 
             foreach (var image in productImages)
             {
-                image.IsActive = false;
-                image.DateDeleted = DateTime.UtcNow;
+                if (imageUrls.Any(url => image.ImagePath.Contains(url)))
+                {
+                    image.DateDeleted = DateTime.UtcNow;
+                    image.IsActive = false;
+                }
             }
 
             await _unitOfWork.SaveChangesAsync();

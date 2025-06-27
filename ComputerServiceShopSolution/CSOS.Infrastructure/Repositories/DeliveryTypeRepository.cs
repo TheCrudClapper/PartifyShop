@@ -14,7 +14,7 @@ namespace CSOS.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<DeliveryType>> GetActiveDeliveryTypesAsync()
+        public async Task<List<DeliveryType>> GetAllDeliveryTypesAsync()
         {
             return await _dbContext.DeliveryTypes
                 .Where(dt => dt.IsActive)

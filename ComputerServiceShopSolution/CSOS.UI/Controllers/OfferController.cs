@@ -1,9 +1,11 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
 using CSOS.Core.Domain.ExternalServicesContracts;
+using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
+using CSOS.Core.ServiceContracts;
 using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
@@ -19,12 +21,17 @@ namespace ComputerServiceOnlineShop.Controllers
         private readonly IOfferService _offerService;
         private readonly IPictureHandlerService _pictureHandlerService;
         private readonly OfferViewModelInitializer _offerViewModelInitializer;
+        private readonly IProductImageService _productImageService; 
         
-        public OfferController(IOfferService offerService, IPictureHandlerService pictureHandlerService, OfferViewModelInitializer offerViewModelInitializer)
+        public OfferController(IOfferService offerService,
+            IPictureHandlerService pictureHandlerService,
+            OfferViewModelInitializer offerViewModelInitializer,
+            IProductImageService productImageService)
         {
             _offerService = offerService;
             _pictureHandlerService = pictureHandlerService;
             _offerViewModelInitializer = offerViewModelInitializer;
+            _productImageService = productImageService;
         }
 
         //OK
@@ -81,7 +88,7 @@ namespace ComputerServiceOnlineShop.Controllers
 
             if (!ModelState.IsValid)
             {
-                var images = await _offerService.GetOfferPictures(id);
+                var images = await _productImageService.GetOfferPictures(id);
 
                 viewModel.ExistingImagesUrls = images.Select(item => new SelectListItem()
                 {
@@ -90,6 +97,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 })
                 .ToList();
 
+                
                 await _offerViewModelInitializer.InitializeAllAsync(viewModel);
                 return View(viewModel);
             }

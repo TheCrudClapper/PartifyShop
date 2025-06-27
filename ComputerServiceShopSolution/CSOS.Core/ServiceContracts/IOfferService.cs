@@ -3,94 +3,91 @@ using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
 
-//put some service method to correspondign services // or create new one !!!!
 namespace ComputerServiceOnlineShop.Abstractions
 {
     public interface IOfferService
     {
         /// <summary>
-        /// Adds user's offer to database
+        /// Adds a new offer for the current user to the database.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <param name="dto">DTO containing offer data.</param>
+        /// <returns>Result indicating success or failure.</returns>
         Task<Result> Add(AddOfferDto dto);
 
         /// <summary>
-        /// Edit user offer and saves changes in database
+        /// Edits an existing offer and saves changes to the database.
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
+        /// <param name="id">The ID of the offer to edit.</param>
+        /// <param name="dto">DTO containing updated offer data.</param>
+        /// <returns>Result indicating success or failure.</returns>
         Task<Result> Edit(int id, EditOfferDto dto);
 
         /// <summary>
-        /// Method that gets offer of specific id from database
+        /// Retrieves a specific offer by its ID.
         /// </summary>
-        /// <param name="id">CartiD of offer</param>
-        /// <returns>Returns an element from database of type SingleOfferViewModel</returns>
+        /// <param name="id">The ID of the offer.</param>
+        /// <returns>Result containing the offer data if found.</returns>
         Task<Result<OfferResponseDto>> GetOffer(int id);
 
         /// <summary>
-        /// Gets user's offer with filtering by product name
+        /// Retrieves all user offers with optional filtering by product title.
         /// </summary>
-        /// <param name="title">Parameter used for filtration</param>
-        /// <returns>IEnumerable collection of UserOfferViewModel</returns>
+        /// <param name="title">Optional title to filter offers by.</param>
+        /// <returns>List of offers matching the filter.</returns>
         Task<List<UserOffersResponseDto>> GetFilteredUserOffers(string? title);
 
         /// <summary>
-        /// Deletes user's offer from database
+        /// Deletes an offer by its ID.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">The ID of the offer to delete.</param>
+        /// <returns>Result indicating success or failure.</returns>
         Task<Result> DeleteOffer(int id);
 
         /// <summary>
-        /// Gets offer for edit, used to populate forms
+        /// Retrieves offer details for editing, typically used to populate a form.
         /// </summary>
-        /// <param name="id">Offer id</param>
-        /// <returns>Object of type EditOfferViewModel</returns>
+        /// <param name="id">The ID of the offer.</param>
+        /// <returns>Result containing the editable offer data.</returns>
         Task<Result<EditOfferResponseDto>> GetOfferForEdit(int id);
 
         /// <summary>
-        /// Used with editing, deletes images from offers 
+        /// Removes specific images from an offer.
         /// </summary>
-        /// <param name="offerId">Offer id</param>
-        /// <param name="imageUrls">Urls of images to delete</param>
-        /// <returns></returns>
+        /// <param name="offerId">The ID of the offer.</param>
+        /// <param name="imageUrls">List of image URLs to delete.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         Task DeleteImagesFromOffer(int offerId, List<string> imageUrls);
 
         /// <summary>
-        /// Gets pictures for specified offer
+        /// Checks whether an offer exists and belongs to the current user.
         /// </summary>
-        /// <param name="id">Offer id</param>
-        /// <returns>List of SelectListItemType</returns>
-        Task<List<SelectListItemDto>> GetOfferPictures(int id);
-
-        /// <summary>
-        /// Checks wheater offer exists in database and belongs to actually logged in user
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>return true if offer exists, false if not</returns>
+        /// <param name="id">The ID of the offer.</param>
+        /// <returns>True if the offer exists and is accessible; otherwise, false.</returns>
         Task<bool> DoesOfferExist(int id);
 
         /// <summary>
-        /// Gets offer from database based on specific filter options
+        /// Retrieves offers based on advanced filter options.
         /// </summary>
-        /// <param name="filter">Object that consist of properties with filtration values</param>
-        /// <returns>An object of OfferBrowserViewModel with fields used in view</returns>
+        /// <param name="filter">Filter parameters for offer searching.</param>
+        /// <returns>Filtered offers suitable for offer browsing views.</returns>
         Task<OfferBrowserResponseDto> GetFilteredOffers(OfferFilter filter);
 
         /// <summary>
-        /// Gets items for the main page of application
+        /// Retrieves highlighted offers for display on the main index page.
         /// </summary>
-        /// <returns>An IEnumerable collection with objects of MainPageCardViewModel</returns>
+        /// <returns>List of offers formatted for main page display.</returns>
         Task<List<MainPageCardResponseDto>> GetIndexPageOffers();
 
         /// <summary>
-        /// TODO: Change this shit to have filtering options from db
+        /// Retrieves available sorting options for offer browsing.
         /// </summary>
-        /// <returns>Returns Sorting options used in OfferBrowser Page</returns>
+        /// <returns>List of sorting options.</returns>
         List<SelectListItemDto> GetSortingOptions();
 
+        /// <summary>
+        /// Retrieves current deals of the day.
+        /// </summary>
+        /// <returns>List of offers labeled as deals of the day.</returns>
         Task<List<MainPageCardResponseDto>> GetDealsOfTheDay();
     }
 }

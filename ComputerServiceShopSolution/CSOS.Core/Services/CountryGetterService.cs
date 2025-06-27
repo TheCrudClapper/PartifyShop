@@ -15,7 +15,7 @@ namespace ComputerServiceOnlineShop.Services
 
         public async Task<List<SelectListItemDto>> GetCountriesSelectionList()
         {
-            var countries = await _countryRepository.GetActiveCountriesAsync();
+            var countries = await _countryRepository.GetAllCountriesAsync();
 
             return countries.Select(item => new SelectListItemDto
             {

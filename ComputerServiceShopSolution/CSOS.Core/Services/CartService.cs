@@ -79,7 +79,7 @@ namespace ComputerServiceOnlineShop.Services
 
         public async Task<Result> DeleteFromCart(int cartItemId)
         {
-            var cartItem = await _cartRepo.GetCartItemAsync(cartItemId);
+            var cartItem = await _cartRepo.GetCartItemByIdAsync(cartItemId);
 
             if (cartItem == null)
                 return Result.Failure(CartItemErrors.CartItemDoesNotExists);
@@ -129,7 +129,7 @@ namespace ComputerServiceOnlineShop.Services
 
         public async Task<Result> UpdateTotalCartValue(int cartId)
         {
-            var cartItems = await _cartRepo.GetCartItemsForCostsUpdate(cartId);
+            var cartItems = await _cartRepo.GetCartItemsForCostsUpdateAsync(cartId);
 
             //return early, bc nothing to calculate here
             if (cartItems == null || cartItems.Count() == 0)

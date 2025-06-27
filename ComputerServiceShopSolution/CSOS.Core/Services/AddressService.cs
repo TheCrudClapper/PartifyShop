@@ -12,19 +12,21 @@ namespace ComputerServiceOnlineShop.Services
     public class AddressService : IAddressService
     {
         private readonly ICurrentUserService _currentUserService;
+        private readonly IAccountRepository _accountRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AddressService(ICurrentUserService currentUserService, IAddressRepository addressRepository, IUnitOfWork unitOfWork)
+        public AddressService(ICurrentUserService currentUserService, IAddressRepository addressRepository, IUnitOfWork unitOfWork, IAccountRepository accountRepository)
         {
             _currentUserService = currentUserService;
             _addressRepository = addressRepository;
             _unitOfWork = unitOfWork;
+            _accountRepository = accountRepository;
         }
 
         public async Task<Result> Edit(int id, AddressDto dto)
         {
-            var address = await _addressRepository.GetAddress(id);
+            var address = await _addressRepository.GetAddressByIdAsync(id);
 
             if (address == null)
                 return Result.Failure(AddressErrors.AddressNotFound);
@@ -65,7 +67,7 @@ namespace ComputerServiceOnlineShop.Services
         private async Task<ApplicationUser?> GetCurrentUserAddress()
         {
             var userId = _currentUserService.GetUserId();
-            return await _addressRepository.GetUserWithAddress(userId);
+            return await _accountRepository.GetUserWithAddressAsync(userId);
         }
     }
 }

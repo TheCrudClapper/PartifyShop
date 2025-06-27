@@ -22,7 +22,7 @@ namespace ComputerServiceOnlineShop.Services
             }
             else
             {
-                response = $"Add at least one image in extendsion {string.Join(',', allowedExtensions)}";
+                response = $"AddAsync at least one image in extendsion {string.Join(',', allowedExtensions)}";
                 return response;
             }
             return response = "OK";

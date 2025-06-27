@@ -18,11 +18,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add DbContext
+// AddAsync DbContext
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ComputerServiceOnlineShop")));
 
-// Add Business-Logic Services to the container.
+// AddAsync Business-Logic Services to the container.
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
@@ -34,12 +34,13 @@ builder.Services.AddScoped<IConditionGetterService, ConditionGetterService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IProductImageService, ProductImageService>();
 
-//Add Helper Classes
+//AddAsync Helper Classes
 builder.Services.AddScoped<OfferViewModelInitializer>();
 builder.Services.AddScoped<PicturesValidatorHelper>();
 
-//Add Unit of Work
+//AddAsync Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Adding repositories

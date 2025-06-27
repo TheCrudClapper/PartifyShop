@@ -18,7 +18,7 @@ namespace CSOS.Infrastructure.Repositories
         {
             await _dbContext.Offers.AddAsync(entity);
         }
-        public async Task<Offer?> GetOfferWithDetailsToEdit(int id, Guid userId)
+        public async Task<Offer?> GetOfferWithDetailsToEditAsync(int id, Guid userId)
         {
             return await _dbContext.Offers
               .Where(item => item.Id == id && item.IsActive && item.SellerId == userId)
@@ -31,21 +31,19 @@ namespace CSOS.Infrastructure.Repositories
         public async Task<Offer?> GetOfferByIdAsync(int id)
         {
             return await _dbContext.Offers
-                .Where(item => item.Id == id && item.IsActive)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(item => item.Id == id && item.IsActive);
         }
         
-        public async Task<Offer?> GetUserOffersByIdAsync(int id, Guid userId)
+        public async Task<Offer?> GetUserOffersByIdAsync(int offerId, Guid userId)
         {
             return await _dbContext.Offers
-                .Where(item => item.Id == id && item.SellerId == userId && item.IsActive == true)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(item => item.Id == offerId && item.SellerId == userId && item.IsActive == true);
         }
-        public async Task<Offer?> GetOfferWithAllDetailsByUserAsync(int id, Guid userId)
+        public async Task<Offer?> GetOfferWithAllDetailsByUserAsync(int offerId, Guid userId)
         {
             return await _dbContext.Offers
             .AsNoTracking()
-            .Where(item => item.IsActive && item.SellerId == userId && item.Id == id)
+            .Where(item => item.IsActive && item.SellerId == userId && item.Id == offerId)
             .Include(item => item.Product)
             .ThenInclude(item => item.ProductImages)
             .Include(item => item.Product.ProductCategory)
@@ -55,7 +53,7 @@ namespace CSOS.Infrastructure.Repositories
             .FirstOrDefaultAsync();
             
         }
-        public async Task<bool> IsOfferInDb(int id)
+        public async Task<bool> IsOfferInDbAsync(int id)
         {
             return await _dbContext.Offers
                 .AnyAsync(item => item.Id == id && item.IsActive);
@@ -157,38 +155,6 @@ namespace CSOS.Infrastructure.Repositories
                .OrderBy(item => item.DateCreated)
                .Take(take)
                .ToListAsync();
-        }
-        public async Task<Offer?> GetOfferDto(int id)
-        {
-            return await _dbContext.Offers.Where(item => item.IsActive)
-               .Where(item => item.Id == id).FirstOrDefaultAsync();        
-        }
-
-        public async Task UpdateAsync(ComputerServiceOnlineShop.Entities.Models.Offer entity, int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<SelectListItemDto>> GetOfferPicturesAsSelectListDto(int id)
-        {
-            var imagePaths = await _dbContext.Offers
-                .AsNoTracking()
-                .Where(item => item.IsActive && item.Id == id)
-                .Include(item => item.Product)
-                    .ThenInclude(item => item.ProductImages)
-                .SelectMany(item => item.Product.ProductImages
-                    .Where(img => img.IsActive)
-                    .Select(img => img.ImagePath))
-                .ToListAsync();
-
-            var imageSelectList = imagePaths.Select(path => new SelectListItemDto
-            {
-                Value = path,
-                Text = path,
-            }).ToList();
-
-            return imageSelectList;
-        }
-        
+        }   
     }
 }

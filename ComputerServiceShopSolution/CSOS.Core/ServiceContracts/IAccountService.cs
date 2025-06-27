@@ -2,54 +2,54 @@
 using CSOS.Core.DTO.Responses.Account;
 using CSOS.Core.ErrorHandling;
 using Microsoft.AspNetCore.Identity;
+
 namespace ComputerServiceOnlineShop.Abstractions
 {
     public interface IAccountService
     {
         /// <summary>
-        /// Registers, adds new user to database
+        /// Registers a new user in the system.
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <param name="dto">Registration data.</param>
+        /// <returns>An <see cref="IdentityResult"/> indicating success or failure.</returns>
         Task<IdentityResult> Register(RegisterDto dto);
 
         /// <summary>
-        /// Login user into database 
+        /// Authenticates the user with the provided credentials.
         /// </summary>
-        /// <param name="model">dto or viewmodel</param>
-        /// <returns></returns>
+        /// <param name="dto">Login credentials.</param>
+        /// <returns>A <see cref="SignInResult"/> indicating the result of the login attempt.</returns>
         Task<SignInResult> Login(LoginDto dto);
 
         /// <summary>
-        /// Allows user to logout
+        /// Logs out the currently authenticated user.
         /// </summary>
-        /// <returns></returns>
         Task Logout();
 
         /// <summary>
-        /// Returns Account Response Dto wiht details needed for edition
+        /// Retrieves account data of the currently logged-in user for editing purposes.
         /// </summary>
-        /// <returns>Returns data of currently logged in user</returns>
+        /// <returns>A <see cref="Result{T}"/> containing <see cref="AccountDto"/> with user data.</returns>
         Task<Result<AccountDto>> GetAccountForEdit();
 
         /// <summary>
-        /// Edits curently logged user using values from AccountDto
+        /// Updates the currently logged-in user's account details.
         /// </summary>
-        /// <param name="dto">Object with updated data</param>
-        /// <returns>Returns an result object identyfying success or failure</returns>
+        /// <param name="dto">Updated account information.</param>
+        /// <returns>A <see cref="Result"/> indicating success or failure of the update.</returns>
         Task<Result> Edit(AccountDto dto);
 
         /// <summary>
-        /// Changes user's password 
+        /// Changes the password of the currently logged-in user.
         /// </summary>
-        /// <param name="dto">DTO contains current, new, confirmed passwords to change</param>
-        /// <returns>Returns an result object identyfying success or failure</returns>
+        /// <param name="dto">Password change data including current and new passwords.</param>
+        /// <returns>A <see cref="Result"/> indicating the outcome of the operation.</returns>
         Task<Result> ChangePassword(PasswordDto dto);
 
         /// <summary>
-        /// Gets all data about user for editing 
+        /// Retrieves detailed account information of the currently logged-in user.
         /// </summary>
-        /// <returns>Retruns result object representing succes or failure of opertion</returns>
+        /// <returns>A <see cref="Result{T}"/> containing <see cref="AccountDetailsDto"/> if successful.</returns>
         Task<Result<AccountDetailsDto>> GetAccountDetailsAsync();
     }
 }

@@ -19,7 +19,7 @@ namespace CSOS.Infrastructure.Repositories
                 .Include(item => item.Product)
                     .ThenInclude(item => item.ProductImages)
                     .SelectMany(item => item.Product.ProductImages)
-                    .Where(item => item.IsActive)
+                        .Where(item => item.IsActive)
                     .ToListAsync();
         }
     }

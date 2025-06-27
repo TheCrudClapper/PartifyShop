@@ -6,6 +6,7 @@ namespace CSOS.Core.Mappings.ToDto
 {
     public static class CartMappings
     {
+        private const string DefaultImagePath = "wwwroot/images/no-image.png";
         public static CartResponseDto ToCartResponseDto(this Cart cart)
         {
             return new CartResponseDto()
@@ -20,7 +21,8 @@ namespace CSOS.Core.Mappings.ToDto
                         Price = item.Offer.Price,
                         Quantity = item.Quantity,
                         Title = item.Offer.Product.ProductName,
-                        ImageUrl = item.Offer.Product.ProductImages.FirstOrDefault()?.ImagePath,
+                        ImageUrl = item.Offer.Product.ProductImages
+                            .FirstOrDefault(item => item.IsActive)?.ImagePath ?? DefaultImagePath,
                         OfferId = item.OfferId,
 
                     }).ToList(),

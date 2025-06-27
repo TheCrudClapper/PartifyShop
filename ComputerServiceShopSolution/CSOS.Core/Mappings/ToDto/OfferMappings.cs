@@ -8,7 +8,7 @@ namespace CSOS.Core.Mappings.ToDto
     public static class OfferMappings
     {
 
-        private const string DefaultImagePath = "wwwroot/images/no-image/png";
+        private const string DefaultImagePath = "wwwroot/images/no-image.png";
 
         public static List<MainPageCardResponseDto> ToListMainPageCardDto(this List<Offer> offers)
         {

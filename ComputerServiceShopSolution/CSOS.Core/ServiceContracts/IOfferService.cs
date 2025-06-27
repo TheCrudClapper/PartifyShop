@@ -56,7 +56,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// <param name="offerId">The ID of the offer.</param>
         /// <param name="imageUrls">List of image URLs to delete.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task DeleteImagesFromOffer(int offerId, List<string> imageUrls);
+        Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls);
 
         /// <summary>
         /// Checks whether an offer exists and belongs to the current user.

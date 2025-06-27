@@ -1,24 +1,36 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
+﻿using AutoFixture;
+using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
+using FluentAssertions;
 namespace CSOS.Tests
 {
     public class CartServiceTests
     {
-        private ICartService _cartService;
+        private readonly ICartService _cartService;
+        private readonly IFixture _fixture;
         public CartServiceTests()
         {
             //should be mocked
             _cartService = new CartService();
+            _fixture = new Fixture();
+
+            _fixture.Behaviors
+            .OfType<ThrowingRecursionBehavior>()
+            .ToList()
+            .ForEach(b => _fixture.Behaviors.Remove(b));
+
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
 
-        #region CalculateItemsTotal Method Testss
+        #region CalculateItemsTotal Method Tests
         [Fact]
         public void CalculateItemsTotal_WithValidItems_ReturnsCorrectTotal()
         {
             //Arrange
             IEnumerable<CartItem> cartItems = new List<CartItem>()
             {
+
                 new CartItem()
                 {
                     Quantity = 15,
@@ -36,6 +48,7 @@ namespace CSOS.Tests
                 }
             };
 
+
             decimal expected = 4200;
 
 
@@ -43,7 +56,7 @@ namespace CSOS.Tests
             decimal actual = _cartService.CalculateItemsTotal(cartItems);
 
             //Assert
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Fact]
@@ -57,7 +70,7 @@ namespace CSOS.Tests
             decimal actual = _cartService.CalculateItemsTotal(cartItems);
 
             //Assert
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Fact]
@@ -71,7 +84,7 @@ namespace CSOS.Tests
             decimal actual = _cartService.CalculateItemsTotal(cartItems);
 
             //Assert
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
         #endregion
 
@@ -80,27 +93,22 @@ namespace CSOS.Tests
         public void CalculateMinimalDeliveryCost_ItemsWithDeliveryTypes_ReturnsSumOfMinimalPrices()
         {
             //Arrange
-            DeliveryType deliveryType1 = new DeliveryType { Price = 12 };
-            DeliveryType deliveryType2 = new DeliveryType { Price = 11 };
-            DeliveryType deliveryType3 = new DeliveryType { Price = 69 };
+            DeliveryType deliveryType1 = _fixture.Build<DeliveryType>().With(item => item.Price, 12).Create();
+            DeliveryType deliveryType2 = _fixture.Build<DeliveryType>().With(item => item.Price, 11).Create();
+            DeliveryType deliveryType3 = _fixture.Build<DeliveryType>().With(item => item.Price, 69).Create();
 
-            Offer offer1 = new Offer()
+            Offer offer1 = _fixture.Build<Offer>().With(item => item.OfferDeliveryTypes, new List<OfferDeliveryType>()
             {
-                OfferDeliveryTypes = new List<OfferDeliveryType>
-                {
-                    new OfferDeliveryType(){ DeliveryType = deliveryType1 },
-                    new OfferDeliveryType(){ DeliveryType = deliveryType2 },
-                }
-            };
+                 new OfferDeliveryType(){ DeliveryType = deliveryType1 },
+                 new OfferDeliveryType(){ DeliveryType = deliveryType2 },
+            })
+            .Create();
 
-            Offer offer2 = new Offer()
+            Offer offer2 = _fixture.Build<Offer>().With(item => item.OfferDeliveryTypes, new List<OfferDeliveryType>()
             {
-                OfferDeliveryTypes = new List<OfferDeliveryType>
-                {
-                    new OfferDeliveryType(){ DeliveryType = deliveryType3 },
-                }
-            };
-
+                 new OfferDeliveryType(){ DeliveryType = deliveryType3 },
+            })
+            .Create();
 
             IEnumerable<CartItem> cartItems = new List<CartItem>()
             {
@@ -122,7 +130,7 @@ namespace CSOS.Tests
             decimal actual = _cartService.CalculateMinimalDeliveryCost(cartItems);
 
             //Assert
-            Assert.True(expected == actual);
+            actual.Should().Be(expected);
         }
 
         [Fact]

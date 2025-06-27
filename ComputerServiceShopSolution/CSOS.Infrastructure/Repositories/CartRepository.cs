@@ -68,7 +68,7 @@ namespace CSOS.Infrastructure.Repositories
                     .ThenInclude(cartItem => cartItem.Offer)
                         .ThenInclude(offer => offer.Product)
                             .ThenInclude(product => product.ProductImages)
-                .FirstOrDefaultAsync(cart => cart.Id == cartId);
+                .FirstOrDefaultAsync(cart => cart.Id == cartId && cart.IsActive);
         }
 
         public async Task<int?> GetLoggedUserCartIdAsync(Guid userId)

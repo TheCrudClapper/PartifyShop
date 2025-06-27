@@ -1,4 +1,4 @@
-namespace ComputerServiceOnlineShop.Entities.Models
+namespace CSOS.UI.ViewModels.SharedViewModels
 {
     public class ErrorViewModel
     {

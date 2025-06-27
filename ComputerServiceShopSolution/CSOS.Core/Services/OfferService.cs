@@ -3,7 +3,6 @@ using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.Domain.ExternalServicesContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
@@ -99,15 +98,19 @@ namespace ComputerServiceOnlineShop.Services
             product.ProductCategoryId = dto.SelectedProductCategory;
 
             //deletes images checked by user
-            if (dto.ImagesToDelete?.Count > 0 && dto.ImagesToDelete != null)
+            if (dto.ImagesToDelete?.Count > 0)
             {
-                await DeleteImagesFromOffer(id, dto.ImagesToDelete);
+                var result = await DeleteImagesFromOffer(id, dto.ImagesToDelete);
+
+                if (result.IsFailure)
+                    return Result.Failure(result.Error);
             }
 
             dto.UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(dto.UploadedImages);
 
+
             //saving new images if any
-            if (dto.UploadedImagesUrls != null && dto.UploadedImagesUrls.Count > 0)
+            if (dto.UploadedImagesUrls.Count > 0)
             {
                 foreach (var url in dto.UploadedImagesUrls)
                 {
@@ -115,7 +118,7 @@ namespace ComputerServiceOnlineShop.Services
                     {
                         ImagePath = url,
                         IsActive = true,
-                        DateCreated = DateTime.Now
+                        DateCreated = DateTime.UtcNow
                     });
                 }
             }
@@ -200,9 +203,15 @@ namespace ComputerServiceOnlineShop.Services
             return await _offerRepo.IsOfferInDbAsync(id);
         }
 
-        public async Task DeleteImagesFromOffer(int offerId, List<string> imageUrls)
+        public async Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls)
         {
-            var productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
+            List<ProductImage>? productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
+
+            if (productImages == null)
+                return Result.Failure(OfferErrors.OfferNotFound);
+
+            if(productImages.Count == 0)
+                return Result.Failure(ProductImageErrors.ProductImagesAreEmpty);
 
             foreach (var image in productImages)
             {
@@ -214,6 +223,7 @@ namespace ComputerServiceOnlineShop.Services
             }
 
             await _unitOfWork.SaveChangesAsync();
+            return Result.Success();
         }
 
         //Just for testing

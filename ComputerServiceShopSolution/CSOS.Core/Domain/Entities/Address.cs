@@ -10,6 +10,7 @@ namespace ComputerServiceOnlineShop.Entities.Models
         public string PostalCity { get; set; } = null!;
         public string PostalCode { get; set; } = null!;
         public int CountryId { get; set; }
+
         [ForeignKey("CountryId")]
         public Country Country { get; set; } = null!;
 

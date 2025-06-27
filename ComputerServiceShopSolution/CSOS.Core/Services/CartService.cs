@@ -129,7 +129,7 @@ namespace ComputerServiceOnlineShop.Services
 
         public async Task<Result> UpdateTotalCartValue(int cartId)
         {
-            var cartItems = await _cartRepo.GetCartItemsForCostsUpdateAsync(cartId);
+            IEnumerable<CartItem>? cartItems = await _cartRepo.GetCartItemsForCostsUpdateAsync(cartId);
 
             //return early, bc nothing to calculate here
             if (cartItems == null || cartItems.Count() == 0)

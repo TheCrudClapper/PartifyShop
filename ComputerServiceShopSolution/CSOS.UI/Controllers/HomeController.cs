@@ -1,9 +1,9 @@
 using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
+using CSOS.UI.ViewModels.SharedViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,7 @@
-﻿namespace ComputerServiceOnlineShop.Entities.Models
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+namespace ComputerServiceOnlineShop.Entities.Models
 {
     /// <summary>
     /// Class that defines base properties for all entities in database

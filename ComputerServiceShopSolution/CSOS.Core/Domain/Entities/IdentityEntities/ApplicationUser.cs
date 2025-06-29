@@ -9,8 +9,6 @@ namespace ComputerServiceOnlineShop.Entities.Models.IdentityEntities
         public string Surname { get; set; } = null!;
         public string? NIP { get; set; }
         public string? Title { get; set; }
-        public int CartId { get; set; }
-        [ForeignKey("CartId")]
         public Cart Cart { get; set; } = null!;
         public int AdressId { get; set; }
         [ForeignKey("AdressId")]

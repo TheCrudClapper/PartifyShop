@@ -5,10 +5,11 @@ namespace CSOS.Core.Mappings.ToEntity.ProductMappings
 {
     public static class ProductsMappings
     {
-        public static Product ToProductEntity(this AddOfferDto dto)
+        public static Product ToProductEntity(this AddOfferDto dto, Offer offer)
         {
             return new Product
             {
+                Offer = offer,
                 ProductName = dto.ProductName,
                 Description = dto.Description,
                 ConditionId = dto.SelectedProductCondition,

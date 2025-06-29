@@ -33,7 +33,6 @@ namespace CSOS.Infrastructure.Repositories
             return await _dbContext.CartItems
                 .FirstOrDefaultAsync(item => item.CartId == cartId && item.OfferId == offerId && item.IsActive);
         }
-
         public async Task<CartItem?> GetCartItemByIdAsync(int cartItemId)
         {
             return await _dbContext.CartItems

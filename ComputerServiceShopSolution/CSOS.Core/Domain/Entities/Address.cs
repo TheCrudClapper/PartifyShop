@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ComputerServiceOnlineShop.Entities.Models
 {
@@ -13,6 +14,7 @@ namespace ComputerServiceOnlineShop.Entities.Models
 
         [ForeignKey("CountryId")]
         public Country Country { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
 
     }
 }

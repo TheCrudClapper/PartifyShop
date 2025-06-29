@@ -1,12 +1,13 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace ComputerServiceOnlineShop.Entities.Models
 {
+    /// <summary>
+    /// Domain Model representing Offer in Online Shop
+    /// </summary>
     public class Offer : BaseModel
     {
-        public int ProductId { get; set; }
 
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Price { get; set; }
@@ -19,10 +20,8 @@ namespace ComputerServiceOnlineShop.Entities.Models
         [ForeignKey("SellerId")]
         public ApplicationUser Seller { get; set; } = null!;
 
-        [ForeignKey("ProductId")]
         public Product Product { get; set; } = null!;
-
         public ICollection<OfferDeliveryType> OfferDeliveryTypes { get; set; } = new List<OfferDeliveryType>();
-      
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
     }
 }

@@ -54,11 +54,11 @@ namespace ComputerServiceOnlineShop.Services
 
             dto.UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(dto.UploadedImages);
 
-            Product product = dto.ToProductEntity();
-            await _productRepo.AddAsync(product);
-
-            Offer offer = dto.ToOfferEntity(product, userId);
+            Offer offer = dto.ToOfferEntity(userId);
             await _offerRepo.AddAsync(offer);
+
+            Product product = dto.ToProductEntity(offer);
+            await _productRepo.AddAsync(product);
 
             //adding one selected parcel locker, it is optional
             if (dto.SelectedParcelLocker.HasValue)
@@ -91,7 +91,7 @@ namespace ComputerServiceOnlineShop.Services
             offer.StockQuantity = dto.StockQuantity;
             offer.Price = dto.Price;
 
-            var product = offer.Product;
+            Product product = offer.Product;
             product.ProductName = dto.ProductName;
             product.Description = dto.Description;
             product.ConditionId = dto.SelectedProductCondition;

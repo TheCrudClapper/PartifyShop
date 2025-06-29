@@ -20,7 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // AddAsync DbContext
 builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ComputerServiceOnlineShop")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ComputerServiceOnlineShop"),
+    migrations => migrations.MigrationsAssembly("CSOS.Infrastructure")));
 
 // AddAsync Business-Logic Services to the container.
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();

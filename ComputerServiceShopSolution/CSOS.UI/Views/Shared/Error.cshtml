@@ -1,6 +1,6 @@
 ﻿@using CSOS.UI.ViewModels.SharedViewModels
 @using ComputerServiceOnlineShop.Entities.Models
-@model ErrorViewModel
+@model string
 @{
     ViewBag.Title = "Error";
 }
@@ -15,7 +15,7 @@
             <i class="fa-solid fa-6x fa-triangle-exclamation"></i>
             <h1 class="purple-text fw-bold mt-2">Ooops!</h1>
             <h2>
-                @(Model.Message ?? "An error occurred while processing your request.")
+                @(Model ?? "An error occurred while processing your request.")
             </h2>
             <span>Try searching or go to <a asp-controller="Home" asp-action="Index" class="purple-text">Partify home page</a></span>
         </div>

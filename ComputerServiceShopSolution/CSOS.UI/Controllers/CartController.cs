@@ -7,6 +7,7 @@ namespace ComputerServiceOnlineShop.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
+
         public CartController(ICartService cartService)
         {
             _cartService = cartService;
@@ -24,7 +25,7 @@ namespace ComputerServiceOnlineShop.Controllers
             return View(cart);
         }
 
-        
+
         [HttpPost]
         //default quantity always 1
         public async Task<IActionResult> AddToCart(int id, int quantity = 1)
@@ -35,7 +36,6 @@ namespace ComputerServiceOnlineShop.Controllers
                 return Json(new { success = false, message = $"Error: {result.Error.Description}" });
 
             return Json(new { success = true, message = "Item added to cart successfully!" });
-
         }
 
         [HttpPost]
@@ -54,10 +54,10 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             var result = await _cartService.UpdateCartItemQuantity(cartItemId, quantity);
 
-            if(result.IsFailure)
+            if (result.IsFailure)
                 return Json(new { success = false, message = $"Error: {result.Error.Description}" });
 
-             return Json(new { success = true, message = "Updated cart successfully!" });
+            return Json(new { success = true, message = "Updated cart successfully!" });
         }
 
         [HttpGet]

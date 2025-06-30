@@ -23,8 +23,6 @@ namespace ComputerServiceOnlineShop.Services
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
         }
-        //later delete taht and provide mocks
-        public CartService() { }
         public async Task<Result> AddToCart(int offerId, int quantity = 1)
         {
             if (quantity <= 0)

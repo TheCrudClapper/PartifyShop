@@ -4,7 +4,7 @@ namespace ComputerServiceOnlineShop.ViewModels.HomePageViewModels
 {
     public class ProductScrollerViewModel
     {
-        public string IdPrefix { get; set; }
-        public IEnumerable<MainPageCardViewModel> Items { get; set; }
+        public string IdPrefix { get; set; } = null!;
+        public IEnumerable<MainPageCardViewModel> Items { get; set; } = new List<MainPageCardViewModel>();
     }
 }

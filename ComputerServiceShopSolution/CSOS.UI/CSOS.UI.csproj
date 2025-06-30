@@ -21,7 +21,7 @@
     <ProjectReference Include="..\CSOS.Core\CSOS.Core.csproj" />
     <ProjectReference Include="..\CSOS.Infrastructure\CSOS.Infrastructure.csproj" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />

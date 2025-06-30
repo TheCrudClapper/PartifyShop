@@ -48,7 +48,7 @@ namespace ComputerServiceOnlineShop.Models.Services
         {
             Address address = dto.ToAddressEntity();
 
-            Cart cart = dto.ToCartEntity();
+            Cart cart = new Cart() { IsActive = true, DateCreated = DateTime.UtcNow };
 
             await _unitOfWork.SaveChangesAsync();
 

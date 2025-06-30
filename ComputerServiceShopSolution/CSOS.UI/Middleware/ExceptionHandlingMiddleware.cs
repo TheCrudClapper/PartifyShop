@@ -22,8 +22,8 @@ namespace CSOS.UI.Middleware
             }
             catch(Exception ex)
             {
-                //httpContext.Response.StatusCode = 500;
-                //await httpContext.Response.WriteAsync($"{ex.Message}");
+                httpContext.Response.StatusCode = 500;
+                await httpContext.Response.WriteAsync($"{ex.Message}");
                 throw;
             }
             

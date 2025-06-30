@@ -112,7 +112,7 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             var result = await _accountService.GetAccountDetailsAsync();
             if (result.IsFailure)
-                return View("Error", result.Error);
+                return View("Error", result.Error.Description);
 
             var viewModel = new AccountDetailsViewModel
             {

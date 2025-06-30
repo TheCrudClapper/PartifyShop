@@ -5,13 +5,12 @@ namespace CSOS.Core.Mappings.ToEntity.OfferMappings
 {
     public static class OfferMapping
     {
-        public static Offer ToOfferEntity(this AddOfferDto dto, Product product, Guid userId)
+        public static Offer ToOfferEntity(this AddOfferDto dto, Guid userId)
         {
             return new Offer()
             {
-                Product = product,
                 IsActive = true,
-                DateCreated = DateTime.Now,
+                DateCreated = DateTime.UtcNow,
                 Price = dto.Price,
                 SellerId = userId,
                 StockQuantity = dto.StockQuantity,

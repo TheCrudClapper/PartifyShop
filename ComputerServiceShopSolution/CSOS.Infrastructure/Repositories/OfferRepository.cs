@@ -45,11 +45,11 @@ namespace CSOS.Infrastructure.Repositories
             .AsNoTracking()
             .Where(item => item.IsActive && item.SellerId == userId && item.Id == offerId)
             .Include(item => item.Product)
-            .ThenInclude(item => item.ProductImages)
+                .ThenInclude(item => item.ProductImages)
             .Include(item => item.Product.ProductCategory)
             .Include(item => item.Product.Condition)
             .Include(item => item.OfferDeliveryTypes)
-            .ThenInclude(item => item.DeliveryType)
+                .ThenInclude(item => item.DeliveryType)
             .FirstOrDefaultAsync();
             
         }
@@ -144,6 +144,7 @@ namespace CSOS.Infrastructure.Repositories
         {
             return await _dbContext.Offers
                 .CountAsync(item => item.IsActive && !item.IsOfferPrivate);
+
         }
 
         public async Task<List<Offer>> GetOffersByTakeAsync(int take = 12)

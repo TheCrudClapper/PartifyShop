@@ -107,7 +107,7 @@
                                         <p>
                                             Available: <span class="fw-bold">@offer.QuantityAvailable</span>
                                         </p>
-                                        @if (User.Identity.Name != offer.SellerName)
+                                        @if (User.Identity?.Name != offer.SellerName)
                                         {
                                             <form method="post">
                                                 @Html.AntiForgeryToken()

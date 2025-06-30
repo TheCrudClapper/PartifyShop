@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace ComputerServiceOnlineShop.Entities.Models
 {
     /// <summary>
@@ -6,6 +7,10 @@ namespace ComputerServiceOnlineShop.Entities.Models
     /// </summary>
     public class Cart : BaseModel
     {
+        public Guid UserId { get; set; }
+        [ForeignKey("UserId")]
+        public ApplicationUser User { get; set; } = null!;
+
         [Column(TypeName = "decimal(10, 2)")]
         public decimal? TotalCartValue { get; set; }
         [Column(TypeName = "decimal(10, 2)")]

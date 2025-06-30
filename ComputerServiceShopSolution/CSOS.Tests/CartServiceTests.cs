@@ -2,27 +2,98 @@
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
+using CSOS.Core.Domain.RepositoryContracts;
+using CSOS.Core.ServiceContracts;
 using FluentAssertions;
+using Moq;
+using CSOS.Core.ErrorHandling;
 namespace CSOS.Tests
 {
     public class CartServiceTests
     {
         private readonly ICartService _cartService;
+        private readonly ICartRepository _cartRepository;
+        private readonly IOfferRepository _offerRepository;
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<ICurrentUserService> _currentUserServiceMock;
+        private readonly Mock<IOfferRepository> _offerRepositoryMock;
+        private readonly Mock<ICartRepository> _cartRepositoryMock;
         private readonly IFixture _fixture;
         public CartServiceTests()
         {
             //should be mocked
-            _cartService = new CartService();
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _cartRepositoryMock = new Mock<ICartRepository>();
+            _offerRepositoryMock = new Mock<IOfferRepository>();
+            _currentUserServiceMock = new Mock<ICurrentUserService>();
+            _cartRepository = _cartRepositoryMock.Object;
+            _unitOfWork = _unitOfWorkMock.Object;
+            _currentUserService = _currentUserServiceMock.Object;
+            _offerRepository = _offerRepositoryMock.Object;
+            _cartService = new CartService(_currentUserService, _offerRepository, _cartRepository, _unitOfWork);
             _fixture = new Fixture();
 
             _fixture.Behaviors
             .OfType<ThrowingRecursionBehavior>()
             .ToList()
             .ForEach(b => _fixture.Behaviors.Remove(b));
-
+            
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
 
+        #region DeleteFromCart Method Tests
+
+        [Fact]
+        public async void DeleteFromCart_InvalidCartId_ReturnsFailureResult()
+        {
+            //Arrange
+            int cartItemId = _fixture.Create<int>();
+            
+            _cartRepositoryMock.Setup(item => item.GetCartItemByIdAsync(cartItemId))
+                .ReturnsAsync((CartItem?)null);
+
+            //Act
+            Result result = await _cartService.DeleteFromCart(cartItemId);
+
+            //Assert
+            result.Should().NotBeNull();
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartItemErrors.CartItemDoesNotExists);
+        }
+
+        [Fact]
+        public async void DeleteFromCart_ValidCartId_ReturnsSuccessResult()
+        {
+            var cartItem = _fixture.Build<CartItem>()
+                .With(item => item.IsActive, true)
+                .Without(item => item.DateDeleted)
+                .Create();
+            
+            
+            _cartRepositoryMock.Setup(repo => repo.GetCartItemByIdAsync(cartItem.Id))
+                .ReturnsAsync(cartItem);
+
+            _cartRepositoryMock.Setup(repo => repo.GetCartByIdAsync(cartItem.CartId))
+                .ReturnsAsync(_fixture.Build<Cart>().With(c => c.Id, cartItem.CartId).Create());
+
+            _cartRepositoryMock.Setup(repo => repo.GetCartItemsForCostsUpdateAsync(cartItem.CartId))
+                .ReturnsAsync(new List<CartItem> { cartItem });
+
+            _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(1); 
+            
+            // Act
+            var result = await _cartService.DeleteFromCart(cartItem.Id);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.IsSuccess.Should().BeTrue();
+            cartItem.IsActive.Should().BeFalse();
+            cartItem.DateDeleted.Should().NotBeNull();
+        }
+        #endregion 
         #region CalculateItemsTotal Method Tests
         [Fact]
         public void CalculateItemsTotal_WithValidItems_ReturnsCorrectTotal()
@@ -30,7 +101,7 @@ namespace CSOS.Tests
             //Arrange
             IEnumerable<CartItem> cartItems = new List<CartItem>()
             {
-
+                
                 new CartItem()
                 {
                     Quantity = 15,

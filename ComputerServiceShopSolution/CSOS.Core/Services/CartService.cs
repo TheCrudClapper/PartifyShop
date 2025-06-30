@@ -119,7 +119,7 @@ namespace ComputerServiceOnlineShop.Services
 
             var cartId = await _cartRepo.GetLoggedUserCartIdAsync(userId);
 
-            if (!cartId.HasValue)
+            if (!cartId.HasValue) 
                 return Result.Failure<int>(CartErrors.CartDoesNotExists);
 
             return cartId.Value;
@@ -191,7 +191,7 @@ namespace ComputerServiceOnlineShop.Services
             return await _cartRepo.GetCartItemsQuantityAsync(cartIdResult.Value);
         }
 
-        public decimal CalculateItemsTotal(IEnumerable<CartItem> cartItems)
+        public decimal CalculateItemsTotal(IEnumerable<CartItem>? cartItems)
         {
             if(cartItems == null || cartItems.Count() == 0)
                 return 0;
@@ -199,7 +199,7 @@ namespace ComputerServiceOnlineShop.Services
             return cartItems.Sum(item => item.Quantity * item.Offer.Price);
         }
 
-        public decimal CalculateMinimalDeliveryCost(IEnumerable<CartItem> cartItems)
+        public decimal CalculateMinimalDeliveryCost(IEnumerable<CartItem>? cartItems)
         {
             if (cartItems == null || cartItems.Count() == 0)
                 return 0;

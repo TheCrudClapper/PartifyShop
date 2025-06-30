@@ -59,13 +59,13 @@ namespace ComputerServiceOnlineShop.ServiceContracts
         /// </summary>
         /// <param name="cartItems">IEnumerable collection representing items in cart</param>
         /// <returns>Return an decimal value with total cost</returns>
-        decimal CalculateItemsTotal(IEnumerable<CartItem> cartItems);
+        decimal CalculateItemsTotal(IEnumerable<CartItem>? cartItems);
 
         /// <summary>
         /// Calculates and sums lowest deliveries avaliable for each item in cart and sums them
         /// </summary>
         /// <param name="cartItems"></param>
         /// <returns>Returns an decimal value with total sum of minimal deliveries costs</returns>
-        decimal CalculateMinimalDeliveryCost(IEnumerable<CartItem> cartItems);
+        decimal CalculateMinimalDeliveryCost(IEnumerable<CartItem>? cartItems);
     }
 }

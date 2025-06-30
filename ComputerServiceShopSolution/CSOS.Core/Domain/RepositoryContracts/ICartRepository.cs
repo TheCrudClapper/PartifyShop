@@ -41,7 +41,7 @@ namespace CSOS.Core.Domain.RepositoryContracts
         Task<int> GetCartItemsQuantityAsync(int cartId);
 
         /// <summary>
-        /// Gets an id of user with given userId
+        /// Gets an cart Id for user with given userId
         /// </summary>
         /// <param name="userId">ID of user to get cart from</param>
         /// <returns></returns>

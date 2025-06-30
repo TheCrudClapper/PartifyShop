@@ -3,10 +3,12 @@ using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
 using CSOS.Core.Domain.RepositoryContracts;
+using CSOS.Core.DTO.Responses.Cart;
+using CSOS.Core.ErrorHandling;
+using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 using FluentAssertions;
 using Moq;
-using CSOS.Core.ErrorHandling;
 namespace CSOS.Tests
 {
     public class CartServiceTests
@@ -43,10 +45,172 @@ namespace CSOS.Tests
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
 
-        #region DeleteFromCart Method Tests
+        #region GetLoggedUserCart Method Tests
+        [Fact]
+        public async Task GetLoggedUserCart_InvalidUserId_ReturnFailureResult()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+
+            //_currentUserServiceMock.Setup(x => x.GetUserId()).Returns(userId);
+            _cartRepositoryMock.Setup(x => x.GetLoggedUserCartIdAsync(userId)).ReturnsAsync((int?)null);
+
+            //Act
+            Result result = await _cartService.GetLoggedUserCart();
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartErrors.CartDoesNotExists);
+        }
 
         [Fact]
-        public async void DeleteFromCart_InvalidCartId_ReturnsFailureResult()
+        public async Task GetLoggedUserCart_ValidDetails_ReturnCartResponseDto()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            var cartId = _fixture.Create<int>();
+
+            //Creating cart items
+            var cartItems = _fixture.Build<CartItem>()
+                .With(item => item.CartId, cartId)
+                .With(item => item.IsActive, true)
+                .CreateMany(3)
+                .ToList();
+
+            //Creating cart
+            var cart = _fixture.Build<Cart>()
+                .With(item => item.Id, cartId)
+                .With(item => item.IsActive, true)
+                .With(item => item.UserId, userId)
+                .With(item => item.CartItems, cartItems)
+                .Create();
+
+            _currentUserServiceMock.Setup(x => x.GetUserId()).Returns(userId);
+            _cartRepositoryMock.Setup(item => item.GetLoggedUserCartIdAsync(userId)).ReturnsAsync(cartId);
+            _cartRepositoryMock.Setup(item => item.GetCartWithAllDetailsAsync(cartId)).ReturnsAsync(cart);
+
+            //Act
+            Result<CartResponseDto> result = await _cartService.GetLoggedUserCart();
+
+            //Converting actual response to dto
+            CartResponseDto expectedDto = cart.ToCartResponseDto();
+
+            //Assert
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().NotBeNull();
+            result.Value.CartItems.Should().HaveCount(cartItems.Count);
+            result.Value.Should().BeEquivalentTo(expectedDto);
+
+            //Compare a few general properties
+            result.Value.TotalCartValue.Should().Be(cart.TotalCartValue);
+            result.Value.TotalItemsValue.Should().Be(cart.TotalItemsValue);
+            result.Value.TotalDeliveryValue.Should().Be(cart.MinimalDeliveryValue);
+        }
+
+        [Fact]
+        public async Task GetLoggedUserCart_InvalidCartId_ReturnFailureResult()
+        {
+            //Arrange
+            var userId = Guid.NewGuid();
+            var cartId = _fixture.Create<int>();
+
+            _currentUserServiceMock.Setup(item => item.GetUserId()).Returns(userId);
+            _cartRepositoryMock.Setup(item => item.GetLoggedUserCartIdAsync(userId)).ReturnsAsync(cartId);
+            _cartRepositoryMock.Setup(item => item.GetCartWithAllDetailsAsync(cartId)).ReturnsAsync((Cart?) null);
+
+            //Act
+            Result result = await _cartService.GetLoggedUserCart();
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartErrors.CartDoesNotExist(cartId));
+        }
+        #endregion
+
+        #region GetLoggedUserCartId Method Tests
+        [Fact]
+        public async Task GetLoggedUserCartId_InvalidUserGuid_ReturnsFailureResult()
+        {
+            // Arrange
+            var invalidUserId = Guid.NewGuid();
+
+            _currentUserServiceMock.Setup(x => x.GetUserId())
+                .Returns(invalidUserId);
+
+            _cartRepositoryMock.Setup(x => x.GetLoggedUserCartIdAsync(invalidUserId))
+                .ReturnsAsync((int?)null);
+
+            // Act
+            var result = await _cartService.GetLoggedUserCartId();
+
+            // Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartErrors.CartDoesNotExists);
+        }
+
+        [Fact]
+        public async Task GetLoggedUserCartId_ValidUserId_ReturnsValidCartId()
+        {
+            //Arrange
+            var validUserId = Guid.NewGuid();
+
+            var cartId = _fixture.Create<int>();
+
+            _currentUserServiceMock.Setup(x => x.GetUserId())
+                .Returns(validUserId);
+
+            _cartRepositoryMock.Setup(x => x.GetLoggedUserCartIdAsync(validUserId))
+                .ReturnsAsync(cartId);
+
+            //Act
+            var actual = await _cartService.GetLoggedUserCartId();
+
+            //Assert
+            actual.Value.Should().Be(cartId);
+            actual.IsSuccess.Should().BeTrue();
+        }
+        #endregion
+
+        #region GetCartItemsQuantity Method Tests
+        [Fact]
+        public async void GetCartItemsQuantity_InvalidUserId_ReturnsZero()
+        {
+            //Arrange
+            _cartRepositoryMock.Setup(item => item.GetLoggedUserCartIdAsync(It.IsAny<Guid>()))
+                   .ReturnsAsync((int?)null);
+
+            //Act
+            int actual = await _cartService.GetCartItemsQuantity();
+
+            //Assert
+            actual.Should().Be(0);
+        }
+
+        [Fact]
+        public async Task GetCartItemsQuantity_ValidCartId_ReturnsQuantity()
+        {
+            //Arrange
+            int expected = 12;
+            int cartId = _fixture.Create<int>();
+            Guid userId = _fixture.Create<Guid>();
+
+            _currentUserServiceMock.Setup(x => x.GetUserId()).Returns(userId);
+            _cartRepositoryMock.Setup(item => item.GetLoggedUserCartIdAsync(userId))
+                               .ReturnsAsync(cartId);
+            _cartRepositoryMock.Setup(item => item.GetCartItemsQuantityAsync(cartId))
+                               .ReturnsAsync(expected);
+
+            // Act
+            int actual = await _cartService.GetCartItemsQuantity();
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+        #endregion
+
+        #region DeleteFromCart Method Tests
+        [Fact]
+        public async Task DeleteFromCart_InvalidCartId_ReturnsFailureResult()
         {
             //Arrange
             int cartItemId = _fixture.Create<int>();
@@ -64,8 +228,9 @@ namespace CSOS.Tests
         }
 
         [Fact]
-        public async void DeleteFromCart_ValidCartId_ReturnsSuccessResult()
+        public async Task DeleteFromCart_ValidCartId_ReturnsSuccessResult()
         {
+            //Arrange
             var cartItem = _fixture.Build<CartItem>()
                 .With(item => item.IsActive, true)
                 .Without(item => item.DateDeleted)
@@ -77,9 +242,6 @@ namespace CSOS.Tests
 
             _cartRepositoryMock.Setup(repo => repo.GetCartByIdAsync(cartItem.CartId))
                 .ReturnsAsync(_fixture.Build<Cart>().With(c => c.Id, cartItem.CartId).Create());
-
-            _cartRepositoryMock.Setup(repo => repo.GetCartItemsForCostsUpdateAsync(cartItem.CartId))
-                .ReturnsAsync(new List<CartItem> { cartItem });
 
             _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1); 
@@ -94,6 +256,7 @@ namespace CSOS.Tests
             cartItem.DateDeleted.Should().NotBeNull();
         }
         #endregion 
+
         #region CalculateItemsTotal Method Tests
         [Fact]
         public void CalculateItemsTotal_WithValidItems_ReturnsCorrectTotal()
@@ -134,7 +297,7 @@ namespace CSOS.Tests
         public void CalculateItemsTotal_NullList_ReturnsZero()
         {
             //Arrange
-            IEnumerable<CartItem> cartItems = null;
+            IEnumerable<CartItem>? cartItems = null;
 
             //Act
             decimal expected = 0;
@@ -221,7 +384,7 @@ namespace CSOS.Tests
         public void CalculateMinimalDeliveryCost_NullList_ReturnsZero()
         {
             // Arrange
-            IEnumerable<CartItem> cartItems = null;
+            IEnumerable<CartItem>? cartItems = null;
 
             // Act
             decimal result = _cartService.CalculateMinimalDeliveryCost(cartItems);

@@ -9,6 +9,7 @@ using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 using FluentAssertions;
 using Moq;
+using Xunit.Abstractions;
 namespace CSOS.Tests
 {
     public class CartServiceTests
@@ -17,13 +18,14 @@ namespace CSOS.Tests
         private readonly ICartRepository _cartRepository;
         private readonly IOfferRepository _offerRepository;
         private readonly ICurrentUserService _currentUserService;
+        private readonly ITestOutputHelper _testHelper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<ICurrentUserService> _currentUserServiceMock;
         private readonly Mock<IOfferRepository> _offerRepositoryMock;
         private readonly Mock<ICartRepository> _cartRepositoryMock;
         private readonly IFixture _fixture;
-        public CartServiceTests()
+        public CartServiceTests(ITestOutputHelper testHelper)
         {
             //should be mocked
             _unitOfWorkMock = new Mock<IUnitOfWork>();
@@ -34,6 +36,7 @@ namespace CSOS.Tests
             _unitOfWork = _unitOfWorkMock.Object;
             _currentUserService = _currentUserServiceMock.Object;
             _offerRepository = _offerRepositoryMock.Object;
+            _testHelper = testHelper;
             _cartService = new CartService(_currentUserService, _offerRepository, _cartRepository, _unitOfWork);
             _fixture = new Fixture();
 
@@ -44,6 +47,213 @@ namespace CSOS.Tests
             
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
+
+        #region UpdateCartItemQuantity Method Tests
+        [Fact]
+        public async Task UpdateCartItemQuantity_NullCartItem_ReturnsFailureResult()
+        {
+            //Arrange
+            int invalidCartItemId = _fixture.Create<int>();
+            int quantity = 1;
+            _cartRepositoryMock.Setup(item => item.GetCartItemWithOfferAsync(invalidCartItemId)).ReturnsAsync((CartItem?)null);
+
+            //Act
+            var result = await _cartService.UpdateCartItemQuantity(invalidCartItemId, quantity);
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartItemErrors.CartItemDoesNotExists);
+        }
+
+        [Fact]
+        public async Task UpdateCartItemQuantity_OfferNotIncluded_ReturnsFailureResult()
+        {
+            //Arrange
+            int validCartItemId = _fixture.Create<int>();
+            int quantity = 1;
+            CartItem cartItem = _fixture.Build<CartItem>()
+                .With(item => item.Offer, null as Offer)
+                .Create();
+
+            _cartRepositoryMock.Setup(item => item.GetCartItemWithOfferAsync(validCartItemId)).ReturnsAsync(cartItem);
+
+            //Act
+            var result = await _cartService.UpdateCartItemQuantity(validCartItemId, quantity);
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(OfferErrors.OfferIsNull);
+            
+        }
+
+        [Fact]
+        public async Task UpdateCartItemQuantity_QuantityLessThanZero_DeletesItemFromCart()
+        {
+            //Arrange
+            int validCartItemId = _fixture.Create<int>();
+            int quantity = -1;
+            CartItem cartItem = _fixture.Build<CartItem>()
+                .With(item => item.IsActive, true)
+                .With(item => item.DateDeleted, null as DateTime?)
+                .Create();
+
+            _cartRepositoryMock.Setup(item => item.GetCartItemWithOfferAsync(validCartItemId)).ReturnsAsync(cartItem);
+            _cartRepositoryMock.Setup(item => item.GetCartItemByIdAsync(validCartItemId)).ReturnsAsync(cartItem);
+
+            //Act
+            var result = await _cartService.UpdateCartItemQuantity(validCartItemId, quantity);
+
+            //Assert
+            result.IsSuccess.Should().BeTrue();
+            cartItem.DateDeleted.Should().NotBeNull();
+            cartItem.IsActive.Should().Be(false);
+        }
+
+        [Fact]
+        public async Task UpdateCartItemQuantity_ValidQuantity_IncreasesCartItemQuantity()
+        {
+            //Arrange
+            int validCartItemId = _fixture.Create<int>();
+            int quantity = 10;
+            Offer offer = _fixture.Build<Offer>().With(item => item.StockQuantity, 20).Create();
+
+            CartItem cartItem = _fixture.Build<CartItem>()
+                .With(item => item.IsActive, true)
+                .With(item => item.Quantity, 1)
+                .With(item => item.Offer, offer)
+                .With(item => item.DateDeleted, null as DateTime?)
+                .Create();
+
+            _cartRepositoryMock.Setup(item => item.GetCartItemWithOfferAsync(validCartItemId)).ReturnsAsync(cartItem);
+
+            //Act
+            var result = await _cartService.UpdateCartItemQuantity(validCartItemId, quantity);
+
+            //Assert
+            result.IsSuccess.Should().BeTrue();
+            cartItem.DateEdited.Should().NotBeNull();
+            cartItem.Quantity.Should().Be(quantity);
+        }
+        [Fact]
+        public async Task UpdateCartItemQuantity_QuantityBiggerThanInStock_SetsQuantityOfCartItemToGivenValue()
+        {
+            //Arrange
+            int validCartItemId = _fixture.Create<int>();
+            int quantity = 10;
+            Offer offer = _fixture.Build<Offer>().With(item => item.StockQuantity, 9).Create();
+
+            CartItem cartItem = _fixture.Build<CartItem>()
+                .With(item => item.IsActive, true)
+                .With(item => item.Quantity, 1)
+                .With(item => item.Offer, offer)
+                .With(item => item.DateDeleted, null as DateTime?)
+                .Create();
+
+            _cartRepositoryMock.Setup(item => item.GetCartItemWithOfferAsync(validCartItemId)).ReturnsAsync(cartItem);
+
+            //Act
+            var result = await _cartService.UpdateCartItemQuantity(validCartItemId, quantity);
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartItemErrors.CannotAddMoreToCart);
+            cartItem.DateEdited.Should().NotBeNull();
+            cartItem.Quantity.Should().Be(offer.StockQuantity);
+        }
+        #endregion
+
+        #region UpdateTotalCartValues Method Tests
+        [Fact]
+        public async Task UpdateTotalCartValues_NullCartItems_ReturnFailureResult()
+        {
+            //Arrange
+            int invalidCartId = _fixture.Create<int>();
+            _cartRepositoryMock.Setup(item => item.GetCartItemsForCostsUpdateAsync(invalidCartId)).ReturnsAsync((List<CartItem>?)null);
+
+            //Act
+            var result = await _cartService.UpdateTotalCartValue(invalidCartId);
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartErrors.CartDoesNotExists);
+        }
+
+        [Fact]
+        public async Task UpdateTotalCartValues_ZeroItemsInCartItemList_ReturnSuccessResult()
+        {
+            //Arrange
+            int validCartId = _fixture.Create<int>();
+            _cartRepositoryMock.Setup(item => item.GetCartItemsForCostsUpdateAsync(validCartId)).ReturnsAsync(new List<CartItem>() { });
+
+            //Act
+            var result = await _cartService.UpdateTotalCartValue(validCartId);
+
+            //Assert
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task UpdateTotalCartValues_CartIsNull_ReturnFailureResult()
+        {
+            //Arrange
+            int validCartId = _fixture.Create<int>();
+            IEnumerable<CartItem> cartItems = _fixture.CreateMany<CartItem>(4);
+
+
+            _cartRepositoryMock.Setup(item => item.GetCartItemsForCostsUpdateAsync(validCartId)).ReturnsAsync(cartItems);
+            _cartRepositoryMock.Setup(item => item.GetCartByIdAsync(validCartId)).ReturnsAsync((Cart?)null);
+
+            //Act
+            var result = await _cartService.UpdateTotalCartValue(validCartId);
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartErrors.CartDoesNotExists);
+        }
+
+        [Fact]
+        public async Task UpdateTotalCartValues_ValidDetails_ReturnSuccesUpdateValues()
+        {
+            //Arrange
+            int validCartId = _fixture.Create<int>();
+
+            _testHelper.WriteLine("Cart Items:");
+            IEnumerable<CartItem> cartItems = _fixture.Build<CartItem>()
+                .With(item => item.Quantity, 10)
+                .CreateMany(4);
+
+            foreach(CartItem item in cartItems)
+            {
+                _testHelper.WriteLine(item.ToString() + "\n");
+            }
+
+            _testHelper.WriteLine("Cart Values before updating costs:");
+            //creating cart with given cart items 
+            Cart cart = _fixture.Build<Cart>()
+                .With(item => item.TotalCartValue, 0)
+                .With(item => item.TotalItemsValue, 0)
+                .With(item => item.MinimalDeliveryValue, 0)
+                .Create();
+
+            _testHelper.WriteLine($"Total Cart Value: {cart.TotalCartValue}\nTotal Items Value: {cart.TotalItemsValue}\n, Minimal Delivery Value: {cart.MinimalDeliveryValue}\n");
+
+            _cartRepositoryMock.Setup(item => item.GetCartItemsForCostsUpdateAsync(validCartId)).ReturnsAsync(cartItems);
+            _cartRepositoryMock.Setup(item => item.GetCartByIdAsync(validCartId)).ReturnsAsync(cart);
+            _unitOfWorkMock.Setup(item => item.SaveChangesAsync(CancellationToken.None)).ReturnsAsync(1);
+
+            //Act
+            var result = await _cartService.UpdateTotalCartValue(validCartId);
+
+            //Assert
+            result.IsSuccess.Should().BeTrue();
+            cart.TotalItemsValue.Should().NotBe(0);
+            cart.TotalCartValue.Should().NotBe(0);
+            cart.MinimalDeliveryValue.Should().NotBe(0);
+
+            _testHelper.WriteLine("Cart Values after updating costs:");
+            _testHelper.WriteLine($"Total Cart Value: {cart.TotalCartValue}\nTotal Items Value: {cart.TotalItemsValue}\nMinimal Delivery Value: {cart.MinimalDeliveryValue}");
+        }
+        #endregion 
 
         #region GetLoggedUserCart Method Tests
         [Fact]
@@ -377,7 +587,7 @@ namespace CSOS.Tests
             decimal result = _cartService.CalculateMinimalDeliveryCost(cartItems);
 
             // Assert
-            Assert.Equal(0, result);
+            result.Should().Be(0);
         }
 
         [Fact]
@@ -390,7 +600,7 @@ namespace CSOS.Tests
             decimal result = _cartService.CalculateMinimalDeliveryCost(cartItems);
 
             // Assert
-            Assert.Equal(0, result);
+            result.Should().Be(0);
         }
         #endregion
     }

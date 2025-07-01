@@ -1,10 +1,8 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Entities.Models;
+﻿using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.Responses.Cart;
 using CSOS.Core.ErrorHandling;
-using CSOS.Core.Exceptions;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 
@@ -45,7 +43,7 @@ namespace ComputerServiceOnlineShop.Services
                 if (existingCartItem.Quantity + quantity <= offer.StockQuantity)
                 {
                     existingCartItem.Quantity += quantity;
-                    existingCartItem.DateCreated = DateTime.Now;
+                    existingCartItem.DateCreated = DateTime.UtcNow;
                 }
                 else
                     return Result.Failure(CartItemErrors.CannotAddMoreToCart);
@@ -58,7 +56,7 @@ namespace ComputerServiceOnlineShop.Services
                 CartItem cartItem = new CartItem()
                 {
                     CartId = cartIdResult.Value,
-                    DateCreated = DateTime.Now,
+                    DateCreated = DateTime.UtcNow,
                     IsActive = true,
                     Offer = offer,
                     Quantity = quantity,
@@ -86,7 +84,7 @@ namespace ComputerServiceOnlineShop.Services
 
             //Soft Delete
             cartItem.IsActive = false;
-            cartItem.DateDeleted = DateTime.Now;
+            cartItem.DateDeleted = DateTime.UtcNow;
 
             var result = await SaveAndUpdateCart(cartId);
 
@@ -128,9 +126,12 @@ namespace ComputerServiceOnlineShop.Services
         public async Task<Result> UpdateTotalCartValue(int cartId)
         {
             IEnumerable<CartItem>? cartItems = await _cartRepo.GetCartItemsForCostsUpdateAsync(cartId);
+            
+            if(cartItems == null)
+                return Result.Failure(CartErrors.CartDoesNotExists);
 
             //return early, bc nothing to calculate here
-            if (cartItems == null || cartItems.Count() == 0)
+            if (cartItems.Count() == 0)
                 return Result.Success();
 
             var totalValue = CalculateItemsTotal(cartItems);
@@ -140,7 +141,7 @@ namespace ComputerServiceOnlineShop.Services
             var cart = await _cartRepo.GetCartByIdAsync(cartId);
 
             if (cart == null)
-                return Result.Failure(CartErrors.CartDoesNotExist(cartId));
+                return Result.Failure(CartErrors.CartDoesNotExists);
 
             cart.TotalItemsValue = totalValue;
             cart.TotalCartValue = totalValue + minimalDeliveryValue;
@@ -154,8 +155,11 @@ namespace ComputerServiceOnlineShop.Services
         {
             var existingItem = await _cartRepo.GetCartItemWithOfferAsync(cartItemId);
 
-            if (existingItem == null || existingItem.Offer == null)
+            if (existingItem == null)
                 return Result.Failure(CartItemErrors.CartItemDoesNotExists);
+
+            if (existingItem.Offer == null)
+                return Result.Failure(OfferErrors.OfferIsNull);
 
             if (quantity <= 0)
             {
@@ -165,11 +169,12 @@ namespace ComputerServiceOnlineShop.Services
             if (quantity <= existingItem.Offer.StockQuantity)
             {
                 existingItem.Quantity = quantity;
-                existingItem.DateEdited = DateTime.Now;
+                existingItem.DateEdited = DateTime.UtcNow;
             }
             else
             {
                 existingItem.Quantity = existingItem.Offer.StockQuantity;
+                existingItem.DateEdited = DateTime.UtcNow;
                 return Result.Failure(CartItemErrors.CannotAddMoreToCart);
             }
 

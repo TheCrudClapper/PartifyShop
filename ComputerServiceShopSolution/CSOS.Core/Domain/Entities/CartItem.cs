@@ -13,5 +13,12 @@ namespace ComputerServiceOnlineShop.Entities.Models
         public Offer Offer { get; set; } = null!;
         
         public int Quantity { get; set; }
+
+        public override string ToString()
+        {
+            return $"CartId: {CartId}, OfferId: {OfferId}, Quantity: {Quantity}";
+        }
     }
+
+   
 }

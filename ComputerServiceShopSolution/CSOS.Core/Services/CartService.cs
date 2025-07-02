@@ -29,7 +29,7 @@ namespace ComputerServiceOnlineShop.Services
             var offer = await _offerRepo.GetOfferByIdAsync(offerId);
 
             if (offer == null)
-                return Result.Failure(CartItemErrors.CartItemDoesNotExists);
+                return Result.Failure(OfferErrors.OfferDoesNotExist);
 
             var cartIdResult = await GetLoggedUserCartId();
 

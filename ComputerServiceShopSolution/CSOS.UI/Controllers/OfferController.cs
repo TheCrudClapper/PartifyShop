@@ -72,7 +72,7 @@ namespace ComputerServiceOnlineShop.Controllers
             var response = await _offerService.GetOfferForEdit(id);
 
             if(response.IsFailure)
-                return View("OfferNotFound", id);
+                return View("OfferDoesNotExist", id);
 
             var viewModel = response.Value.ToEditOfferViewModel();
             await _offerViewModelInitializer.InitializeAllAsync(viewModel);
@@ -141,7 +141,7 @@ namespace ComputerServiceOnlineShop.Controllers
             var response = await _offerService.GetOffer(id);
 
             if(response.IsFailure)
-                return View("OfferNotFound", id);
+                return View("OfferDoesNotExist", id);
 
             var viewModel = response.Value.ToSingleOfferViewModel();
             return View(viewModel);

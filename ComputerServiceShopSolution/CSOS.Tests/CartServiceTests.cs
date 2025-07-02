@@ -48,6 +48,99 @@ namespace CSOS.Tests
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
 
+        #region AddToCart Method Tests
+        [Fact]
+        public async Task AddToCart_QuantityLowerThanZero_ReturnsFailureResult()
+        {
+            //Arrange
+            int quantity = -1;
+            int offerId = _fixture.Create<int>();
+
+            //Act
+            var result = await _cartService.AddToCart(offerId ,quantity);
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartItemErrors.QuantityLowerThanZero);
+        }
+
+        [Fact]
+        public async Task AddToCart_OfferNull_ReturnsFailureResult()
+        {
+            //Arrange
+            int quantity = _fixture.Create<int>();
+            int offerId = _fixture.Create<int>();
+            _offerRepositoryMock.Setup(item => item.GetOfferByIdAsync(It.IsAny<int>())).ReturnsAsync((Offer?) null);
+
+            //Act
+            var result = await _cartService.AddToCart(offerId, quantity);
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(OfferErrors.OfferDoesNotExist);
+        }
+
+        [Fact]
+        public async Task AddToCart_CartIdNull_ReturnsFailureResult()
+        {
+            //Arrange
+            int quantity = _fixture.Create<int>();
+            int offerId = _fixture.Create<int>();
+            Offer offer = _fixture.Create<Offer>();
+
+            _offerRepositoryMock.Setup(item => item.GetOfferByIdAsync(It.IsAny<int>())).ReturnsAsync(offer);
+            _cartRepositoryMock.Setup(item => item.GetLoggedUserCartIdAsync(It.IsAny<Guid>())).ReturnsAsync((int?) null);
+
+            //Act
+            var result = await _cartService.AddToCart(offerId, quantity);
+
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(CartErrors.CartDoesNotExists);
+        }
+
+        [Fact]
+        public async Task AddToCart_ItemExistInCartAndQuantitySumIsLowerOrSameAsStockQuantity_UpdatesItemQuantity()
+        {
+            //Arrange
+            int quantityToAdd = 14;
+
+            int offerId = _fixture.Create<int>();
+
+            int cartId = _fixture.Create<int>();
+
+            int stockQuantity = 20;
+
+            int currentCartItemQuantity = 5;
+
+            CartItem cartItem = _fixture.Build<CartItem>()
+                .With(item => item.CartId, cartId)
+                .With(item => item.OfferId, offerId)
+                .With(item => item.Quantity, currentCartItemQuantity)
+                .Create();
+
+            Offer offer = _fixture.Build<Offer>()
+                .With(item => item.Id, offerId)
+                .With(item => item.StockQuantity, stockQuantity)
+                .With(item => item.CartItems, new List<CartItem>() { cartItem })
+                .Create();
+
+            _offerRepositoryMock.Setup(item => item.GetOfferByIdAsync(It.IsAny<int>())).ReturnsAsync(offer);
+            _cartRepositoryMock.Setup(item => item.GetLoggedUserCartIdAsync(It.IsAny<Guid>())).ReturnsAsync(cartId);
+            _cartRepositoryMock.Setup(item => item.GetCartItemAsync(cartId, offer.Id)).ReturnsAsync(cartItem);
+
+            //Act
+            var result = await _cartService.AddToCart(offerId, quantityToAdd);
+
+            //Assert
+            result.IsSuccess.Should().BeTrue();
+            cartItem.Quantity.Should().Be(quantityToAdd + currentCartItemQuantity);
+            cartItem.DateCreated.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(2));
+        }
+
+        #endregion
+
+
         #region UpdateCartItemQuantity Method Tests
         [Fact]
         public async Task UpdateCartItemQuantity_NullCartItem_ReturnsFailureResult()

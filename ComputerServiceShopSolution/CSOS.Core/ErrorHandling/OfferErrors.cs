@@ -5,8 +5,8 @@
         public static readonly Error OfferIsNull = new Error(
              "Offer.OfferIsNull", "Given offer is null");
 
-        public static readonly Error OfferNotFound = new Error(
-            "Offer.OfferNotFound", "Offer not found");
+        public static readonly Error OfferDoesNotExist = new Error(
+            "Offer.OfferDoesNotExist", "Offer doesn not exists");
 
 
     }

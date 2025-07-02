@@ -85,7 +85,7 @@ namespace ComputerServiceOnlineShop.Services
             var offer = await _offerRepo.GetOfferWithDetailsToEditAsync(id, userId);
 
             if (offer == null)
-                return Result.Failure(OfferErrors.OfferNotFound);
+                return Result.Failure(OfferErrors.OfferDoesNotExist);
 
             offer.IsOfferPrivate = dto.IsOfferPrivate;
             offer.StockQuantity = dto.StockQuantity;
@@ -147,7 +147,7 @@ namespace ComputerServiceOnlineShop.Services
             var offer = await _offerRepo.GetUserOffersByIdAsync(id, userId);
 
             if (offer == null)
-                return Result.Failure(OfferErrors.OfferNotFound);
+                return Result.Failure(OfferErrors.OfferDoesNotExist);
 
             offer.DateDeleted = DateTime.UtcNow;
             offer.IsActive = false;
@@ -171,7 +171,7 @@ namespace ComputerServiceOnlineShop.Services
             Guid userId = _currentUserService.GetUserId();
             var offer = await _offerRepo.GetOfferWithAllDetailsByUserAsync(id, userId);
             if (offer == null)
-                return Result.Failure<EditOfferResponseDto>(OfferErrors.OfferNotFound);
+                return Result.Failure<EditOfferResponseDto>(OfferErrors.OfferDoesNotExist);
 
             var dto = offer.ToEditOfferResponseDto();
             return dto;
@@ -208,7 +208,7 @@ namespace ComputerServiceOnlineShop.Services
             List<ProductImage>? productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
 
             if (productImages == null)
-                return Result.Failure(OfferErrors.OfferNotFound);
+                return Result.Failure(OfferErrors.OfferDoesNotExist);
 
             if(productImages.Count == 0)
                 return Result.Failure(ProductImageErrors.ProductImagesAreEmpty);
@@ -263,7 +263,7 @@ namespace ComputerServiceOnlineShop.Services
             var offer = await _offerRepo.GetOfferWithAllDetailsAsync(id);
 
             if (offer == null)
-                return Result.Failure<OfferResponseDto>(OfferErrors.OfferNotFound);
+                return Result.Failure<OfferResponseDto>(OfferErrors.OfferDoesNotExist);
 
             var dto = offer.ToOfferResponseDto();
 

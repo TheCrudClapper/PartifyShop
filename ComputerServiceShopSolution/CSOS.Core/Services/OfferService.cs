@@ -3,6 +3,7 @@ using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.Domain.ExternalServicesContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.DtoContracts;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
@@ -17,7 +18,9 @@ namespace ComputerServiceOnlineShop.Services
     public class OfferService : IOfferService
     {
         private readonly IOfferRepository _offerRepo;
+        private readonly ISortingOptionService _sortingOptionService;
         private readonly IPictureHandlerService _pictureHandlerService;
+        private readonly IProductImageService _productImageService;
         private readonly IProductRepository _productRepo;
         private readonly IOfferDeliveryTypeRepository _offerDeliveryTypeRepo;
         private readonly IProductImageRepository _productImageRepo;
@@ -33,7 +36,9 @@ namespace ComputerServiceOnlineShop.Services
             IOfferDeliveryTypeRepository offerDeliveryTypeRepo,
             IProductImageRepository productImageRepo,
             ICurrentUserService currentUserService,
-            IPictureHandlerService pictureHandlerService
+            IPictureHandlerService pictureHandlerService,
+            IProductImageService productImageService,
+            ISortingOptionService sortingOptionService
             )
         {
             _productRepo = productRepo;
@@ -44,6 +49,8 @@ namespace ComputerServiceOnlineShop.Services
             _deliveryTypeGetterService = deliveryTypeGetterService;
             _productImageRepo = productImageRepo;
             _pictureHandlerService = pictureHandlerService;
+            _productImageService = productImageService;
+            _sortingOptionService = sortingOptionService;
         }
         public async Task<Result> Add(AddOfferDto dto)
         {
@@ -52,28 +59,16 @@ namespace ComputerServiceOnlineShop.Services
 
             Guid userId = _currentUserService.GetUserId();
 
-            dto.UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(dto.UploadedImages);
-
             Offer offer = dto.ToOfferEntity(userId);
             await _offerRepo.AddAsync(offer);
 
             Product product = dto.ToProductEntity(offer);
             await _productRepo.AddAsync(product);
 
-            //adding one selected parcel locker, it is optional
-            if (dto.SelectedParcelLocker.HasValue)
-            {
-                OfferDeliveryType parcelLockerDelivery = dto.ToOfferDeliveryTypeEntity(offer);
-                await _offerDeliveryTypeRepo.AddAsync(parcelLockerDelivery);
-            }
-
-            var deliveryTypes = dto.SelectedOtherDeliveries
-                .Select(deliveryId => deliveryId.ToOfferDeliveryTypeEntity(offer)).ToList();
-
-            await _offerDeliveryTypeRepo.AddRangeAsync(deliveryTypes);
+            await SaveNewImagesAsync(dto, product);
+            await AddDeliveryTypesAsync(dto, offer);
 
             await _unitOfWork.SaveChangesAsync();
-
             return Result.Success();
         }
         public async Task<Result> Edit(int id, EditOfferDto dto)
@@ -100,44 +95,16 @@ namespace ComputerServiceOnlineShop.Services
             //deletes images checked by user
             if (dto.ImagesToDelete?.Count > 0)
             {
-                var result = await DeleteImagesFromOffer(id, dto.ImagesToDelete);
+                var result = await _productImageService.DeleteImagesFromOffer(id, dto.ImagesToDelete);
 
                 if (result.IsFailure)
                     return Result.Failure(result.Error);
             }
 
-            dto.UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(dto.UploadedImages);
-
-
-            //saving new images if any
-            if (dto.UploadedImagesUrls.Count > 0)
-            {
-                foreach (var url in dto.UploadedImagesUrls)
-                {
-                    product.ProductImages.Add(new ProductImage
-                    {
-                        ImagePath = url,
-                        IsActive = true,
-                        DateCreated = DateTime.UtcNow
-                    });
-                }
-            }
-
-            //clear all existing delivery types
-            offer.OfferDeliveryTypes.Clear();
-
-            if (dto.SelectedParcelLocker.HasValue)
-            {
-                OfferDeliveryType parcelLockerDelivery = dto.ToOfferDeliveryTypeEntity(offer);
-                await _offerDeliveryTypeRepo.AddAsync(parcelLockerDelivery);
-            }
-
-            var deliveryTypes = dto.SelectedOtherDeliveries
-                .Select(deliveryId => deliveryId.ToOfferDeliveryTypeEntity(offer)).ToList();
-            await _offerDeliveryTypeRepo.AddRangeAsync(deliveryTypes);
+            await SaveNewImagesAsync(dto, product);
+            await AddDeliveryTypesAsync(dto, offer);
 
             await _unitOfWork.SaveChangesAsync();
-
             return Result.Success();
         }
 
@@ -153,7 +120,6 @@ namespace ComputerServiceOnlineShop.Services
             offer.IsActive = false;
 
             await _unitOfWork.SaveChangesAsync();
-
             return Result.Success();
         }
 
@@ -187,7 +153,7 @@ namespace ComputerServiceOnlineShop.Services
             {
                 Items = items,
                 Filter = filter,
-                SortingOptions = GetSortingOptions(),
+                SortingOptions = _sortingOptionService.GetSortingOptions(),
                 DeliveryOptions = await _deliveryTypeGetterService.GetAllDeliveryTypes(),
             };
         }
@@ -203,47 +169,6 @@ namespace ComputerServiceOnlineShop.Services
             return await _offerRepo.IsOfferInDbAsync(id);
         }
 
-        public async Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls)
-        {
-            List<ProductImage>? productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
-
-            if (productImages == null)
-                return Result.Failure(OfferErrors.OfferDoesNotExist);
-
-            if(productImages.Count == 0)
-                return Result.Failure(ProductImageErrors.ProductImagesAreEmpty);
-
-            foreach (var image in productImages)
-            {
-                if (imageUrls.Any(url => image.ImagePath.Contains(url)))
-                {
-                    image.DateDeleted = DateTime.UtcNow;
-                    image.IsActive = false;
-                }
-            }
-
-            await _unitOfWork.SaveChangesAsync();
-            return Result.Success();
-        }
-
-        //Just for testing
-        //Later create table in db for filtering options
-        public List<SelectListItemDto> GetSortingOptions()
-        {
-            return new List<SelectListItemDto>()
-            {
-                new SelectListItemDto()
-                {
-                    Text = "Price - from highest",
-                    Value = "price_desc",
-                },
-                new SelectListItemDto()
-                {
-                    Text = "Price - from lowest",
-                    Value = "price_asc",
-                }
-            };
-        }
         public async Task<List<MainPageCardResponseDto>> GetDealsOfTheDay()
         {
             //add daily reshuffle logic
@@ -268,6 +193,39 @@ namespace ComputerServiceOnlineShop.Services
             var dto = offer.ToOfferResponseDto();
 
             return dto;
+        }
+        private async Task SaveNewImagesAsync(IOfferImageDto dto, Product product)
+        {
+            dto.UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(dto.UploadedImages);
+
+            if (dto.UploadedImagesUrls?.Count > 0)
+            {
+                var newImages = dto.UploadedImagesUrls.Select(url => new ProductImage
+                {
+                    ImagePath = url,
+                    IsActive = true,
+                    DateCreated = DateTime.UtcNow
+                });
+
+                foreach (var image in newImages)
+                {
+                    product.ProductImages.Add(image); 
+                }
+            }
+        }
+        private async Task AddDeliveryTypesAsync(IOfferDeliveryDto dto, Offer offer)
+        {
+            if (dto.SelectedParcelLocker.HasValue)
+            {
+                var parcelLockerDelivery = dto.ToOfferDeliveryTypeEntity(offer);
+                await _offerDeliveryTypeRepo.AddAsync(parcelLockerDelivery);
+            }
+
+            var deliveryTypes = dto.SelectedOtherDeliveries
+                .Select(deliveryId => deliveryId.ToOfferDeliveryTypeEntity(offer))
+                .ToList();
+
+            await _offerDeliveryTypeRepo.AddRangeAsync(deliveryTypes);
         }
     }
 }

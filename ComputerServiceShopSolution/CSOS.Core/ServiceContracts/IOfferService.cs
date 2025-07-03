@@ -51,14 +51,6 @@ namespace ComputerServiceOnlineShop.Abstractions
         Task<Result<EditOfferResponseDto>> GetOfferForEdit(int id);
 
         /// <summary>
-        /// Removes specific images from an offer.
-        /// </summary>
-        /// <param name="offerId">The ID of the offer.</param>
-        /// <param name="imageUrls">List of image URLs to delete.</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
-        Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls);
-
-        /// <summary>
         /// Checks whether an offer exists and belongs to the current user.
         /// </summary>
         /// <param name="id">The ID of the offer.</param>
@@ -77,12 +69,6 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// </summary>
         /// <returns>List of offers formatted for main page display.</returns>
         Task<List<MainPageCardResponseDto>> GetIndexPageOffers();
-
-        /// <summary>
-        /// Retrieves available sorting options for offer browsing.
-        /// </summary>
-        /// <returns>List of sorting options.</returns>
-        List<SelectListItemDto> GetSortingOptions();
 
         /// <summary>
         /// Retrieves current deals of the day.

@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CSOS.Core.DTO.DtoContracts;
+using Microsoft.AspNetCore.Http;
 
 namespace CSOS.Core.DTO
 {
-    public class AddOfferDto
+    public class AddOfferDto : IOfferDeliveryDto, IOfferImageDto
     {
         public string ProductName { get; set; } = null!;
         public string Description { get; set; } = null!;

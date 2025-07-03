@@ -1,27 +1,16 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.DtoContracts;
 
 namespace CSOS.Core.Mappings.ToEntity.OfferDeliveryTypeMappings
 {
     public static class OfferDeliveryTypeMapping
     {
-        //For mapping single parcel locker delivery
-        public static OfferDeliveryType ToOfferDeliveryTypeEntity(this AddOfferDto dto, Offer offer)
+        public static OfferDeliveryType ToOfferDeliveryTypeEntity(this IOfferDeliveryDto dto, Offer offer)
         {
-            return new OfferDeliveryType()
+            return new OfferDeliveryType
             {
-                DateCreated = DateTime.Now,
-                IsActive = true,
-                Offer = offer,
-                DeliveryTypeId = dto.SelectedParcelLocker!.Value,
-            };
-        }
-
-        public static OfferDeliveryType ToOfferDeliveryTypeEntity(this EditOfferDto dto, Offer offer)
-        {
-            return new OfferDeliveryType()
-            {
-                DateCreated = DateTime.Now,
+                DateCreated = DateTime.UtcNow,
                 IsActive = true,
                 Offer = offer,
                 DeliveryTypeId = dto.SelectedParcelLocker!.Value,

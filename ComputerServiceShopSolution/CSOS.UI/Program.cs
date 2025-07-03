@@ -36,6 +36,7 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IProductImageService, ProductImageService>();
+builder.Services.AddScoped<ISortingOptionService, SortingOptionsService>();
 
 //AddAsync Helper Classes
 builder.Services.AddScoped<OfferViewModelInitializer>();

@@ -51,7 +51,7 @@ namespace ComputerServiceOnlineShop.Services
             else
             {
                 if (quantity > offer.StockQuantity)
-                    return Result.Failure(CartItemErrors.InvalidItemQuantity);
+                    return Result.Failure(CartItemErrors.CannotAddMoreToCart);
 
                 CartItem cartItem = new CartItem()
                 {

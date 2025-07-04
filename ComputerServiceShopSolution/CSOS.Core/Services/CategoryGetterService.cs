@@ -13,7 +13,7 @@ namespace CSOS.Core.Services
             _productCategoryRepo = productCategoryRepository;
         }
 
-        public async Task<List<MainPageCardResponseDto>> GetProductCategories()
+        public async Task<List<MainPageCardResponseDto>> GetProductCategoriesAsMainPageCardResponseDto()
         {
             var categories = await _productCategoryRepo.GetAllProductCategoriesAsync();
 

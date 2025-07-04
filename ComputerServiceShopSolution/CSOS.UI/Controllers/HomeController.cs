@@ -29,7 +29,7 @@ public class HomeController : Controller
         {
             Cards = (await _offerService.GetIndexPageOffers()).ToViewModel(),
             Categories = (await _categoryGetterService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem(),
-            CategoriesSlider = (await _categoryGetterService.GetProductCategories()).ToViewModel(),
+            CategoriesSlider = (await _categoryGetterService.GetProductCategoriesAsMainPageCardResponseDto()).ToViewModel(),
             BestDeals = (await _offerService.GetDealsOfTheDay()).ToViewModel(),
         };
         return View(viewModel);

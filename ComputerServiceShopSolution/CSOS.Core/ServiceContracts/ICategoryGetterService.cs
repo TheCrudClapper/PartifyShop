@@ -9,7 +9,7 @@ namespace CSOS.Core.ServiceContracts
         /// Gets Product categories to display in main page of application
         /// </summary>
         /// <returns>An List of MainPageCardViewModel items</returns>
-        Task<List<MainPageCardResponseDto>> GetProductCategories();
+        Task<List<MainPageCardResponseDto>> GetProductCategoriesAsMainPageCardResponseDto();
         /// <summary>
         /// Gets ProductCategories as SelectListItems
         /// </summary>

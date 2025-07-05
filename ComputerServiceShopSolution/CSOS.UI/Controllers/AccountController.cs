@@ -18,11 +18,11 @@ namespace ComputerServiceOnlineShop.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IAddressService _addressService;
-        private readonly ICountriesService _countriesService;
-        public AccountController(IAccountService accountService, ICountriesService countriesService, IAddressService addressService)
+        private readonly ICountriesGetterService _countriesGetterService;
+        public AccountController(IAccountService accountService, ICountriesGetterService countriesGetterService, IAddressService addressService)
         {
             _accountService = accountService;
-            _countriesService = countriesService;
+            _countriesGetterService = countriesGetterService;
             _addressService = addressService;
         }
 
@@ -31,7 +31,7 @@ namespace ComputerServiceOnlineShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register()
         {
-            var response = await _countriesService.GetCountriesSelectionList();
+            var response = await _countriesGetterService.GetCountriesSelectionList();
             RegisterViewModel viewModel = new RegisterViewModel();
             viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
             return View(viewModel);
@@ -42,7 +42,7 @@ namespace ComputerServiceOnlineShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
-            var response = await _countriesService.GetCountriesSelectionList();
+            var response = await _countriesGetterService.GetCountriesSelectionList();
             viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
 
             if (!ModelState.IsValid)

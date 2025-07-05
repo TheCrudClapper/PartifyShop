@@ -23,7 +23,7 @@ namespace ComputerServiceOnlineShop.Models.Services
         private readonly IAccountRepository _accountRepo;
         private readonly ICurrentUserService _currentUserService;
         private readonly IAddressService _addressService;
-        private readonly ICountriesService _countriesService;
+        private readonly ICountriesGetterService _countriesGetterService;
         
         public AccountService
             (UserManager<ApplicationUser> userManager,
@@ -32,14 +32,14 @@ namespace ComputerServiceOnlineShop.Models.Services
             IAccountRepository accountRepository,
             IUnitOfWork unitOfWork,
             IAddressService addressService,
-            ICountriesService countriesService)
+            ICountriesGetterService countriesGetterService)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _accountRepo = accountRepository;
             _signInManager = signInManager;
             _addressService = addressService;
-            _countriesService = countriesService;
+            _countriesGetterService = countriesGetterService;
             _currentUserService = currentUserService;
         }
 
@@ -139,7 +139,7 @@ namespace ComputerServiceOnlineShop.Models.Services
             if (accountResult.IsFailure)
                 return Result.Failure<AccountDetailsDto>(AccountErrors.AccountNotFound);
 
-            var countries = await _countriesService.GetCountriesSelectionList();
+            var countries = await _countriesGetterService.GetCountriesSelectionList();
 
             var addressDto = addressResult.Value;
             addressDto.CountriesSelectionList = countries;

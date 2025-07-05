@@ -9,13 +9,13 @@ using Moq;
 
 namespace CSOS.Tests
 {
-    public class ConditionGetterCategoryService
+    public class ConditionGetterCategoryServiceTests
     {
         private readonly IConditionGetterService _conditionGetterService;
         private readonly IConditionRepository _conditionRepo;
         private readonly Mock<IConditionRepository> _conditionRepoMock;
         private readonly Fixture _fixture;
-        public ConditionGetterCategoryService()
+        public ConditionGetterCategoryServiceTests()
         {
             _fixture = new Fixture();
             _conditionRepoMock = new Mock<IConditionRepository>();

@@ -14,11 +14,11 @@ namespace ComputerServiceOnlineShop.Controllers
     public class AddressController : Controller
     {
         private readonly IAddressService _addressService;
-        private readonly ICountriesService _countriesService;
-        public AddressController(IAddressService addressService, ICountriesService countriesService)
+        private readonly ICountriesGetterService _countriesGetterService;
+        public AddressController(IAddressService addressService, ICountriesGetterService countriesGetterService)
         {
             _addressService = addressService;
-            _countriesService = countriesService;
+            _countriesGetterService = countriesGetterService;
         }
         
         [HttpGet]
@@ -30,7 +30,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 return View("Error", result.Error.Description);
 
             EditAddressViewModel viewModel = result.Value.ToViewModel();
-            viewModel.CountriesSelectionList = (await _countriesService.GetCountriesSelectionList()).ConvertToSelectListItem();
+            viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ConvertToSelectListItem();
             return PartialView("_EditAddressPartial", viewModel);
         }
 
@@ -40,7 +40,7 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             if (!ModelState.IsValid)
             {
-                viewModel.CountriesSelectionList = (await _countriesService.GetCountriesSelectionList()).ConvertToSelectListItem();
+                viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ConvertToSelectListItem();
                 return PartialView("_EditAddressPartial", viewModel);
             }
 

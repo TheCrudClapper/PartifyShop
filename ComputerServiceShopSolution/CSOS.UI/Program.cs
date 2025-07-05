@@ -28,7 +28,7 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IPictureHandlerService, PictureHandlerService>();
-builder.Services.AddScoped<ICountriesService, CountryGetterService>();
+builder.Services.AddScoped<ICountriesGetterService, CountryGetterService>();
 builder.Services.AddScoped<ICategoryGetterService, CategoryGetterService>();
 builder.Services.AddScoped<IDeliveryTypeGetterService, DeliveryTypeGetterService>();
 builder.Services.AddScoped<IConditionGetterService, ConditionGetterService>();

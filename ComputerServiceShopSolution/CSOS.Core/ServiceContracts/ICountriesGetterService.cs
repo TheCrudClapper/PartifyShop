@@ -2,7 +2,7 @@
 
 namespace ComputerServiceOnlineShop.Abstractions
 {
-    public interface ICountriesService
+    public interface ICountriesGetterService
     {   /// <summary>
         /// Method gets countries for select
         /// </summary>

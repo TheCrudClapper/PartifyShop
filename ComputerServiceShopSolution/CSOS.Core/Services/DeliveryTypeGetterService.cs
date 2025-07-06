@@ -2,6 +2,7 @@
 using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.ServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
+using CSOS.Core.Mappings.ToDto;
 
 namespace CSOS.Core.Services
 {
@@ -14,15 +15,11 @@ namespace CSOS.Core.Services
             _deliveryTypeRepository = deliveryTypeRepository;
         }
 
-        public async Task<List<SelectListItemDto>> GetAllDeliveryTypes()
+        public async Task<List<SelectListItemDto>> GetAllDeliveryTypesAsSelectionList()
         {
             var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
+            return types.Select(item => item.ToSelectListItem()).ToList();
 
-            return types.Select(item => new SelectListItemDto
-            {
-                Text = item.Title,
-                Value = item.Id.ToString()
-            }).ToList();
         }
 
         public async Task<List<SelectListItemDto>> GetOtherDeliveryTypes()
@@ -30,13 +27,8 @@ namespace CSOS.Core.Services
             var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 
             return types
-                .Where(item => !item.Title.Contains("Locker"))
-                .Select(item => new SelectListItemDto
-                {
-                    Text = item.Title,
-                    Value = item.Id.ToString()
-                })
-                .ToList();
+                .Where(item => !item.Title.Contains("locker", StringComparison.OrdinalIgnoreCase))
+                .Select(item => item.ToSelectListItem()).ToList();
         }
 
         public async Task<List<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes()
@@ -44,14 +36,8 @@ namespace CSOS.Core.Services
             var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 
             return types
-                .Where(item => item.Title.Contains("Locker"))
-                .Select(item => new DeliveryTypeResponseDto
-                {
-                    Id = item.Id,
-                    Price = item.Price,
-                    Title = item.Title
-                })
-                .ToList();
+                .Where(item => item.Title.Contains("locker", StringComparison.OrdinalIgnoreCase))
+                .Select(item => item.ToDeliveryTypeResponseDto()).ToList();
         }
     }
 }

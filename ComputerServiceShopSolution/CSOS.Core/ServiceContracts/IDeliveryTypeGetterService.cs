@@ -21,6 +21,6 @@ namespace CSOS.Core.ServiceContracts
         /// Retrieves all active delivery types available in the database.
         /// </summary>
         /// <returns>A list of <see cref="SelectListItemDto"/> representing all available delivery types.</returns>
-        Task<List<SelectListItemDto>> GetAllDeliveryTypes();
+        Task<List<SelectListItemDto>> GetAllDeliveryTypesAsSelectionList();
     }
 }

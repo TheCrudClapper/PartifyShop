@@ -16,7 +16,7 @@
 
 	<ItemGroup>
 		<Folder Include="DTO\Responses\Category\" />
-		<Folder Include="Mappings\ToEntity\CartItemMappings\" />
+		<Folder Include="Mappings\ToDomainEntity\CartItemMappings\" />
 	</ItemGroup>
 
 </Project>

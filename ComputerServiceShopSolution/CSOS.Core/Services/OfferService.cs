@@ -154,7 +154,7 @@ namespace ComputerServiceOnlineShop.Services
                 Items = items,
                 Filter = filter,
                 SortingOptions = _sortingOptionService.GetSortingOptions(),
-                DeliveryOptions = await _deliveryTypeGetterService.GetAllDeliveryTypes(),
+                DeliveryOptions = await _deliveryTypeGetterService.GetAllDeliveryTypesAsSelectionList(),
             };
         }
 

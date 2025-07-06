@@ -76,6 +76,7 @@ namespace CSOS.UI.Mappings.ToViewModel
                 PostalCity = dto.PostalCity,
                 PostalCode = dto.PostalCode,
                 Seller= dto.Seller,
+                Category = dto.Category,
                 StockQuantity = dto.StockQuantity,
                 ProductImages = dto.ProductImages,
             };

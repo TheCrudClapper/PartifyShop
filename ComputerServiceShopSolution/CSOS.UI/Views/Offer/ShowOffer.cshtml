@@ -11,7 +11,12 @@
 {
     @await Html.PartialAsync("_ToastMessagePartial", TempData)
 }
+
+
 <div class="container mt-3">
+    <div class="row g-3 mb-2">
+        <span class="fs-6">Partify <b>/</b> @Model.Category </span>
+    </div>
     <div class="row g-3">
         <div class="col-12 col-lg-8">
             <div class="midesection-style shadow">
@@ -54,11 +59,12 @@
             <div class="midesection-style shadow">
                 <p>
                     Sells and sends:
-                    <br />
+                    <br/>
                     <span class="fw-bold">@Model.Seller</span>
                 </p>
-                <hr />
+                <hr/>
                 <h3 class="fw-bold">@Model.Price PLN</h3>
+                <h6><span class="badge bg-secondary text-bg-secondary">Seller: @(Model.isSellerCompany ? "Company" : "Private Person") </span></h6>
                 <div class="row">
                     @if (User.Identity!.Name != Model.Seller)
                     {
@@ -71,7 +77,7 @@
                                        class="form-control text-center"
                                        min="1"
                                        max="@Model.StockQuantity"
-                                       title="Max available: @Model.StockQuantity" />
+                                       title="Max available: @Model.StockQuantity"/>
                             </div>
                             <div class="col-8">
                                 <button type="submit" class="btn custom-button w-100 toCartButton" data-id="@Model.Id"> To Cart</button>
@@ -80,14 +86,14 @@
                     }
                     else
                     {
-                        <div class="col-9">
+                        <div class="col-12">
                             <a class="btn custom-button w-100" href="@Url.Action("EditOffer", "Offer", new { id = Model.Id })">Edit</a>
                         </div>
                     }
 
                 </div>
                 <p class="mt-2">Available: @Model.StockQuantity</p>
-                <hr />
+                <hr/>
                 <p>
                     <strong>Delivery Types</strong>
                 </p>
@@ -99,13 +105,13 @@
                         </label>
                     </div>
                 }
-                <hr />
+                <hr/>
 
                 <p>
                     <strong>Sender Location</strong>
                 </p>
-                <strong>Place:</strong> @Model.Place <br />
-                <strong>Postal City:</strong> @Model.PostalCity <br />
+                <strong>Place:</strong> @Model.Place <br/>
+                <strong>Postal City:</strong> @Model.PostalCity <br/>
                 <strong>Postal Code:</strong> @Model.PostalCode
             </div>
         </div>

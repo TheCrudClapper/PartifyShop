@@ -1,5 +1,6 @@
 ﻿using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
+using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 
 namespace CSOS.Core.Services
@@ -16,12 +17,7 @@ namespace CSOS.Core.Services
         {
             var conditions = await _conditionRepo.GetAllConditionsAsync();
 
-            return conditions.Select(item => new SelectListItemDto()
-            {
-                Text = item.ConditionTitle,
-                Value = item.Id + "",
-            })
-            .ToList();
+            return conditions.Select(item => item.ToSelectListItem()).ToList();
         }
 
     }

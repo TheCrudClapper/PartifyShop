@@ -1,5 +1,4 @@
-﻿using CSOS.Core.DTO.Responses.Offers;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ComputerServiceOnlineShop.ViewModels.IndexPageViewModel
 {

@@ -1,6 +1,7 @@
 ﻿using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 
 namespace CSOS.Core.Services
@@ -29,12 +30,7 @@ namespace CSOS.Core.Services
         {
             var categories = await _productCategoryRepo.GetAllProductCategoriesAsync();
 
-            return categories.Select(item => new SelectListItemDto()
-            {
-                Text = item.Name,
-                Value = item.Id + "",
-            })
-            .ToList();
+            return categories.Select(item => item.ToSelectListItem()).ToList();
         }
     }
 }

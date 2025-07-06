@@ -1,6 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
+using CSOS.Core.Mappings.ToDto;
 
 namespace ComputerServiceOnlineShop.Services
 {
@@ -17,12 +18,7 @@ namespace ComputerServiceOnlineShop.Services
         {
             var countries = await _countryRepository.GetAllCountriesAsync();
 
-            return countries.Select(item => new SelectListItemDto
-            {
-                Text = item.CountryName,
-                Value = item.Id.ToString()
-            })
-            .ToList();
+            return countries.Select(item => item.ToSelectListItem()).ToList();
         }
     }
 }

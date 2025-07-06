@@ -1,5 +1,6 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
+using System.IO;
 
 namespace CSOS.Core.Mappings.ToDto
 {
@@ -11,6 +12,42 @@ namespace CSOS.Core.Mappings.ToDto
             {
                 Text = deliveryType.Title,
                 Value = deliveryType.Id.ToString()
+            };
+        }
+
+        public static SelectListItemDto ToSelectListItem(this ProductImage productImage)
+        {
+            return new SelectListItemDto
+            {
+                Value = productImage.ImagePath,
+                Text = productImage.ImagePath,
+            };
+        }
+
+        public static SelectListItemDto ToSelectListItem(this ProductCategory productCategory)
+        {
+            return new SelectListItemDto
+            {
+                Text = productCategory.Name,
+                Value = productCategory.Id.ToString(),
+            };
+        }
+
+        public static SelectListItemDto ToSelectListItem(this Condition condition)
+        {
+            return new SelectListItemDto
+            {
+                Text = condition.ConditionTitle,
+                Value = condition.Id.ToString(),
+            };
+        }
+
+        public static SelectListItemDto ToSelectListItem(this Country country)
+        {
+            return new SelectListItemDto
+            {
+                Text = country.CountryName,
+                Value = country.Id.ToString()
             };
         }
     }

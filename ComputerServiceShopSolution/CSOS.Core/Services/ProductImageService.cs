@@ -2,6 +2,7 @@
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.ErrorHandling;
+using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 
 namespace CSOS.Core.Services
@@ -20,12 +21,7 @@ namespace CSOS.Core.Services
         {
             var items = await _productImageRepo.GetImagesFromOfferAsync(offerId);
 
-            return items.Select(path => new SelectListItemDto
-            {
-                Value = path.ImagePath,
-                Text = path.ImagePath,
-            })
-           .ToList();
+            return items.Select(item => item.ToSelectListItem()).ToList();
         }
 
         public async Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls)

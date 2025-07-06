@@ -1,5 +1,4 @@
-﻿
-namespace CSOS.Core.DTO.Responses.Offers
+﻿namespace CSOS.Core.DTO.Responses.Offers
 {
     public class MainPageCardResponseDto
     {

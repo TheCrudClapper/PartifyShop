@@ -26,8 +26,7 @@ namespace CSOS.Core.Services
         {
             var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 
-            return types
-                .Where(item => !item.Title.Contains("locker", StringComparison.OrdinalIgnoreCase))
+            return types.Where(item => !item.Title.Contains("locker", StringComparison.OrdinalIgnoreCase))
                 .Select(item => item.ToSelectListItem()).ToList();
         }
 
@@ -35,8 +34,7 @@ namespace CSOS.Core.Services
         {
             var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 
-            return types
-                .Where(item => item.Title.Contains("locker", StringComparison.OrdinalIgnoreCase))
+            return types.Where(item => item.Title.Contains("locker", StringComparison.OrdinalIgnoreCase))
                 .Select(item => item.ToDeliveryTypeResponseDto()).ToList();
         }
     }

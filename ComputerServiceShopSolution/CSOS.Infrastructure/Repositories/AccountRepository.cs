@@ -27,6 +27,7 @@ namespace CSOS.Infrastructure.Repositories
         public async Task<ApplicationUser?> GetUserWithAddressAsync(Guid userId)
         {
             return await _dbContext.Users
+                .AsNoTracking()
                 .Where(item => item.IsActive && item.Id == userId)
                 .Include(item => item.Address)
                 .FirstOrDefaultAsync();

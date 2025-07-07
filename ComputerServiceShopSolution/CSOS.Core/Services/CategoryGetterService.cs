@@ -21,7 +21,7 @@ namespace CSOS.Core.Services
             return categories.Select(item => new MainPageCardResponseDto()
             {
                 Id = item.Id,
-                ImagePath = item.CategoryImage,
+                ImageUrl = item.CategoryImage,
                 Title = item.Name,
             })
            .ToList();

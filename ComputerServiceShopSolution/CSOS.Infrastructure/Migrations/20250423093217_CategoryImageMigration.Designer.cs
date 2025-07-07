@@ -545,7 +545,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Property<DateTime?>("DateEdited")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImagePath")
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

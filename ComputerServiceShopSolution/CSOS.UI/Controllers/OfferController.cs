@@ -7,6 +7,7 @@ using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Helpers;
+using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
@@ -22,17 +23,19 @@ namespace ComputerServiceOnlineShop.Controllers
         private readonly IOfferService _offerService;
         private readonly IPictureHandlerService _pictureHandlerService;
         private readonly OfferViewModelInitializer _offerViewModelInitializer;
-        private readonly IProductImageService _productImageService; 
-        
+        private readonly IProductImageService _productImageService;
+        private readonly IConfigurationReader _configurationReader;
         public OfferController(IOfferService offerService,
             IPictureHandlerService pictureHandlerService,
             OfferViewModelInitializer offerViewModelInitializer,
-            IProductImageService productImageService)
+            IProductImageService productImageService,
+            IConfigurationReader configurationReader)
         {
             _offerService = offerService;
             _pictureHandlerService = pictureHandlerService;
             _offerViewModelInitializer = offerViewModelInitializer;
             _productImageService = productImageService;
+            _configurationReader = configurationReader;
         }
         
         [HttpGet]
@@ -120,7 +123,7 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> AllUserOffers(string? title)
         {
             List<UserOffersResponseDto> response = await _offerService.GetFilteredUserOffers(title);
-            List<UserOffersViewModel> userOffers = response.ToViewModelCollection();
+            List<UserOffersViewModel> userOffers = response.ToViewModelCollection(_configurationReader);
             return View(userOffers);
         }
 
@@ -134,7 +137,7 @@ namespace ComputerServiceOnlineShop.Controllers
             if(response.IsFailure)
                 return View("OfferDoesNotExist", id);
 
-            var viewModel = response.Value.ToSingleOfferViewModel();
+            var viewModel = response.Value.ToSingleOfferViewModel(_configurationReader);
             return View(viewModel);
         }
 
@@ -144,7 +147,7 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> OfferBrowser([FromQuery] OfferFilter filter)
         {
             OfferBrowserResponseDto response = await _offerService.GetFilteredOffers(filter);
-            OfferBrowserViewModel viewModel = response.ToOfferBrowserViewModel();
+            OfferBrowserViewModel viewModel = response.ToOfferBrowserViewModel(_configurationReader);
             return View(viewModel);
         }
     }

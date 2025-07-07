@@ -1,16 +1,11 @@
 ﻿using CSOS.Core.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSOS.Core.DTO.Responses.Offers
 {
     public class OfferBrowserResponseDto
     {
         public List<OfferBrowserItemResponseDto> Items = new List<OfferBrowserItemResponseDto>();
-        public OfferFilter Filter { get; set; }
+        public OfferFilter Filter { get; set; } = null!;
 
         public List<SelectListItemDto> DeliveryOptions = new List<SelectListItemDto>();
 

@@ -7,7 +7,7 @@
         <div class="col-12 col-sm-6 col-md-4 col-lg-2 flex-shrink-0">
             <a href="@Url.Action("ShowOffer", "Offer", new { id = item.Id })" class="card-link">
                 <div class="card  h-100">
-                    <img src="@Url.Content(item.ImagePath)" class="card-img-top" alt="product-image">
+                    <img src="@Url.Content(item.ImageUrl)" class="card-img-top" alt="product-image">
                     <div class="card-body text-start">
                         <h5 class="card-title item-price">@item.Price PLN</h5>
                         <h6 class="card-title item-name">@item.Title</h6>

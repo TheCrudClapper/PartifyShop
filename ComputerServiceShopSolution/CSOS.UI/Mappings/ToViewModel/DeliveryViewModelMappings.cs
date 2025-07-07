@@ -13,7 +13,6 @@ namespace CSOS.UI.Mappings.ToViewModel
                 Id = item.Id,
                 Price = item.Price,
                 Title = item.Title,
-
             })
              .ToList();
         }

@@ -1,12 +1,13 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.CartItemViewModels;
 using ComputerServiceOnlineShop.ViewModels.CartViewModels;
 using CSOS.Core.DTO.Responses.Cart;
+using CSOS.UI.Helpers.Contracts;
 
 namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class CartViewModelMappings
     {
-        public static CartViewModel ToViewModel(this CartResponseDto dto)
+        public static CartViewModel ToViewModel(this CartResponseDto dto, IConfigurationReader configuration)
         {
             return new CartViewModel()
             {
@@ -19,7 +20,9 @@ namespace CSOS.UI.Mappings.ToViewModel
                     Condition = item.Condition,
                     DateAdded = item.DateAdded,
                     Id = item.Id,
-                    ImageUrl = item.ImageUrl ?? "",
+                    ImageUrl = string.IsNullOrWhiteSpace(item.ImageUrl)
+                    ? configuration.DefaultProductImage
+                    : item.ImageUrl,
                     OfferId = item.OfferId,
                     Price = item.Price,
                     Quantity = item.Quantity,

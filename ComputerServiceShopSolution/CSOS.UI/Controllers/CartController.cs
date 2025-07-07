@@ -1,4 +1,6 @@
 ﻿using ComputerServiceOnlineShop.ServiceContracts;
+using CSOS.UI.Helpers;
+using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.ToViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +9,11 @@ namespace ComputerServiceOnlineShop.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
-
-        public CartController(ICartService cartService)
+        private readonly IConfigurationReader  _configurationReader;
+        public CartController(ICartService cartService, IConfigurationReader configurationReader)
         {
             _cartService = cartService;
+            _configurationReader = configurationReader;
         }
 
         [HttpGet]
@@ -21,7 +24,7 @@ namespace ComputerServiceOnlineShop.Controllers
             if (result.IsFailure)
                 return View("Error", result.Error.Description);
 
-            var cart = result.Value.ToViewModel();
+            var cart = result.Value.ToViewModel(_configurationReader);
             return View(cart);
         }
 

@@ -10,6 +10,7 @@ using CSOS.Core.ServiceContracts;
 using CSOS.Core.Services;
 using CSOS.Infrastructure.Repositories;
 using CSOS.UI.Helpers;
+using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -41,6 +42,7 @@ builder.Services.AddScoped<ISortingOptionService, SortingOptionsService>();
 //AddAsync Helper Classes
 builder.Services.AddScoped<OfferViewModelInitializer>();
 builder.Services.AddScoped<PicturesValidatorHelper>();
+builder.Services.AddScoped<IConfigurationReader, ConfigurationReader>();
 
 //AddAsync Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

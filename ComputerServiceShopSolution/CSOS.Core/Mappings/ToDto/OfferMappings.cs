@@ -18,7 +18,7 @@ namespace CSOS.Core.Mappings.ToDto
                 return new MainPageCardResponseDto()
                 {
                     Id = item.Id,
-                    ImagePath = activeImage?.ImagePath ?? DefaultImagePath,
+                    ImageUrl = activeImage?.ImagePath ?? DefaultImagePath,
                     Price = item.Price,
                     Title = item.Product.ProductName
                 };

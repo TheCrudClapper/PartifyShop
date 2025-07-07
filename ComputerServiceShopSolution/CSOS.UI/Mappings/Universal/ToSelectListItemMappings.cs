@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace CSOS.UI.Mappings.Universal
 {
     //extension class that maps select list item dto -> select list item
-    public static class ToSelectListItemCollection
+    public static class ToSelectListItemMappings
     {
-        public static List<SelectListItem> ConvertToSelectListItem(this IEnumerable<SelectListItemDto>? items)
+        public static List<SelectListItem> ToSelectListItem(this IEnumerable<SelectListItemDto>? items)
         {
             if (items == null)
                 return new List<SelectListItem>();

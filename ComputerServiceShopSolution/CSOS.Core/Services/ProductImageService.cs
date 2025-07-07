@@ -10,11 +10,9 @@ namespace CSOS.Core.Services
     public class ProductImageService : IProductImageService
     {
         private readonly IProductImageRepository _productImageRepo;
-        private readonly IUnitOfWork _unitOfWork;
-        public ProductImageService(IProductImageRepository productImageRepository, IUnitOfWork unitOfWork)
+        public ProductImageService(IProductImageRepository productImageRepository)
         {
             _productImageRepo = productImageRepository;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<SelectListItemDto>> GetOfferPictures(int offerId)
@@ -26,11 +24,8 @@ namespace CSOS.Core.Services
 
         public async Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls)
         {
-            List<ProductImage>? productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
-
-            if (productImages == null)
-                return Result.Failure(OfferErrors.OfferDoesNotExist);
-
+            List<ProductImage> productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
+            
             if (productImages.Count == 0)
                 return Result.Failure(ProductImageErrors.ProductImagesAreEmpty);
 
@@ -42,7 +37,6 @@ namespace CSOS.Core.Services
                     image.IsActive = false;
                 }
             }
-
             return Result.Success();
         }
     }

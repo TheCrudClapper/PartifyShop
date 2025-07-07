@@ -28,7 +28,7 @@ namespace CSOS.UI.Mappings.ToViewModel
                 Place = dto.Place,
                 PostalCity = dto.PostalCity,
                 PostalCode = dto.PostalCode,
-                CountriesSelectionList = dto.CountriesSelectionList.ConvertToSelectListItem(),
+                CountriesSelectionList = dto.CountriesSelectionList.ToSelectListItem(),
                 SelectedCountry = dto.SelectedCountry,
             };
         }

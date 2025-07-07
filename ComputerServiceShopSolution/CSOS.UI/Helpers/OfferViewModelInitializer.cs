@@ -35,19 +35,19 @@ namespace CSOS.UI.Helpers
         public async Task PopulateConditions<TViewModel>(TViewModel viewModel) where TViewModel : BaseOfferViewModel
         {
             viewModel.ProductConditionsSelectList =
-                (await _conditionGetterService.GetProductConditionsAsSelectList()).ConvertToSelectListItem();
+                (await _conditionGetterService.GetProductConditionsAsSelectList()).ToSelectListItem();
         }
 
         public async Task PopulateCategories<TViewModel>(TViewModel viewModel) where TViewModel : BaseOfferViewModel
         {
             viewModel.ProductCategoriesSelectionList =
-                (await _categoryGetterService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem();
+                (await _categoryGetterService.GetProductCategoriesAsSelectList()).ToSelectListItem();
         }
 
         public async Task PopulateOtherDeliveryTypes<TViewModel>(TViewModel viewModel) where TViewModel : BaseOfferViewModel
         {
             viewModel.OtherDeliveriesSelectedList =
-                (await _deliveryTypeGetterService.GetOtherDeliveryTypes()).ConvertToSelectListItem();
+                (await _deliveryTypeGetterService.GetOtherDeliveryTypes()).ToSelectListItem();
         }
 
     }

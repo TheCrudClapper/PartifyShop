@@ -14,7 +14,7 @@ namespace ComputerServiceOnlineShop.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var categories = (await _categoryGetterService.GetProductCategoriesAsSelectList()).ConvertToSelectListItem();
+            var categories = (await _categoryGetterService.GetProductCategoriesAsSelectList()).ToSelectListItem();
             return View(categories);
         }
     }

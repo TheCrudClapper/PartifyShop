@@ -9,6 +9,7 @@ using CSOS.Core.ServiceContracts;
 using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
+using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -33,8 +34,7 @@ namespace ComputerServiceOnlineShop.Controllers
             _offerViewModelInitializer = offerViewModelInitializer;
             _productImageService = productImageService;
         }
-
-        //OK
+        
         [HttpGet]
         public async Task<IActionResult> AddOffer()
         {
@@ -64,8 +64,7 @@ namespace ComputerServiceOnlineShop.Controllers
 
             return RedirectToAction(nameof(AllUserOffers));
         }
-
-        //OK
+        
         [HttpGet]
         public async Task<IActionResult> EditOffer([FromRoute] int id)
         {
@@ -89,15 +88,7 @@ namespace ComputerServiceOnlineShop.Controllers
             if (!ModelState.IsValid)
             {
                 var images = await _productImageService.GetOfferPictures(id);
-
-                viewModel.ExistingImagesUrls = images.Select(item => new SelectListItem()
-                {
-                    Text = item.Text,
-                    Value = item.Value,
-                })
-                .ToList();
-
-                
+                viewModel.ExistingImagesUrls = images.ToSelectListItem();
                 await _offerViewModelInitializer.InitializeAllAsync(viewModel);
                 return View(viewModel);
             }

@@ -30,7 +30,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 return View("Error", result.Error.Description);
 
             EditAddressViewModel viewModel = result.Value.ToViewModel();
-            viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ConvertToSelectListItem();
+            viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
             return PartialView("_EditAddressPartial", viewModel);
         }
 
@@ -40,7 +40,7 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             if (!ModelState.IsValid)
             {
-                viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ConvertToSelectListItem();
+                viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
                 return PartialView("_EditAddressPartial", viewModel);
             }
 

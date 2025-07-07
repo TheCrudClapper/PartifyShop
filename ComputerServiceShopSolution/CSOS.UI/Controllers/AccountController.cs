@@ -33,7 +33,7 @@ namespace ComputerServiceOnlineShop.Controllers
         {
             var response = await _countriesGetterService.GetCountriesSelectionList();
             RegisterViewModel viewModel = new RegisterViewModel();
-            viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
+            viewModel.CountriesSelectionList = response.ToSelectListItem();
             return View(viewModel);
         }
 
@@ -43,7 +43,7 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
             var response = await _countriesGetterService.GetCountriesSelectionList();
-            viewModel.CountriesSelectionList = response.ConvertToSelectListItem();
+            viewModel.CountriesSelectionList = response.ToSelectListItem();
 
             if (!ModelState.IsValid)
             {
@@ -136,7 +136,6 @@ namespace ComputerServiceOnlineShop.Controllers
             {
                 //find a way to handle errors
                 ModelState.AddModelError("Error", result.Error.Description);
-                return PartialView("AccountPartials/_UserDetailsForm", viewModel);
             }
                 
             return PartialView("AccountPartials/_UserDetailsForm", viewModel);

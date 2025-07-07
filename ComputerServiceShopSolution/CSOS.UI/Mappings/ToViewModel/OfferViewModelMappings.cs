@@ -22,12 +22,7 @@ namespace CSOS.UI.Mappings.ToViewModel
                 SelectedProductCondition = dto.SelectedProductCondition,
                 StockQuantity = dto.StockQuantity,
                 SelectedProductCategory = dto.SelectedProductCategory,
-                ExistingImagesUrls = dto.ExistingImagesUrls.Select(item => new SelectListItem()
-                {
-                    Value = item.Value,
-                    Text = item.Value,
-                })
-                .ToList()
+                ExistingImagesUrls = dto.ExistingImagesUrls.ToSelectListItem()
             };
             
         }
@@ -38,8 +33,8 @@ namespace CSOS.UI.Mappings.ToViewModel
             return new OfferBrowserViewModel()
             {
                 Filter = dto.Filter,
-                SortingOptions = dto.SortingOptions.ConvertToSelectListItem(),
-                DeliveryOptions = dto.DeliveryOptions.ConvertToSelectListItem(),
+                SortingOptions = dto.SortingOptions.ToSelectListItem(),
+                DeliveryOptions = dto.DeliveryOptions.ToSelectListItem(),
                 Items = dto.Items.Select(item => new OfferBrowserItemViewModel()
                 {
                     Category = item.Category,
@@ -88,7 +83,7 @@ namespace CSOS.UI.Mappings.ToViewModel
             {
                 DateCreated = dto.DateCreated,
                 Id = dto.Id,
-                ImageUrl = dto.ImageUrl,
+                ImageUrl = dto.ImageUrl ?? "",
                 Price = dto.Price,
                 ProductCategory = dto.ProductCategory,
                 ProductCondition = dto.ProductCondition,

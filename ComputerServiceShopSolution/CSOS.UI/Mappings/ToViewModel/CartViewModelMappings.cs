@@ -19,7 +19,7 @@ namespace CSOS.UI.Mappings.ToViewModel
                     Condition = item.Condition,
                     DateAdded = item.DateAdded,
                     Id = item.Id,
-                    ImageUrl = item.ImageUrl,
+                    ImageUrl = item.ImageUrl ?? "",
                     OfferId = item.OfferId,
                     Price = item.Price,
                     Quantity = item.Quantity,

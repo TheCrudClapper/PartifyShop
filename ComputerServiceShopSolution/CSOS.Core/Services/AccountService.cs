@@ -81,7 +81,7 @@ namespace ComputerServiceOnlineShop.Models.Services
             var userResult = await _currentUserService.GetCurrentUserAsync();
 
             if (userResult.IsFailure)
-                return Result.Failure<AccountDto>(AccountErrors.AccountNotFound);
+                return Result.Failure<AccountDto>(userResult.Error);
 
             var dto = userResult.Value.ToAccountResponseDto();
 

@@ -104,6 +104,49 @@ namespace CSOS.Tests.ServiceTests
             result.Value.FirstName.Should().Be(applicationUser.FirstName);
         }
         #endregion
+        
+        #region Edit Method Tests
+
+        [Fact]
+        public async Task Edit_UserResultFailure_ReturnFailureResult()
+        {
+            //Arrange 
+            AccountDto dto = _fixture.Create<AccountDto>();
+            _currentUserServiceMock.Setup(item => item.GetCurrentUserAsync()).ReturnsAsync(Result.Failure<ApplicationUser>(AccountErrors.AccountNotFound));
+            
+            //Act
+            var result = await _accountService.Edit(dto);
+            
+            //Assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(AccountErrors.AccountNotFound);
+        }
+
+        [Fact]
+        public async Task Edit_ValidUser_ReturnsDto()
+        {
+            //Arrange
+            AccountDto dto = _fixture.Create<AccountDto>();
+            ApplicationUser applicationUser = _fixture.Build<ApplicationUser>()
+                .Without(item => item.Address).Without(item => item.Offers)
+                .Without(item => item.Cart)
+                .Create();
+            _currentUserServiceMock.Setup(item => item.GetCurrentUserAsync()).ReturnsAsync(Result.Success(applicationUser));
+            _unitOfWorkMock.Setup(item => item.SaveChangesAsync(CancellationToken.None)).ReturnsAsync(1);
+            
+            //Act
+            var result = await _accountService.Edit(dto);
+            
+            //
+            result.IsSuccess.Should().BeTrue();
+            applicationUser.PhoneNumber.Should().Be(dto.PhoneNumber);
+            applicationUser.Title.Should().Be(dto.Title);
+            applicationUser.FirstName.Should().Be(dto.FirstName);
+            applicationUser.Surname.Should().Be(dto.Surname);
+            applicationUser.NIP.Should().Be(dto.NIP);
+            applicationUser.DateEdited.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
+        }
+        #endregion
 
     }
 }

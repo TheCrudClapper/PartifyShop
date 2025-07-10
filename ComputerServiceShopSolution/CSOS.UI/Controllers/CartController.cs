@@ -1,5 +1,5 @@
 ﻿using ComputerServiceOnlineShop.ServiceContracts;
-using CSOS.UI.Helpers;
+using CSOS.UI;
 using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.ToViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,8 @@ namespace ComputerServiceOnlineShop.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
-        private readonly IConfigurationReader  _configurationReader;
+        private readonly IConfigurationReader _configurationReader;
+
         public CartController(ICartService cartService, IConfigurationReader configurationReader)
         {
             _cartService = cartService;
@@ -36,9 +37,9 @@ namespace ComputerServiceOnlineShop.Controllers
             var result = await _cartService.AddToCart(id, quantity);
 
             if (result.IsFailure)
-                return Json(new { success = false, message = $"Error: {result.Error.Description}" });
+                return new JsonResult(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
 
-            return Json(new { success = true, message = "Item added to cart successfully!" });
+            return new JsonResult(new JsonResponseModel { Success = true, Message = "Success: Item Successfully Added to Cart" });
         }
 
         [HttpPost]
@@ -47,9 +48,9 @@ namespace ComputerServiceOnlineShop.Controllers
             var result = await _cartService.DeleteFromCart(id);
 
             if (result.IsFailure)
-                return Json(new { success = false, message = $"Error: {result.Error.Description}" });
+                return new JsonResult(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
 
-            return Json(new { success = true, message = "Item removed from cart successfully!" });
+            return Json(new JsonResponseModel { Success = true, Message = "Success: Item removed from cart successfully!" });
         }
 
         [HttpPost]
@@ -58,9 +59,9 @@ namespace ComputerServiceOnlineShop.Controllers
             var result = await _cartService.UpdateCartItemQuantity(cartItemId, quantity);
 
             if (result.IsFailure)
-                return Json(new { success = false, message = $"Error: {result.Error.Description}" });
+                return Json(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
 
-            return Json(new { success = true, message = "Updated cart successfully!" });
+            return Json(new JsonResponseModel { Success = true, Message = "Updated cart successfully!" });
         }
 
         [HttpGet]

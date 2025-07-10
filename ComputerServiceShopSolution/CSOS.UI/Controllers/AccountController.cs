@@ -3,6 +3,7 @@ using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Account;
+using CSOS.UI;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
@@ -133,22 +134,25 @@ namespace ComputerServiceOnlineShop.Controllers
             var result = await _accountService.Edit(dto);
 
             if (result.IsFailure)
-            {
-                //find a way to handle errors
-                ModelState.AddModelError("Error", result.Error.Description);
-            }
-                
-            return PartialView("AccountPartials/_UserDetailsForm", viewModel);
+                return Json(new JsonResponseModel() { Success = false, Message = $"Error: {result.Error.Description}" });
 
+            return Json(new JsonResponseModel() { Success = true, Message = "User details updated successfully !" });
         }
 
         [HttpPost]
         public async Task<IActionResult> ChangePassword(PasswordChangeViewModel viewModel)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction();
+                return PartialView("AccountPartials/_PasswordChangeForm", viewModel);
 
-            return RedirectToAction();
+            PasswordChangeRequest dto = viewModel.ToPasswordChangeRequest();
+            var result = await _accountService.ChangePassword(dto);
+
+            if(result.IsFailure)
+                return Json(new JsonResponseModel() { Success = false, Message = $"Error: {result.Error.Description}" });
+
+            return Json(new JsonResponseModel() { Success = true, Message = "Password changed successfully !" });
+
         }
     }
 }

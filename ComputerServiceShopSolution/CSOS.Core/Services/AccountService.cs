@@ -109,7 +109,7 @@ namespace ComputerServiceOnlineShop.Models.Services
             return Result.Success();
         }
 
-        public async Task<Result> ChangePassword(PasswordDto dto)
+        public async Task<Result> ChangePassword(PasswordChangeRequest dto)
         {
             var userResult = await _currentUserService.GetCurrentUserAsync();
             if(userResult.IsFailure)

@@ -44,7 +44,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// </summary>
         /// <param name="dto">Password change data including current and new passwords.</param>
         /// <returns>A <see cref="Result"/> indicating the outcome of the operation.</returns>
-        Task<Result> ChangePassword(PasswordDto dto);
+        Task<Result> ChangePassword(PasswordChangeRequest dto);
 
         /// <summary>
         /// Retrieves detailed account information of the currently logged-in user.

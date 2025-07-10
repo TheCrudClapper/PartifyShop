@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CSOS.Core\CSOS.Core.csproj" />
+    <ProjectReference Include="..\CSOS.UI\CSOS.UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

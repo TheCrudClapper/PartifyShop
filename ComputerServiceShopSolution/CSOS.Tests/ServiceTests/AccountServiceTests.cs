@@ -40,14 +40,15 @@ namespace CSOS.Tests.ServiceTests
                 Mock.Of<IdentityErrorDescriber>(),
                 Mock.Of<IServiceProvider>(),
                 Mock.Of<ILogger<UserManager<ApplicationUser>>>());
-
+            
             var signInManager = new SignInManager<ApplicationUser>(
                 userManager,
                 Mock.Of<IHttpContextAccessor>(),
                 Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>(),
                 Mock.Of<IOptions<IdentityOptions>>(),
                 Mock.Of<ILogger<SignInManager<ApplicationUser>>>(),
-                Mock.Of<IAuthenticationSchemeProvider>());
+                Mock.Of<IAuthenticationSchemeProvider>(),
+                Mock.Of<IUserConfirmation<ApplicationUser>>());
 
             _fixture = new Fixture();
 

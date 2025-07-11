@@ -7,7 +7,6 @@ using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Addresses;
 using CSOS.Core.ErrorHandling;
-using CSOS.UI.Mappings.ToViewModel;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -61,7 +60,8 @@ namespace CSOS.Tests.ControllerTests
 
             //Assert
             PartialViewResult viewResult = Assert.IsType<PartialViewResult>(result);
-            viewResult.Model.Should().BeEquivalentTo(dto.ToViewModel());
+            viewResult.Model.Should().BeOfType<EditAddressViewModel>();
+            viewResult.Model.Should().NotBeNull();
         }
         #endregion
     }

@@ -48,7 +48,7 @@
                             <li>
                                 <span class="fw-bold">Customer: </span>
                                 @Model.UserAddressDetails.CustomerName
-                             </li>
+                            </li>
                             <li>
                                 <span class="fw-bold">Address: </span>
                                 @Model.UserAddressDetails.Address
@@ -62,7 +62,11 @@
                                 @Model.UserAddressDetails.PhoneNumber
                             </li>
                         </ul>
-                        <a href="#" asp- class="edit-address-btn purple-text" data-id="@Model.UserAddressDetails.AddressId">Edit Adress</a>
+                        <form asp-action="Edit" asp-controller="Address" method="post" id="editAddressForm">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="Source" value="AddOrder" />
+                            <button type="submit" class="btn text-white edit-address-btn purple-background" data-id="@Model.UserAddressDetails.AddressId">Edit Address</button>
+                        </form>
                     </div>
 
                 </div>
@@ -129,6 +133,7 @@
 
     <script>
           // Open modal with form
+
         $(document).on('click', '.edit-address-btn', function (e) {
             e.preventDefault();
             var addressId = $(this).data('id');
@@ -139,6 +144,7 @@
                 success: function (html) {
                     $('#modalContainer').html(html);
                     $('#staticBackdrop').modal('show');
+                    $.validator.unobtrusive.parse("#editAddressForm");
                 },
                 error: function () {
                     showToast('Could not load the form', false)
@@ -147,7 +153,7 @@
         });
 
         // Handle form submit via AJAX
-               $(document).on('submit', '#editAddressForm', function (e) {
+            $(document).on('submit', '#editAddressForm', function (e) {
             e.preventDefault();
 
             var form = $(this);
@@ -170,7 +176,7 @@
                     } else {
                         $('#staticBackdrop').modal('hide');
                         $('#addressInfo').load(location.href + ' #addressInfo');
-
+                        showToast(response.message, response.success);
                     }
                 },
                 error: function (xhr) {

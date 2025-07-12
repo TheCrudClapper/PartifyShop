@@ -1,7 +1,6 @@
 ﻿using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
 using CSOS.Core.Domain.ExternalServicesContracts;
-using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
@@ -13,7 +12,6 @@ using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ComputerServiceOnlineShop.Controllers
 {

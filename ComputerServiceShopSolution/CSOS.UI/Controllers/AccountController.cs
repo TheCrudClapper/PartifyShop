@@ -120,6 +120,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 EditAddress = result.Value.EditAddressResponseDto.ToViewModel(),
                 UserDetails = result.Value.AccountDto.ToUserDetailsViewModel()
             };
+            viewModel.EditAddress.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
 
             return View(viewModel);
         }

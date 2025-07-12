@@ -2,6 +2,7 @@
 using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
+using CSOS.UI;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
@@ -20,12 +21,12 @@ namespace ComputerServiceOnlineShop.Controllers
             _addressService = addressService;
             _countriesGetterService = countriesGetterService;
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> Edit([FromRoute]int id)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
             var result = await _addressService.GetAddressForEdit();
-            
+
             if (result.IsFailure)
                 return View("Error", result.Error.Description);
 
@@ -35,22 +36,29 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute]int id, EditAddressViewModel viewModel)
+        public async Task<IActionResult> Edit([FromRoute] int id, EditAddressViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
-                return PartialView("_EditAddressPartial", viewModel);
+                viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList())
+                    .ToSelectListItem();
+
+
+                return viewModel.Source switch
+                {
+                    "AddOrder" => PartialView("_EditAddressPartial", viewModel),
+                    "AccountDetails" => PartialView("AccountPartials/_AddresChangePartial", viewModel),
+                    _ => Json(new JsonResponseModel() { Message = "Something went wrong", Success = false })
+                };
             }
 
             AddressDto dto = viewModel.ToDto();
             var result = await _addressService.Edit(id, dto);
 
             if (result.IsFailure)
-                return View("Error", result.Error.Description);
+                return Json(new JsonResponseModel() { Message = result.Error.Description, Success = false });
 
-            return NoContent();
+            return Json(new JsonResponseModel() { Message = "Addres updated successfully !", Success = true });
         }
 
     }

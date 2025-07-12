@@ -26,5 +26,7 @@ namespace ComputerServiceOnlineShop.ViewModels.AddressViewModels
         [Required(ErrorMessage = "Country is required")]
         public string SelectedCountry { get; set; } = null!;
         public List<SelectListItem>? CountriesSelectionList { get; set; }
+
+        public string? Source { get; set; }
     }
 }

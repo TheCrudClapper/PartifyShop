@@ -76,6 +76,28 @@
         });
 
         $(document).ready(function (){
+            $("#addres-change-form-container").on("submit", "#addresChangeForm", function(e){
+                e.preventDefault();
+                var form = $(this);
+                var addressId = form.find("#update-address-button").data("id");
+                var url = form.attr('action') + "/" + addressId;
+                var formData = form.serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function (response) {
+                        showToast(response.message, response.success);
+                    },
+                    error: function () {
+                        showToast("Something went wrong", false);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function (){
             $('#password-change-form-container').on('submit', '#passwordChangeForm', function (e){
                 e.preventDefault();
                 var form = $(this);
@@ -95,5 +117,7 @@
                 });
             });
         });
+
+
     </script>
 }

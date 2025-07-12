@@ -11,6 +11,7 @@
                 <form asp-action="Edit" asp-controller="Address" asp-route-id="@Model.Id" id="editAddressForm" data-action="/Address/Edit/@Model.Id" method="post">
                     @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="Id" />
+                    <input type="hidden" name="Source" value="AddOrder" />
                     <div class="mb-3">
                         <label asp-for="Place" class="form-label"></label>
                         <input asp-for="Place" class="form-control" />

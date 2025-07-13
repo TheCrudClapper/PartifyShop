@@ -58,7 +58,7 @@ namespace ComputerServiceOnlineShop.Controllers
             if (result.IsFailure)
                 return Json(new JsonResponseModel() { Message = result.Error.Description, Success = false });
 
-            return Json(new JsonResponseModel() { Message = "Addres updated successfully !", Success = true });
+            return Json(new JsonResponseModel() { Message = "Address updated successfully !", Success = true });
         }
 
     }

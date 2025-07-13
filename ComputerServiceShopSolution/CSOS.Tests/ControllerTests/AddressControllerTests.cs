@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using Castle.Components.DictionaryAdapter.Xml;
 using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Controllers;
 using ComputerServiceOnlineShop.ServiceContracts;
@@ -7,6 +6,7 @@ using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Addresses;
 using CSOS.Core.ErrorHandling;
+using CSOS.UI;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -62,6 +62,93 @@ namespace CSOS.Tests.ControllerTests
             PartialViewResult viewResult = Assert.IsType<PartialViewResult>(result);
             viewResult.Model.Should().BeOfType<EditAddressViewModel>();
             viewResult.Model.Should().NotBeNull();
+        }
+        #endregion
+
+        #region Edit POST Method Tests
+        [Fact]
+        public async Task Edit_EditAddresSuccessResult_ReturnSuccessJson()
+        {
+            //Arrange
+            EditAddressViewModel viewModel = _fixture.Build<EditAddressViewModel>()
+                .With(item => item.SelectedCountry, "21")
+                .Create();
+
+            _addressServiceMock.Setup(item => item.Edit(It.IsAny<int>(), It.IsAny<AddressDto>())).ReturnsAsync(Result.Success);
+
+            //Act
+            IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
+
+            //Assert
+            JsonResult jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Should().NotBeNull();
+            jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject.Message.Should().Be("Address updated successfully !");
+            jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject.Success.Should().Be(true);
+        }
+
+        [Fact]
+        public async Task Edit_EditAddressFailureResult_ReturnErrorJson()
+        {
+            //Arrange
+            EditAddressViewModel viewModel = _fixture.Build<EditAddressViewModel>()
+                .With(item => item.SelectedCountry, "21")
+                .Create();
+
+            _addressServiceMock.Setup(item => item.Edit(It.IsAny<int>(), It.IsAny<AddressDto>())).ReturnsAsync(Result.Failure(AddressErrors.AddressNotFound));
+
+            //Act
+            IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
+
+            //Assert
+            JsonResult jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.Should().NotBeNull();
+            jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject.Message.Should().Be(AddressErrors.AddressNotFound.Description);
+            jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject.Success.Should().Be(false);
+        }
+
+        [Fact]
+        public async Task Edit_ModelStateInvalidSourceAddOrder_ReturnPartialView()
+        {
+            //Arrange
+            List<SelectListItemDto> countries = _fixture.CreateMany<SelectListItemDto>().ToList();
+            EditAddressViewModel viewModel = _fixture.Build<EditAddressViewModel>()
+               .With(item => item.SelectedCountry, "21")
+               .With(item => item.Source, "AddOrder")
+               .Create();
+
+            _countriesGetterServiceMock.Setup(item => item.GetCountriesSelectionList()).ReturnsAsync(countries);
+            _addressController.ModelState.AddModelError("TestError", "ErrorTest");
+
+            //Act
+            IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
+
+            //Assert
+            PartialViewResult partialView = Assert.IsType<PartialViewResult>(result);
+            partialView.Should().NotBeNull();
+            partialView.Model.Should().Be(viewModel);
+            partialView.ViewName.Should().Be("_EditAddressPartial");
+        }
+
+        [Fact]
+        public async Task Edit_ModelStateInvalidSorceAccountDetails_ReturnsPartialView()
+        {
+            List<SelectListItemDto> countries = _fixture.CreateMany<SelectListItemDto>().ToList();
+            EditAddressViewModel viewModel = _fixture.Build<EditAddressViewModel>()
+               .With(item => item.SelectedCountry, "21")
+               .With(item => item.Source, "AccountDetails")
+               .Create();
+
+            _countriesGetterServiceMock.Setup(item => item.GetCountriesSelectionList()).ReturnsAsync(countries);
+            _addressController.ModelState.AddModelError("TestError", "ErrorTest");
+
+            //Act
+            IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
+
+            //Assert
+            PartialViewResult partialView = Assert.IsType<PartialViewResult>(result);
+            partialView.Should().NotBeNull();
+            partialView.Model.Should().Be(viewModel);
+            partialView.ViewName.Should().Be("AccountPartials/_AddresChangePartial");
         }
         #endregion
     }

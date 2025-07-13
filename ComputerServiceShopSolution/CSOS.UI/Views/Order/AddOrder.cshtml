@@ -62,11 +62,7 @@
                                 @Model.UserAddressDetails.PhoneNumber
                             </li>
                         </ul>
-                        <form asp-action="Edit" asp-controller="Address" method="post" id="editAddressForm">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="Source" value="AddOrder" />
-                            <button type="submit" class="btn text-white edit-address-btn purple-background" data-id="@Model.UserAddressDetails.AddressId">Edit Address</button>
-                        </form>
+                        <button type="submit" class="btn text-white edit-address-btn purple-background" data-id="@Model.UserAddressDetails.AddressId">Edit Address</button>
                     </div>
 
                 </div>

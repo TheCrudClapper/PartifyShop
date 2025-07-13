@@ -5,6 +5,7 @@ using CSOS.Core.DTO;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
 using CSOS.Core.ServiceContracts;
+using CSOS.UI;
 using CSOS.UI.Helpers;
 using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.ToDto;
@@ -103,20 +104,17 @@ namespace ComputerServiceOnlineShop.Controllers
             return RedirectToAction(nameof(AllUserOffers));
         }
 
-        //Changes needed
         [HttpPost]
         public async Task<IActionResult> DeleteOffer([FromRoute]int id)
         {
             var result = await _offerService.DeleteOffer(id);
 
-            //or json object
-            if(result.IsFailure)
-                return StatusCode(500);
+            if (result.IsFailure)
+                return Json(new JsonResponseModel() { Message = result.Error.Description, Success = false });
 
-            return NoContent();
+            return Json(new JsonResponseModel() { Message = "Deleted Offer Successfully !", Success = true });
         }
 
-        //OK
         [HttpGet]
         public async Task<IActionResult> AllUserOffers(string? title)
         {
@@ -127,7 +125,6 @@ namespace ComputerServiceOnlineShop.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        //Ok
         public async Task<IActionResult> ShowOffer([FromRoute] int id)
         {
             var response = await _offerService.GetOffer(id);
@@ -141,7 +138,6 @@ namespace ComputerServiceOnlineShop.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        //OK
         public async Task<IActionResult> OfferBrowser([FromQuery] OfferFilter filter)
         {
             OfferBrowserResponseDto response = await _offerService.GetFilteredOffers(filter);

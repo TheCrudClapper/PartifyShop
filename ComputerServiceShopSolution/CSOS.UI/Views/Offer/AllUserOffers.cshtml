@@ -91,7 +91,7 @@
             offerIdToDelete = $(this).data('id');
             tokenToUse = $('input[name="__RequestVerificationToken"]').val();
 
-             const modal = new bootstrap.Modal(document.getElementById('messageModal'));
+            const modal = new bootstrap.Modal(document.getElementById('messageModal'));
             $('#messageModalLabel').text("Delete Offer");
             $('.modal-body').text("Are you sure you want to delete this offer?");
             $('.modal-footer .btn-ok').show();
@@ -106,11 +106,12 @@
                     headers:{
                         'RequestVerificationToken': tokenToUse
                     },
-                    success: function (html){
+                    success: function (response){
                         if ($('#offersContainer .card').length === 1) {
                             location.reload();
                         } else {
                             $('#offersContainer').load(location.href + ' #offersContainer > *');
+                            showToast(response.message, response.success);
                         }
                     },
                     error: function () {

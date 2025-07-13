@@ -102,6 +102,11 @@ namespace ComputerServiceOnlineShop.Services
             }
 
             await SaveNewImagesAsync(dto, product);
+
+            //clean existing deliveries for offer
+            offer.OfferDeliveryTypes.Clear();
+
+            //add new ones
             await AddDeliveryTypesAsync(dto, offer);
 
             await _unitOfWork.SaveChangesAsync();
@@ -123,12 +128,12 @@ namespace ComputerServiceOnlineShop.Services
             return Result.Success();
         }
 
-        public async Task<List<UserOffersResponseDto>> GetFilteredUserOffers(string? title)
+        public async Task<IEnumerable<UserOffersResponseDto>> GetFilteredUserOffers(string? title)
         {
             Guid userId = _currentUserService.GetUserId();
             var offers = await _offerRepo.GetFilteredUserOffersAsync(title, userId);
 
-            var items = offers.ToListUserOffersResponseDto();
+            var items = offers.ToIEnumerableUserOffersResponseDto();
             return items;
         }
 
@@ -151,17 +156,17 @@ namespace ComputerServiceOnlineShop.Services
 
             return new OfferBrowserResponseDto()
             {
-                Items = items,
+                Items = items.ToList(),
                 Filter = filter,
-                SortingOptions = _sortingOptionService.GetSortingOptions(),
-                DeliveryOptions = await _deliveryTypeGetterService.GetAllDeliveryTypesAsSelectionList(),
+                SortingOptions = _sortingOptionService.GetSortingOptions().ToList(),
+                DeliveryOptions = (await _deliveryTypeGetterService.GetAllDeliveryTypesAsSelectionList()).ToList(),
             };
         }
 
-        public async Task<List<MainPageCardResponseDto>> GetIndexPageOffers()
+        public async Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers()
         {
             var offers = await _offerRepo.GetOffersByTakeAsync();
-            return offers.ToListMainPageCardDto();
+            return offers.ToIEnumerableMainPageCardDto();
         }
 
         public async Task<bool> DoesOfferExist(int id)
@@ -169,31 +174,32 @@ namespace ComputerServiceOnlineShop.Services
             return await _offerRepo.IsOfferInDbAsync(id);
         }
 
-        public async Task<List<MainPageCardResponseDto>> GetDealsOfTheDay()
+        public async Task<IEnumerable<MainPageCardResponseDto>> GetDealsOfTheDay()
         {
             //add daily reshuffle logic
             var count = await _offerRepo.GetNonPrivateOfferCount();
             if (count == 0)
-                return new();
+                return Enumerable.Empty<MainPageCardResponseDto>();
 
             var take = Math.Min(count, 7);
 
             var offers = await _offerRepo.GetOffersByTakeAsync(take);
 
-            return offers.ToListMainPageCardDto();
+            return offers.ToIEnumerableMainPageCardDto();
         }
 
         public async Task<Result<OfferResponseDto>> GetOffer(int id)
         {
             var offer = await _offerRepo.GetOfferWithAllDetailsAsync(id);
 
-            if (offer == null)
+            if (offer == null || offer.IsOfferPrivate)
                 return Result.Failure<OfferResponseDto>(OfferErrors.OfferDoesNotExist);
 
             var dto = offer.ToOfferResponseDto();
 
             return dto;
         }
+
         private async Task SaveNewImagesAsync(IOfferImageDto dto, Product product)
         {
             dto.UploadedImagesUrls = await _pictureHandlerService.SavePicturesToDirectory(dto.UploadedImages);
@@ -222,8 +228,7 @@ namespace ComputerServiceOnlineShop.Services
             }
 
             var deliveryTypes = dto.SelectedOtherDeliveries
-                .Select(deliveryId => deliveryId.ToOfferDeliveryTypeEntity(offer))
-                .ToList();
+                .Select(deliveryId => deliveryId.ToOfferDeliveryTypeEntity(offer));
 
             await _offerDeliveryTypeRepo.AddRangeAsync(deliveryTypes);
         }

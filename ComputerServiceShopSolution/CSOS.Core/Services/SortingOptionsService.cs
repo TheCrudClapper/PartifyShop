@@ -7,7 +7,7 @@ namespace CSOS.Core.Services
     {
         //Just for testing
         //Later create table in db for filtering options
-        public List<SelectListItemDto> GetSortingOptions()
+        public IEnumerable<SelectListItemDto> GetSortingOptions()
         {
             return new List<SelectListItemDto>()
             {

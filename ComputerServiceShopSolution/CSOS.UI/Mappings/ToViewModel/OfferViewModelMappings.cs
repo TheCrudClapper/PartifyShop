@@ -27,7 +27,6 @@ namespace CSOS.UI.Mappings.ToViewModel
             
         }
 
-        //OK
         public static OfferBrowserViewModel ToOfferBrowserViewModel(this OfferBrowserResponseDto dto, IConfigurationReader configurationReader)
         {
             return new OfferBrowserViewModel()
@@ -93,7 +92,7 @@ namespace CSOS.UI.Mappings.ToViewModel
                 StockQuantity = dto.StockQuantity,
             };
         }
-        public static List<UserOffersViewModel> ToViewModelCollection(this List<UserOffersResponseDto> dtos, IConfigurationReader configurationReader)
+        public static List<UserOffersViewModel> ToViewModelCollection(this IEnumerable<UserOffersResponseDto> dtos, IConfigurationReader configurationReader)
         {
             return dtos.Select(dto => dto.ToUserOffersViewModel(configurationReader)).ToList();
         }

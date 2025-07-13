@@ -8,6 +8,6 @@ namespace CSOS.Core.ServiceContracts
         /// Retrieves available sorting options for offer browsing.
         /// </summary>
         /// <returns>List of sorting options.</returns>
-        List<SelectListItemDto> GetSortingOptions();
+        IEnumerable<SelectListItemDto> GetSortingOptions();
     }
 }

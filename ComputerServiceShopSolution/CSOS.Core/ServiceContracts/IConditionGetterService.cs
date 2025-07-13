@@ -8,6 +8,6 @@ namespace CSOS.Core.ServiceContracts
         /// Gets Product Conditions as SelectListItem object
         /// </summary>
         /// <returns>An List of SelectListItem</returns>
-        Task<List<SelectListItemDto>> GetProductConditionsAsSelectList();
+        Task<IEnumerable<SelectListItemDto>> GetProductConditionsAsSelectList();
     }
 }

@@ -12,7 +12,7 @@ namespace CSOS.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<List<ProductImage>> GetImagesFromOfferAsync(int offerId)
+        public async Task<IEnumerable<ProductImage>> GetImagesFromOfferAsync(int offerId)
         {
             return await _dbContext.Offers
                 .Where(item => item.IsActive && item.Id == offerId)

@@ -36,7 +36,7 @@ namespace CSOS.Tests
                 .ReturnsAsync(productImages);
             
             //Act
-            List<SelectListItemDto> productImagesFromService = await _productImageService.GetOfferPictures(invalidOfferId);
+            List<SelectListItemDto> productImagesFromService = (await _productImageService.GetOfferPictures(invalidOfferId)).ToList();
             
           
             productImagesFromService.Should().BeEmpty();
@@ -56,7 +56,7 @@ namespace CSOS.Tests
             _productImageRepositoryMock.Setup(item => item.GetImagesFromOfferAsync(offerId)).ReturnsAsync(productImages);
             
             //Act
-            List<SelectListItemDto> productImagesFromService = await _productImageService.GetOfferPictures(offerId);
+            List<SelectListItemDto> productImagesFromService = (await _productImageService.GetOfferPictures(offerId)).ToList();
             
             //Assert
             productImagesFromService.Should().NotBeEmpty();

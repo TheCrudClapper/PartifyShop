@@ -2,34 +2,37 @@
 
 namespace CSOS.Core.Domain.RepositoryContracts
 {
+    /// <summary>
+    /// Represents a repository contract for managing application user accounts.
+    /// </summary>
     public interface IAccountRepository
     {
         /// <summary>
-        /// Adds user to data storage
+        /// Asynchronously adds a new user to the data storage.
         /// </summary>
-        /// <param name="entity">Represents Domain Model</param>
-        /// <returns>Return Application User Domain Model</returns>
+        /// <param name="entity">The user entity to add.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         Task AddAsync(ApplicationUser entity);
-        
+
         /// <summary>
-        /// Check whether user of given email exist in database
+        /// Asynchronously checks if a user with the given email exists in the database.
         /// </summary>
-        /// <param name="email">Email</param>
-        /// <returns>Returns boolean value</returns>
+        /// <param name="email">The email address to check.</param>
+        /// <returns><c>true</c> if a user with the specified email exists; otherwise, <c>false</c>.</returns>
         Task<bool> IsUserByEmailInDatabaseAsync(string email);
 
         /// <summary>
-        /// Gets user based from database based on his Id
+        /// Asynchronously retrieves a user by their unique identifier.
         /// </summary>
-        /// <param name="userId">User id to search for</param>
-        /// <returns>Return Application User Domain Model</returns>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The matching <see cref="ApplicationUser"/> if found; otherwise, <c>null</c>.</returns>
         Task<ApplicationUser?> GetUserByIdAsync(Guid userId);
 
         /// <summary>
-        /// Gets ApplicationUser Domain Model with eager loaded address by user Id
+        /// Asynchronously retrieves a user with their address eagerly loaded, by user ID.
         /// </summary>
-        /// <param name="userId">Id of an user</param>
-        /// <returns>Returns ApplicationUser Domain Model</returns>
+        /// <param name="userId">The unique identifier of the user.</param>
+        /// <returns>The matching <see cref="ApplicationUser"/> with address if found; otherwise, <c>null</c>.</returns>
         Task<ApplicationUser?> GetUserWithAddressAsync(Guid userId);
     }
 }

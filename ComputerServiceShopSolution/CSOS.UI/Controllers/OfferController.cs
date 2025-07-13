@@ -120,7 +120,7 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpGet]
         public async Task<IActionResult> AllUserOffers(string? title)
         {
-            List<UserOffersResponseDto> response = await _offerService.GetFilteredUserOffers(title);
+            IEnumerable<UserOffersResponseDto> response = await _offerService.GetFilteredUserOffers(title);
             List<UserOffersViewModel> userOffers = response.ToViewModelCollection(_configurationReader);
             return View(userOffers);
         }

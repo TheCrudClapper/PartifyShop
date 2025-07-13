@@ -59,7 +59,7 @@ namespace CSOS.Infrastructure.Repositories
                 .AnyAsync(item => item.Id == id && item.IsActive);
         }
 
-        public async Task<List<Offer>> GetFilteredUserOffersAsync(string? title, Guid userId)
+        public async Task<IEnumerable<Offer>> GetFilteredUserOffersAsync(string? title, Guid userId)
         {
             var query = _dbContext.Offers.Where(item => item.IsActive)
               .Where(item => item.SellerId == userId)
@@ -88,7 +88,7 @@ namespace CSOS.Infrastructure.Repositories
                 .ThenInclude(o => o.DeliveryType)
             .FirstOrDefaultAsync();
         }
-        public async Task<List<Offer>> GetFilteredOffersAsync(OfferFilter filter)
+        public async Task<IEnumerable<Offer>> GetFilteredOffersAsync(OfferFilter filter)
         {
             var query = _dbContext.Offers
             .Where(o => o.IsActive && !o.IsOfferPrivate)
@@ -147,7 +147,7 @@ namespace CSOS.Infrastructure.Repositories
 
         }
 
-        public async Task<List<Offer>> GetOffersByTakeAsync(int take = 12)
+        public async Task<IEnumerable<Offer>> GetOffersByTakeAsync(int take = 12)
         {
             return await _dbContext.Offers
                .Where(item => item.IsActive && !item.IsOfferPrivate)

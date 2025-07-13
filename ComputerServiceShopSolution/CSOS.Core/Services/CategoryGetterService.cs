@@ -14,7 +14,7 @@ namespace CSOS.Core.Services
             _productCategoryRepo = productCategoryRepository;
         }
 
-        public async Task<List<MainPageCardResponseDto>> GetProductCategoriesAsMainPageCardResponseDto()
+        public async Task<IEnumerable<MainPageCardResponseDto>> GetProductCategoriesAsMainPageCardResponseDto()
         {
             var categories = await _productCategoryRepo.GetAllProductCategoriesAsync();
 
@@ -23,14 +23,13 @@ namespace CSOS.Core.Services
                 Id = item.Id,
                 ImageUrl = item.CategoryImage,
                 Title = item.Name,
-            })
-           .ToList();
+            });
         }
-        public async Task<List<SelectListItemDto>> GetProductCategoriesAsSelectList()
+        public async Task<IEnumerable<SelectListItemDto>> GetProductCategoriesAsSelectList()
         {
             var categories = await _productCategoryRepo.GetAllProductCategoriesAsync();
 
-            return categories.Select(item => item.ToSelectListItem()).ToList();
+            return categories.Select(item => item.ToSelectListItem());
         }
     }
 }

@@ -7,10 +7,9 @@ namespace CSOS.Core.Mappings.ToDto
 {
     public static class OfferMappings
     {
+        // Usunięty DefaultImagePath
 
-        private const string DefaultImagePath = "wwwroot/images/no-image.png";
-
-        public static List<MainPageCardResponseDto> ToListMainPageCardDto(this List<Offer> offers)
+        public static IEnumerable<MainPageCardResponseDto> ToIEnumerableMainPageCardDto(this IEnumerable<Offer> offers)
         {
             return offers.Select(item =>
             {
@@ -18,7 +17,7 @@ namespace CSOS.Core.Mappings.ToDto
                 return new MainPageCardResponseDto()
                 {
                     Id = item.Id,
-                    ImageUrl = activeImage?.ImagePath ?? DefaultImagePath,
+                    ImageUrl = activeImage?.ImagePath,
                     Price = item.Price,
                     Title = item.Product.ProductName
                 };
@@ -39,7 +38,7 @@ namespace CSOS.Core.Mappings.ToDto
                 Category = offer.Product.ProductCategory.Name,
                 Price = offer.Price,
                 StockQuantity = offer.StockQuantity,
-                IsSellerCompany = offer.Seller.NIP != null ? true : false,
+                IsSellerCompany = offer.Seller.NIP != null,
                 Title = offer.Product.ProductName,
                 Place = offer.Seller.Address.Place,
                 PostalCity = offer.Seller.Address.PostalCity,
@@ -58,7 +57,7 @@ namespace CSOS.Core.Mappings.ToDto
             };
         }
 
-        public static List<OfferBrowserItemResponseDto> ToListOfferItemBrowserResponseDto(this List<Offer> offers)
+        public static IEnumerable<OfferBrowserItemResponseDto> ToListOfferItemBrowserResponseDto(this IEnumerable<Offer> offers)
         {
             return offers.Select(item =>
             {
@@ -74,14 +73,14 @@ namespace CSOS.Core.Mappings.ToDto
                     SellerName = item.Seller.UserName!,
                     Description = item.Product.Description,
                     QuantityAvailable = item.StockQuantity,
-                    ImageUrl = activeImage?.ImagePath ?? DefaultImagePath
+                    ImageUrl = activeImage?.ImagePath
                 };
 
             })
             .ToList();
         }
 
-        public static List<UserOffersResponseDto> ToListUserOffersResponseDto(this List<Offer> offers)
+        public static IEnumerable<UserOffersResponseDto> ToIEnumerableUserOffersResponseDto(this IEnumerable<Offer> offers)
         {
             return offers.Select(item =>
             {
@@ -97,7 +96,7 @@ namespace CSOS.Core.Mappings.ToDto
                     ProductCategory = item.Product.ProductCategory.Name,
                     ProductStatus = item.IsOfferPrivate,
                     ProductName = item.Product.ProductName,
-                    ImageUrl = activeImage?.ImagePath ?? DefaultImagePath
+                    ImageUrl = activeImage?.ImagePath 
                 };
             })
            .ToList();

@@ -2,13 +2,16 @@
 
 namespace CSOS.Core.Domain.RepositoryContracts
 {
+    /// <summary>
+    /// Represents a repository contract for accessing product image data.
+    /// </summary>
     public interface IProductImageRepository
     {
         /// <summary>
-        /// Gets an list of all images from specific offer
+        /// Asynchronously retrieves a list of all product images associated with a specific offer.
         /// </summary>
-        /// <param name="offerId">Offer id to get images from</param>
-        /// <returns>Returns an list of ProductImage Domain Models</returns>
-        Task<List<ProductImage>> GetImagesFromOfferAsync(int offerId);
+        /// <param name="offerId">The ID of the offer to retrieve images for.</param>
+        /// <returns>A collection of <see cref="ProductImage"/> entities.</returns>
+        Task<IEnumerable<ProductImage>> GetImagesFromOfferAsync(int offerId);
     }
 }

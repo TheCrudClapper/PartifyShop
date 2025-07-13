@@ -2,12 +2,15 @@
 
 namespace CSOS.Core.Domain.RepositoryContracts
 {
+    /// <summary>
+    /// Represents a repository contract for accessing product category data.
+    /// </summary>
     public interface IProductCategoryRepository
     {
         /// <summary>
-        /// Gets active all product categories from databse
+        /// Asynchronously retrieves all active product categories from the database.
         /// </summary>
-        /// <returns>Returns an list of Product Category Domain Models</returns>
-        Task<List<ProductCategory>> GetAllProductCategoriesAsync();
+        /// <returns>A collection of <see cref="ProductCategory"/> entities.</returns>
+        Task<IEnumerable<ProductCategory>> GetAllProductCategoriesAsync();
     }
 }

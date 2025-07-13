@@ -7,6 +7,6 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// Method gets countries for select
         /// </summary>
         /// <returns>Returns asynchronous list item</returns>
-        Task<List<SelectListItemDto>> GetCountriesSelectionList();
+        Task<IEnumerable<SelectListItemDto>> GetCountriesSelectionList();
     }
 }

@@ -15,7 +15,7 @@ namespace CSOS.Core.Services
             _productImageRepo = productImageRepository;
         }
 
-        public async Task<List<SelectListItemDto>> GetOfferPictures(int offerId)
+        public async Task<IEnumerable<SelectListItemDto>> GetOfferPictures(int offerId)
         {
             var items = await _productImageRepo.GetImagesFromOfferAsync(offerId);
 
@@ -24,9 +24,8 @@ namespace CSOS.Core.Services
 
         public async Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls)
         {
-            List<ProductImage> productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
-            
-            if (productImages.Count == 0)
+            IEnumerable<ProductImage> productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
+            if (productImages.Count() == 0)
                 return Result.Failure(ProductImageErrors.ProductImagesAreEmpty);
 
             foreach (var image in productImages)

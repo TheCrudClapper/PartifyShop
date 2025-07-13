@@ -9,7 +9,7 @@ namespace CSOS.Core.ServiceContracts
         /// </summary>
         /// <param name="offerId">Id of offer to fetch pictures from</param>
         /// <returns>Returns List of SelectListItemDto</returns>
-        Task<List<SelectListItemDto>> GetOfferPictures(int offerId);
+        Task<IEnumerable<SelectListItemDto>> GetOfferPictures(int offerId);
         /// <summary>
         /// Removes specific images from an offer.
         /// </summary>

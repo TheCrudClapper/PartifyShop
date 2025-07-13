@@ -2,12 +2,15 @@
 
 namespace CSOS.Core.Domain.RepositoryContracts
 {
+    /// <summary>
+    /// Represents a repository contract for accessing product condition data.
+    /// </summary>
     public interface IConditionRepository
     {
         /// <summary>
-        /// Gets all product conditions from db
+        /// Asynchronously retrieves all product conditions from the database.
         /// </summary>
-        /// <returns>Return an List of Condition Domain Models</returns>
-        Task<List<Condition>> GetAllConditionsAsync();
+        /// <returns>A collection of <see cref="Condition"/> entities.</returns>
+        Task<IEnumerable<Condition>> GetAllConditionsAsync();
     }
 }

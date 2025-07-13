@@ -13,11 +13,11 @@ namespace CSOS.Core.Services
         {
             _conditionRepo = conditionRepository;
         }
-        public async Task<List<SelectListItemDto>> GetProductConditionsAsSelectList()
+        public async Task<IEnumerable<SelectListItemDto>> GetProductConditionsAsSelectList()
         {
             var conditions = await _conditionRepo.GetAllConditionsAsync();
 
-            return conditions.Select(item => item.ToSelectListItem()).ToList();
+            return conditions.Select(item => item.ToSelectListItem());
         }
 
     }

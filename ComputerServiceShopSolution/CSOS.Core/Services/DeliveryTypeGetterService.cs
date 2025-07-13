@@ -15,14 +15,14 @@ namespace CSOS.Core.Services
             _deliveryTypeRepository = deliveryTypeRepository;
         }
 
-        public async Task<List<SelectListItemDto>> GetAllDeliveryTypesAsSelectionList()
+        public async Task<IEnumerable<SelectListItemDto>> GetAllDeliveryTypesAsSelectionList()
         {
             var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
             return types.Select(item => item.ToSelectListItem()).ToList();
 
         }
 
-        public async Task<List<SelectListItemDto>> GetOtherDeliveryTypes()
+        public async Task<IEnumerable<SelectListItemDto>> GetOtherDeliveryTypes()
         {
             var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 
@@ -30,7 +30,7 @@ namespace CSOS.Core.Services
                 .Select(item => item.ToSelectListItem()).ToList();
         }
 
-        public async Task<List<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes()
+        public async Task<IEnumerable<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes()
         {
             var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 

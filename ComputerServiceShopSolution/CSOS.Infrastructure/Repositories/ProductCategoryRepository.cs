@@ -12,7 +12,7 @@ namespace CSOS.Infrastructure.Repositories
         {
             _dbContext = databaseContext;
         }
-        public async Task<List<ProductCategory>> GetAllProductCategoriesAsync()
+        public async Task<IEnumerable<ProductCategory>> GetAllProductCategoriesAsync()
         {
             return await _dbContext.ProductCategories
                 .Where(item => item.IsActive)

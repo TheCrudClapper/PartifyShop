@@ -2,20 +2,23 @@
 
 namespace CSOS.Core.Domain.RepositoryContracts
 {
+    /// <summary>
+    /// Represents a repository contract for managing offer delivery type associations.
+    /// </summary>
     public interface IOfferDeliveryTypeRepository
     {
         /// <summary>
-        /// Adds to db entity
+        /// Asynchronously adds a single <see cref="OfferDeliveryType"/> entity to the database.
         /// </summary>
-        /// <param name="entity">Entity to be added to database</param>
-        /// <returns></returns>
+        /// <param name="entity">The entity to be added.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task AddAsync(OfferDeliveryType entity);
 
         /// <summary>
-        /// Adds a range of items (IEnumerable) to db
+        /// Asynchronously adds a collection of <see cref="OfferDeliveryType"/> entities to the database.
         /// </summary>
-        /// <param name="entities">List of items to be added to db</param>
-        /// <returns></returns>
+        /// <param name="entities">The collection of entities to be added.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         Task AddRangeAsync(IEnumerable<OfferDeliveryType> entities);
     }
 }

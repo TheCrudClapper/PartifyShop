@@ -34,7 +34,7 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// </summary>
         /// <param name="title">Optional title to filter offers by.</param>
         /// <returns>List of offers matching the filter.</returns>
-        Task<List<UserOffersResponseDto>> GetFilteredUserOffers(string? title);
+        Task<IEnumerable<UserOffersResponseDto>> GetFilteredUserOffers(string? title);
 
         /// <summary>
         /// Deletes an offer by its ID.
@@ -68,12 +68,12 @@ namespace ComputerServiceOnlineShop.Abstractions
         /// Retrieves highlighted offers for display on the main index page.
         /// </summary>
         /// <returns>List of offers formatted for main page display.</returns>
-        Task<List<MainPageCardResponseDto>> GetIndexPageOffers();
+        Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers();
 
         /// <summary>
         /// Retrieves current deals of the day.
         /// </summary>
         /// <returns>List of offers labeled as deals of the day.</returns>
-        Task<List<MainPageCardResponseDto>> GetDealsOfTheDay();
+        Task<IEnumerable<MainPageCardResponseDto>> GetDealsOfTheDay();
     }
 }

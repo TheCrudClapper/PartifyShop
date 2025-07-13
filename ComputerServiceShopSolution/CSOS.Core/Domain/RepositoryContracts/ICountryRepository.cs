@@ -1,14 +1,16 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 
-
 namespace CSOS.Core.Domain.RepositoryContracts
 {
+    /// <summary>
+    /// Represents a repository contract for accessing country data.
+    /// </summary>
     public interface ICountryRepository
     {
         /// <summary>
-        /// Gets an List of all countries from db
+        /// Asynchronously retrieves all countries from the database.
         /// </summary>
-        /// <returns>Return an List of Country Domain Models</returns>
-        Task<List<Country>> GetAllCountriesAsync();
+        /// <returns>A collection of <see cref="Country"/> entities.</returns>
+        Task<IEnumerable<Country>> GetAllCountriesAsync();
     }
 }

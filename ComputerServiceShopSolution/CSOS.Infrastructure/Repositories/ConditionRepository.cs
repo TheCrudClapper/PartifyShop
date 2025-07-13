@@ -12,7 +12,7 @@ namespace CSOS.Infrastructure.Repositories
         {
             _dbContext = databaseContext;
         }
-        public async Task<List<Condition>> GetAllConditionsAsync()
+        public async Task<IEnumerable<Condition>> GetAllConditionsAsync()
         {
             return await _dbContext.Conditions
              .Where(item => item.IsActive).ToListAsync();

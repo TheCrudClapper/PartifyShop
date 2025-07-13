@@ -14,11 +14,11 @@ namespace ComputerServiceOnlineShop.Services
             _countryRepository = countryRepository;
         }
 
-        public async Task<List<SelectListItemDto>> GetCountriesSelectionList()
+        public async Task<IEnumerable<SelectListItemDto>> GetCountriesSelectionList()
         {
             var countries = await _countryRepository.GetAllCountriesAsync();
 
-            return countries.Select(item => item.ToSelectListItem()).ToList();
+            return countries.Select(item => item.ToSelectListItem());
         }
     }
 }

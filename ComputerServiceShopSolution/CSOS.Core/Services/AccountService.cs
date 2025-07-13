@@ -142,7 +142,7 @@ namespace ComputerServiceOnlineShop.Models.Services
             var countries = await _countriesGetterService.GetCountriesSelectionList();
 
             var addressDto = addressResult.Value;
-            addressDto.CountriesSelectionList = countries;
+            addressDto.CountriesSelectionList = countries.ToList();
 
             var accountDto = accountResult.Value;
 

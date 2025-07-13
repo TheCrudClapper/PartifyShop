@@ -37,9 +37,9 @@ namespace ComputerServiceOnlineShop.Controllers
             var result = await _cartService.AddToCart(id, quantity);
 
             if (result.IsFailure)
-                return new JsonResult(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
+                return Json(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
 
-            return new JsonResult(new JsonResponseModel { Success = true, Message = "Success: Item Successfully Added to Cart" });
+            return Json(new JsonResponseModel { Success = true, Message = "Success: Item Successfully Added to Cart" });
         }
 
         [HttpPost]
@@ -48,7 +48,7 @@ namespace ComputerServiceOnlineShop.Controllers
             var result = await _cartService.DeleteFromCart(id);
 
             if (result.IsFailure)
-                return new JsonResult(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
+                return Json(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
 
             return Json(new JsonResponseModel { Success = true, Message = "Success: Item removed from cart successfully!" });
         }

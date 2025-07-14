@@ -105,7 +105,7 @@ namespace CSOS.Tests.ControllerTests
                 .Subject.Should().BeEquivalentTo(new JsonResponseModel
                 {
                     Success = true,
-                    Message = "Success: Item Successfully Added to Cart",
+                    Message = "Item Successfully Added to Cart",
                 });
         }
 
@@ -148,7 +148,7 @@ namespace CSOS.Tests.ControllerTests
                 .Subject.Should().BeEquivalentTo(new JsonResponseModel()
                 {
                     Success = true,
-                    Message = "Success: Item removed from cart successfully!",
+                    Message = "Item removed from cart successfully!",
                 });
         }
         #endregion

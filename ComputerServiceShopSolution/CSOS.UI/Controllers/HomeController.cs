@@ -4,11 +4,9 @@ using CSOS.Core.ServiceContracts;
 using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
-using CSOS.UI.ViewModels.SharedViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 namespace ComputerServiceOnlineShop.Controllers;
 
 [AllowAnonymous]
@@ -41,10 +39,6 @@ public class HomeController : Controller
         return View();
     }
     public IActionResult AboutUs()
-    {
-        return View();
-    }
-    public IActionResult NewView()
     {
         return View();
     }

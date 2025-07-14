@@ -39,7 +39,7 @@ namespace ComputerServiceOnlineShop.Controllers
             if (result.IsFailure)
                 return Json(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
 
-            return Json(new JsonResponseModel { Success = true, Message = "Success: Item Successfully Added to Cart" });
+            return Json(new JsonResponseModel { Success = true, Message = "Item Successfully Added to Cart" });
         }
 
         [HttpPost]
@@ -50,7 +50,7 @@ namespace ComputerServiceOnlineShop.Controllers
             if (result.IsFailure)
                 return Json(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
 
-            return Json(new JsonResponseModel { Success = true, Message = "Success: Item removed from cart successfully!" });
+            return Json(new JsonResponseModel { Success = true, Message = "Item removed from cart successfully!" });
         }
 
         [HttpPost]

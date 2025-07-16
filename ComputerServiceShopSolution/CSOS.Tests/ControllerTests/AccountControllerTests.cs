@@ -11,6 +11,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+using CSOS.Core.ErrorHandling;
+using CSOS.UI.ViewModels.AccountViewModels;
+using CSOS.UI.Mappings.ToViewModel;
+using CSOS.UI.Mappings.Universal;
+using CSOS.UI.Mappings.ToDto;
+using CSOS.Core.DTO.Responses.Account;
+using CSOS.UI;
 
 namespace CSOS.Tests.ControllerTests
 {
@@ -20,7 +27,7 @@ namespace CSOS.Tests.ControllerTests
         private readonly IAddressService _addressService;
         private readonly IAccountService _accountService;
         private readonly Mock<IAccountService> _accountServiceMock;
-        private readonly Mock<ICountriesGetterService>  _countriesGetterServiceMock;
+        private readonly Mock<ICountriesGetterService> _countriesGetterServiceMock;
         private readonly Mock<IAddressService> _addressServiceMock;
         private readonly IFixture _fixture;
         private AccountController _accountController;
@@ -40,7 +47,7 @@ namespace CSOS.Tests.ControllerTests
         {
             return new AccountController(_accountService, _countriesGetterService, _addressService);
         }
-        
+
         #region Register GET Method Tests
 
         [Fact]
@@ -61,7 +68,7 @@ namespace CSOS.Tests.ControllerTests
         }
 
         #endregion
-        
+
         #region Register POST Method Tests
 
         [Fact]
@@ -71,14 +78,14 @@ namespace CSOS.Tests.ControllerTests
             RegisterViewModel viewModel = _fixture.Build<RegisterViewModel>()
                 .With(item => item.SelectedCountry, "1")
                 .Create();
-            
+
             _accountServiceMock.Setup(item => item.Register(It.IsAny<RegisterDto>())).ReturnsAsync(IdentityResult.Success);
-            
+
             _accountController = CreateController();
-            
+
             //Act
             IActionResult result = await _accountController.Register(viewModel);
-            
+
             //Assert
             RedirectToActionResult redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
             redirect.ControllerName.Should().Be("Home");
@@ -92,14 +99,14 @@ namespace CSOS.Tests.ControllerTests
             RegisterViewModel viewModel = _fixture.Build<RegisterViewModel>()
                 .With(item => item.SelectedCountry, "1")
                 .Create();
-            
+
             _accountServiceMock.Setup(item => item.Register(It.IsAny<RegisterDto>())).ReturnsAsync(IdentityResult.Failed());
-            
+
             _accountController = CreateController();
-            
+
             //Act
             IActionResult result = await _accountController.Register(viewModel);
-            
+
             //Assert
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
             var data = Assert.IsType<RegisterViewModel>(viewResult.Model);
@@ -167,7 +174,7 @@ namespace CSOS.Tests.ControllerTests
             _accountController = CreateController();
 
             _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginDto>())).ReturnsAsync(SignInResult.Success);
-            
+
             var UrlHelperMock = new Mock<IUrlHelper>();
             UrlHelperMock.Setup(item => item.IsLocalUrl(localUrl)).Returns(true);
 
@@ -197,6 +204,129 @@ namespace CSOS.Tests.ControllerTests
             viewResult.Model.Should().BeEquivalentTo(viewModel);
             _accountController.ModelState.IsValid.Should().BeFalse();
             _accountController.ModelState["Login"]!.Errors.Should().NotBeNull();
+        }
+        #endregion
+
+        #region Logout Method Tests
+        [Fact]
+        public async Task Logout_RedirectsToAction()
+        {
+            //Arrange
+            _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.Logout()).Returns(Task.CompletedTask);
+
+            //Act
+            IActionResult result = await _accountController.Logout();
+
+            //Assert
+            RedirectToActionResult redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+            redirectToActionResult.ActionName.Should().Be("Index");
+            redirectToActionResult.ControllerName.Should().Be("Home");
+        }
+        #endregion
+
+        #region AccountDetails GET Method Tests
+        [Fact]
+        public async Task AccountDetails_FailureServiceResult_ReturnsErrorView()
+        {
+            //Arrange
+            _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.GetAccountDetailsAsync()).ReturnsAsync(Result.Failure<AccountDetailsDto>(AddressErrors.AddressNotFound));
+
+            //Act
+            IActionResult result = await _accountController.AccountDetails();
+
+            //Assert
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            viewResult.ViewName.Should().Be("Error");
+            var viewModel = viewResult.Model.Should().BeOfType<string>();
+            viewModel.Subject.Should().BeSameAs(AddressErrors.AddressNotFound.Description);
+        }
+
+
+        //To be repiared and the whole edit addres mess fixed
+        [Fact]
+        public async Task AccountDetails_SuccessServiceResult_ReturnsView()
+        {
+            //Arrange
+            _accountController = CreateController();
+            AccountDetailsDto accountDetailsDto = _fixture.Create<AccountDetailsDto>();
+           
+            AccountDetailsViewModel expectedViewModel = new AccountDetailsViewModel()
+            {
+                EditAddress = accountDetailsDto.EditAddressResponseDto.ToViewModel(),
+                UserDetails = accountDetailsDto.AccountDto.ToUserDetailsViewModel(),
+            };
+            
+            IEnumerable<SelectListItemDto> countries = _fixture.CreateMany<SelectListItemDto>();
+
+            expectedViewModel.EditAddress.CountriesSelectionList = countries.ToSelectListItem();
+            accountDetailsDto.EditAddressResponseDto.CountriesSelectionList = countries.ToList();
+
+            _accountServiceMock.Setup(item => item.GetAccountDetailsAsync()).ReturnsAsync(Result.Success(accountDetailsDto));
+
+            //Act
+            IActionResult result = await _accountController.AccountDetails();
+
+            //Assert
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            var viewModel = viewResult.Model.Should().BeOfType<AccountDetailsViewModel>();
+            //Assert wheret the second item is right
+            viewModel.Subject.UserDetails.Should().BeEquivalentTo(expectedViewModel.UserDetails);
+        }
+        #endregion
+
+        #region Edit POST Method Tests
+        [Fact]
+        public async Task Edit_InvalidModelState_ReturnsPartial()
+        {
+            //Arrange
+            UserDetailsViewModel viewModel = _fixture.Create<UserDetailsViewModel>();
+            _accountController = CreateController();
+            _accountController.ModelState.AddModelError("test", "test");
+
+            //Act
+            IActionResult result = await _accountController.Edit(viewModel);
+
+            //Arrange
+            PartialViewResult partialViewResult = result.Should().BeOfType<PartialViewResult>().Subject;
+            partialViewResult.Model.Should().BeEquivalentTo(viewModel);
+        }
+
+        [Fact]
+        public async Task Edit_FailureServiceResult_ReturnsErrorJson()
+        {
+            //Arrange
+            UserDetailsViewModel viewModel = _fixture.Create<UserDetailsViewModel>();
+            _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.Edit(It.IsAny<AccountDto>())).ReturnsAsync(Result.Failure(AccountErrors.AccountNotFound));
+
+            //Act
+            IActionResult result = await _accountController.Edit(viewModel);
+
+            //Assert
+            JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
+            var responseModel = jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject;
+            responseModel.Success.Should().BeFalse();
+            responseModel.Message.Should().Be($"Error: {AccountErrors.AccountNotFound.Description}");
+        }
+
+        [Fact]
+        public async Task Edit_SuccessServiceResult_ReturnsErrorJson()
+        {
+            //Arrange
+            UserDetailsViewModel viewModel = _fixture.Create<UserDetailsViewModel>();
+            _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.Edit(It.IsAny<AccountDto>())).ReturnsAsync(Result.Success);
+
+            //Act
+            IActionResult result = await _accountController.Edit(viewModel);
+
+            //Assert
+            JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
+            var responseModel = jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject;
+            responseModel.Success.Should().BeTrue();
+            responseModel.Message.Should().Be("User details updated successfully !");
         }
         #endregion
     }

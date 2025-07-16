@@ -22,6 +22,7 @@ namespace CSOS.Core.Services
             return items.Select(item => item.ToSelectListItem()).ToList();
         }
 
+        //change this to take productiamges instead of downloading once again offer
         public async Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls)
         {
             IEnumerable<ProductImage> productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);

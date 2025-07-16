@@ -62,8 +62,8 @@ namespace CSOS.Tests.ControllerTests
             var result = await homeController.Index();
 
             //Assert
-            ViewResult viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsType<IndexPageViewModel>(viewResult.Model);
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            var model = viewResult.Model.Should().BeOfType<IndexPageViewModel>().Subject;
 
             model.Cards.Should().NotBeNull();
             model.Cards.Should().HaveCount(offers.Count());
@@ -80,11 +80,14 @@ namespace CSOS.Tests.ControllerTests
         [Fact]
         public void Privacy_ReturnsView()
         {
+            //Arrange
             var controller = CreateController();
 
-            var result = controller.Privacy();
+            //Act
+            IActionResult result = controller.Privacy();
 
-            Assert.IsType<ViewResult>(result);
+            //Assert
+            result.Should().BeOfType<ViewResult>();
         }
         #endregion
 
@@ -92,11 +95,14 @@ namespace CSOS.Tests.ControllerTests
         [Fact]
         public void AboutUs_ReturnsView()
         {
+            //Arrange
             var controller = CreateController();
 
-            var result = controller.AboutUs();
+            //Act
+            IActionResult result = controller.AboutUs();
 
-            Assert.IsType<ViewResult>(result);
+            //Assert
+            result.Should().BeOfType<ViewResult>();
         }
         #endregion
 
@@ -122,7 +128,6 @@ namespace CSOS.Tests.ControllerTests
             var result = controller.Error();
 
             // Assert
-            Assert.IsType<ViewResult>(result);
             Assert.Equal("Test exception message", controller.ViewBag.Error);
         }
 

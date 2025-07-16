@@ -10,6 +10,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace CSOS.Tests.ControllerTests
 {
@@ -55,9 +56,7 @@ namespace CSOS.Tests.ControllerTests
 
             //Assert
             ViewResult viewResult = Assert.IsType<ViewResult>(result);
-            viewResult.Model.Should().BeOfType<RegisterViewModel>();
-
-            var viewModel = Assert.IsType<RegisterViewModel>(viewResult.Model);
+            var viewModel = viewResult.Model.Should().BeOfType<RegisterViewModel>().Subject;
             viewModel.CountriesSelectionList.Should().HaveCount(countries.Count());
         }
 
@@ -81,13 +80,13 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _accountController.Register(viewModel);
             
             //Assert
-            RedirectToActionResult redirect = Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
             redirect.ControllerName.Should().Be("Home");
             redirect.ActionName.Should().Be("Index");
         }
 
         [Fact]
-        public async Task Register_FailedRegister_ReturnViewWithViewModel()
+        public async Task Register_FailedRegister_ReturnView()
         {
             //Arrange
             RegisterViewModel viewModel = _fixture.Build<RegisterViewModel>()
@@ -102,8 +101,102 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _accountController.Register(viewModel);
             
             //Assert
-            ViewResult viewResult = Assert.IsType<ViewResult>(result);
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
             var data = Assert.IsType<RegisterViewModel>(viewResult.Model);
+        }
+        #endregion
+
+        #region Login GET Method Tests
+        [Fact]
+        public void Login_ReturnsView()
+        {
+            //Arrange
+            _accountController = CreateController();
+
+            //Act
+            IActionResult result = _accountController.Login();
+
+            //Assert
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
+        }
+
+        #endregion
+
+        #region Login POST Method Tests
+        [Fact]
+        public async Task Login_InvalidModelState_ReturnsView()
+        {
+            //Arrange
+            LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
+            _accountController = CreateController();
+            _accountController.ModelState.AddModelError("key1", "Test dummy error");
+
+            //Act
+            IActionResult result = await _accountController.Login(viewModel, It.IsAny<string>());
+
+            //Assert
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            viewResult.Model.Should().BeEquivalentTo(viewModel);
+        }
+
+        [Fact]
+        public async Task Login_SuccededLogin_RedirectsToAction()
+        {
+            //Arrange
+            LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
+            _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginDto>())).ReturnsAsync(SignInResult.Success);
+
+            //Act
+            IActionResult result = await _accountController.Login(viewModel, String.Empty);
+
+            //Arrange
+            RedirectToActionResult redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
+            redirectToActionResult.ActionName.Should().Be("Index");
+            redirectToActionResult.ControllerName.Should().Be("Home");
+        }
+
+        [Fact]
+        public async Task Login_ReturnUrlValid_ReturnsLocalRedirect()
+        {
+            //Arrange
+            LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
+
+            string localUrl = "~/Offer/OfferBrowser";
+
+            _accountController = CreateController();
+
+            _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginDto>())).ReturnsAsync(SignInResult.Success);
+            
+            var UrlHelperMock = new Mock<IUrlHelper>();
+            UrlHelperMock.Setup(item => item.IsLocalUrl(localUrl)).Returns(true);
+
+            _accountController.Url = UrlHelperMock.Object;
+
+            //Act
+            IActionResult result = await _accountController.Login(viewModel, localUrl);
+
+            //Assert
+            LocalRedirectResult localRedirectResult = result.Should().BeOfType<LocalRedirectResult>().Subject;
+            localRedirectResult.Url.Should().Be(localUrl);
+        }
+
+        [Fact]
+        public async Task Login_FailedLogin_ReturnsView()
+        {
+            //Arrange
+            LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
+            _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginDto>())).ReturnsAsync(SignInResult.Failed);
+
+            //Act
+            IActionResult result = await _accountController.Login(viewModel, String.Empty);
+
+            //Arrange
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            viewResult.Model.Should().BeEquivalentTo(viewModel);
+            _accountController.ModelState.IsValid.Should().BeFalse();
+            _accountController.ModelState["Login"]!.Errors.Should().NotBeNull();
         }
         #endregion
     }

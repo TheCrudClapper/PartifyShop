@@ -112,6 +112,7 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> AccountDetails()
         {
             var result = await _accountService.GetAccountDetailsAsync();
+
             if (result.IsFailure)
                 return View("Error", result.Error.Description);
 
@@ -120,6 +121,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 EditAddress = result.Value.EditAddressResponseDto.ToViewModel(),
                 UserDetails = result.Value.AccountDto.ToUserDetailsViewModel()
             };
+
             viewModel.EditAddress.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
 
             return View(viewModel);

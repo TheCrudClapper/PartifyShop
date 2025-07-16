@@ -44,7 +44,7 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _cartController.Cart();
 
             //Assert
-            ViewResult viewResult = Assert.IsType<ViewResult>(result);
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
             viewResult.ViewData.Model.Should().Be(CartErrors.CartDoesNotExists.Description);
         }
 
@@ -60,7 +60,7 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _cartController.Cart();
 
             //Assert
-            ViewResult viewResult = Assert.IsType<ViewResult>(result);
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
             viewResult.ViewData.Model.Should().BeEquivalentTo(cartResponseDto.ToViewModel(_configurationReader));
         }
 

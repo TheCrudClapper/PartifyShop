@@ -1,7 +1,6 @@
 ﻿using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.DTO;
 using CSOS.Core.Helpers;
 using Microsoft.EntityFrameworkCore;
 

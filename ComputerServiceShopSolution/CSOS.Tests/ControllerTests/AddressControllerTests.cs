@@ -42,7 +42,7 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _addressController.Edit(It.IsAny<int>());
 
             //Assert
-            ViewResult viewResult = Assert.IsType<ViewResult>(result);
+            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
             viewResult.Model.Should().Be(AddressErrors.AddressNotFound.Description);
         }
 
@@ -59,7 +59,7 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _addressController.Edit(It.IsAny<int>());
 
             //Assert
-            PartialViewResult viewResult = Assert.IsType<PartialViewResult>(result);
+            PartialViewResult viewResult = result.Should().BeOfType<PartialViewResult>().Subject;
             viewResult.Model.Should().BeOfType<EditAddressViewModel>();
             viewResult.Model.Should().NotBeNull();
         }
@@ -80,7 +80,7 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
 
             //Assert
-            JsonResult jsonResult = Assert.IsType<JsonResult>(result);
+            JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
             jsonResult.Should().NotBeNull();
             jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject.Message.Should().Be("Address updated successfully !");
             jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject.Success.Should().Be(true);
@@ -100,7 +100,7 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
 
             //Assert
-            JsonResult jsonResult = Assert.IsType<JsonResult>(result);
+            JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
             jsonResult.Should().NotBeNull();
             jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject.Message.Should().Be(AddressErrors.AddressNotFound.Description);
             jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject.Success.Should().Be(false);
@@ -123,7 +123,7 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
 
             //Assert
-            PartialViewResult partialView = Assert.IsType<PartialViewResult>(result);
+            PartialViewResult partialView = result.Should().BeOfType<PartialViewResult>().Subject;
             partialView.Should().NotBeNull();
             partialView.Model.Should().Be(viewModel);
             partialView.ViewName.Should().Be("_EditAddressPartial");
@@ -145,7 +145,7 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
 
             //Assert
-            PartialViewResult partialView = Assert.IsType<PartialViewResult>(result);
+            PartialViewResult partialView = result.Should().BeOfType<PartialViewResult>().Subject;
             partialView.Should().NotBeNull();
             partialView.Model.Should().Be(viewModel);
             partialView.ViewName.Should().Be("AccountPartials/_AddresChangePartial");

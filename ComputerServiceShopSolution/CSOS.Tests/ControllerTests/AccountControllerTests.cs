@@ -3,19 +3,16 @@ using ComputerServiceOnlineShop.ServiceContracts;
 using Moq;
 using AutoFixture;
 using ComputerServiceOnlineShop.Controllers;
-using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 using CSOS.Core.ErrorHandling;
 using CSOS.UI.ViewModels.AccountViewModels;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
-using CSOS.UI.Mappings.ToDto;
 using CSOS.Core.DTO.Responses.Account;
 using CSOS.UI;
 
@@ -109,7 +106,7 @@ namespace CSOS.Tests.ControllerTests
 
             //Assert
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
-            var data = Assert.IsType<RegisterViewModel>(viewResult.Model);
+            viewResult.Model.Should().BeOfType<RegisterViewModel>();
         }
         #endregion
 
@@ -124,7 +121,7 @@ namespace CSOS.Tests.ControllerTests
             IActionResult result = _accountController.Login();
 
             //Assert
-            ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
+            result.Should().BeOfType<ViewResult>();
         }
 
         #endregion
@@ -175,10 +172,10 @@ namespace CSOS.Tests.ControllerTests
 
             _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginDto>())).ReturnsAsync(SignInResult.Success);
 
-            var UrlHelperMock = new Mock<IUrlHelper>();
-            UrlHelperMock.Setup(item => item.IsLocalUrl(localUrl)).Returns(true);
+            var urlHelperMock = new Mock<IUrlHelper>();
+            urlHelperMock.Setup(item => item.IsLocalUrl(localUrl)).Returns(true);
 
-            _accountController.Url = UrlHelperMock.Object;
+            _accountController.Url = urlHelperMock.Object;
 
             //Act
             IActionResult result = await _accountController.Login(viewModel, localUrl);
@@ -327,6 +324,63 @@ namespace CSOS.Tests.ControllerTests
             var responseModel = jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject;
             responseModel.Success.Should().BeTrue();
             responseModel.Message.Should().Be("User details updated successfully !");
+        }
+        #endregion
+
+        #region ChangePassword POST Method Tests
+
+        [Fact]
+        public async Task ChangePassword_InvalidModelState_ReturnsPartial()
+        {
+            //Arrange
+            PasswordChangeViewModel viewModel = _fixture.Create<PasswordChangeViewModel>();
+            _accountController = CreateController();
+            _accountController.ModelState.AddModelError("test", "test");
+            
+            //Act
+            IActionResult result = await  _accountController.ChangePassword(viewModel);
+            
+            //Assert
+            PartialViewResult partialViewResult = result.Should().BeOfType<PartialViewResult>().Subject;
+            partialViewResult.Model.Should().BeEquivalentTo(viewModel);
+        }
+
+        [Fact]
+        public async Task ChangePassword_FailureServiceResult_ReturnsErrorJson()
+        {
+            //Arrange
+            PasswordChangeViewModel viewModel = _fixture.Create<PasswordChangeViewModel>();
+            _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.ChangePassword(It.IsAny<PasswordChangeRequest>()))
+                .ReturnsAsync(Result.Failure(AccountErrors.PasswordChangeFailed));
+            
+            //Act
+            IActionResult result = await _accountController.ChangePassword(viewModel);
+            
+            //Assert
+            JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
+            var responseModel = jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject;
+            responseModel.Success.Should().BeFalse();
+            responseModel.Message.Should().Be($"Error: {AccountErrors.PasswordChangeFailed.Description}");
+        }
+
+        [Fact]
+        public async Task ChangePassword_SuccessServiceResult_ReturnsErrorJson()
+        {
+            //Arrange
+            PasswordChangeViewModel viewModel = _fixture.Create<PasswordChangeViewModel>();
+            _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.ChangePassword(It.IsAny<PasswordChangeRequest>()))
+                .ReturnsAsync(Result.Success);
+            
+            //Act
+            IActionResult result = await _accountController.ChangePassword(viewModel);
+            
+            //Assert
+            JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
+            var responseModel = jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject;
+            responseModel.Success.Should().BeTrue();
+            responseModel.Message.Should().Be("Password changed successfully !");
         }
         #endregion
     }

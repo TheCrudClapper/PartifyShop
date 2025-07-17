@@ -1,19 +1,17 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Entities.Models;
+﻿using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 using CSOS.Core.DTO.Responses.Account;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.Mappings.ToEntity.AddressMappings;
 using CSOS.Core.Mappings.ToEntity.ApplicationUserMappings;
-using CSOS.Core.Mappings.ToEntity.CartMappings;
 using CSOS.Core.ServiceContracts;
 using Microsoft.AspNetCore.Identity;
 
-namespace ComputerServiceOnlineShop.Models.Services
+namespace CSOS.Core.Services
 {
     public class AccountService : IAccountService
     {

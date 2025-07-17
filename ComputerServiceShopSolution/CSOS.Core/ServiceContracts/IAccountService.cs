@@ -1,9 +1,10 @@
 ﻿using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 using CSOS.Core.DTO.Responses.Account;
 using CSOS.Core.ErrorHandling;
 using Microsoft.AspNetCore.Identity;
 
-namespace ComputerServiceOnlineShop.Abstractions
+namespace CSOS.Core.ServiceContracts
 {
     public interface IAccountService
     {

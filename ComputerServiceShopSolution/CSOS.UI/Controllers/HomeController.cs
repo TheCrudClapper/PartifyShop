@@ -1,4 +1,3 @@
-using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Helpers.Contracts;

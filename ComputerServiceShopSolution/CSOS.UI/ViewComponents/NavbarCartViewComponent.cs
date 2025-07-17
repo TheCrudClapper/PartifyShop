@@ -1,4 +1,4 @@
-﻿using ComputerServiceOnlineShop.ServiceContracts;
+﻿using CSOS.Core.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComputerServiceOnlineShop.ViewComponents

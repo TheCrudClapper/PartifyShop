@@ -1,10 +1,9 @@
-using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.ServiceContracts;
 using Moq;
 using AutoFixture;
 using ComputerServiceOnlineShop.Controllers;
 using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +13,7 @@ using CSOS.UI.ViewModels.AccountViewModels;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
 using CSOS.Core.DTO.Responses.Account;
+using CSOS.Core.ServiceContracts;
 using CSOS.UI;
 
 namespace CSOS.Tests.ControllerTests

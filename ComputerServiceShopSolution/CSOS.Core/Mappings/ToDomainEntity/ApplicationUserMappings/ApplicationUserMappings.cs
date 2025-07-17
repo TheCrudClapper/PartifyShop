@@ -1,6 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 
 namespace CSOS.Core.Mappings.ToEntity.ApplicationUserMappings
 {

@@ -1,4 +1,4 @@
-﻿using ComputerServiceOnlineShop.ServiceContracts;
+﻿using CSOS.Core.ServiceContracts;
 using CSOS.UI;
 using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.ToViewModel;

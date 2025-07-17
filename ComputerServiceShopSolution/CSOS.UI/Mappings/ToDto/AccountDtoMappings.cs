@@ -1,5 +1,6 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 using CSOS.Core.DTO.Responses.Account;
 using CSOS.UI.ViewModels.AccountViewModels;
 

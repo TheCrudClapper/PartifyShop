@@ -1,5 +1,5 @@
-﻿using ComputerServiceOnlineShop.ServiceContracts;
-using ComputerServiceOnlineShop.ViewModels.OrderViewModels;
+﻿using ComputerServiceOnlineShop.ViewModels.OrderViewModels;
+using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using Microsoft.AspNetCore.Mvc;
 

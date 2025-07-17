@@ -1,7 +1,4 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using ComputerServiceOnlineShop.Models.Services;
-using ComputerServiceOnlineShop.ServiceContracts;
+﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.Responses.Account;
 using CSOS.Core.ErrorHandling;
@@ -14,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using AutoFixture;
+using CSOS.Core.Services;
+
 namespace CSOS.Tests.ServiceTests
 {
     public class AccountServiceTests

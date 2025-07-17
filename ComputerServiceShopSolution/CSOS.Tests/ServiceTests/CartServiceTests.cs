@@ -1,12 +1,12 @@
 ﻿using AutoFixture;
 using ComputerServiceOnlineShop.Entities.Models;
-using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.Responses.Cart;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
+using CSOS.Core.Services;
 using FluentAssertions;
 using Moq;
 using Xunit.Abstractions;

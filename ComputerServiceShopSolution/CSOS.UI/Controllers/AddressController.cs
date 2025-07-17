@@ -1,7 +1,7 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.ServiceContracts;
-using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
+﻿using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
+using CSOS.Core.ServiceContracts;
 using CSOS.UI;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;

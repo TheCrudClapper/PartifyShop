@@ -1,5 +1,6 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 
 namespace CSOS.Core.Mappings.ToEntity.AddressMappings
 {

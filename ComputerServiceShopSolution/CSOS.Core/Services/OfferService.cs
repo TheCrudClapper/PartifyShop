@@ -1,9 +1,9 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.Entities.Models;
+﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.Domain.ExternalServicesContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.DtoContracts;
+using CSOS.Core.DTO.Requests;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
@@ -13,7 +13,7 @@ using CSOS.Core.Mappings.ToEntity.OfferMappings;
 using CSOS.Core.Mappings.ToEntity.ProductMappings;
 using CSOS.Core.ServiceContracts;
 
-namespace ComputerServiceOnlineShop.Services
+namespace CSOS.Core.Services
 {
     public class OfferService : IOfferService
     {
@@ -49,62 +49,62 @@ namespace ComputerServiceOnlineShop.Services
             _productImageService = productImageService;
             _sortingOptionService = sortingOptionService;
         }
-        public async Task<Result> Add(AddOfferDto dto)
+        public async Task<Result> Add(OfferAddRequest? addRequest)
         {
-            if (dto == null)
+            if (addRequest == null)
                 return Result.Failure(OfferErrors.OfferIsNull);
 
             Guid userId = _currentUserService.GetUserId();
 
-            Offer offer = dto.ToOfferEntity(userId);
+            Offer offer = addRequest.ToOfferEntity(userId);
             await _offerRepo.AddAsync(offer);
 
-            Product product = dto.ToProductEntity(offer);
+            Product product = addRequest.ToProductEntity(offer);
             await _productRepo.AddAsync(product);
 
-            await SaveNewImagesAsync(dto, product);
-            await AddDeliveryTypesAsync(dto, offer);
+            await SaveNewImagesAsync(addRequest, product);
+            await AddDeliveryTypesAsync(addRequest, offer);
 
             await _unitOfWork.SaveChangesAsync();
             return Result.Success();
         }
-        public async Task<Result> Edit(int id, EditOfferDto dto)
+        public async Task<Result> Edit(OfferUpdateRequest? updateRequest)
         {
-            if (dto == null)
+            if (updateRequest == null)
                 return Result.Failure(OfferErrors.OfferIsNull);
 
             Guid userId = _currentUserService.GetUserId();
-            var offer = await _offerRepo.GetOfferWithDetailsToEditAsync(id, userId);
+            var offer = await _offerRepo.GetOfferWithDetailsToEditAsync(updateRequest.Id, userId);
 
             if (offer == null)
                 return Result.Failure(OfferErrors.OfferDoesNotExist);
 
-            offer.IsOfferPrivate = dto.IsOfferPrivate;
-            offer.StockQuantity = dto.StockQuantity;
-            offer.Price = dto.Price;
+            offer.IsOfferPrivate = updateRequest.IsOfferPrivate;
+            offer.StockQuantity = updateRequest.StockQuantity;
+            offer.Price = updateRequest.Price;
 
             Product product = offer.Product;
-            product.ProductName = dto.ProductName;
-            product.Description = dto.Description;
-            product.ConditionId = dto.SelectedProductCondition;
-            product.ProductCategoryId = dto.SelectedProductCategory;
+            product.ProductName = updateRequest.ProductName;
+            product.Description = updateRequest.Description;
+            product.ConditionId = updateRequest.SelectedProductCondition;
+            product.ProductCategoryId = updateRequest.SelectedProductCategory;
 
             //deletes images checked by user
-            if (dto.ImagesToDelete?.Count > 0)
+            if (updateRequest.ImagesToDelete?.Count > 0)
             {
-                var result =  _productImageService.DeleteImagesFromOffer(product.ProductImages, dto.ImagesToDelete);
+                var result =  _productImageService.DeleteImagesFromOffer(product.ProductImages, updateRequest.ImagesToDelete);
 
                 if (result.IsFailure)
                     return Result.Failure(result.Error);
             }
 
-            await SaveNewImagesAsync(dto, product);
+            await SaveNewImagesAsync(updateRequest, product);
 
             //clean existing deliveries for offer
             offer.OfferDeliveryTypes.Clear();
 
             //add new ones
-            await AddDeliveryTypesAsync(dto, offer);
+            await AddDeliveryTypesAsync(updateRequest, offer);
 
             await _unitOfWork.SaveChangesAsync();
             return Result.Success();

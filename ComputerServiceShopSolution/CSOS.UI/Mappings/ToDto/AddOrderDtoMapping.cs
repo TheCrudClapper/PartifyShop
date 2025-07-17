@@ -3,14 +3,15 @@ using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
 using CSOS.Core.Domain.ExternalServicesContracts;
 using CSOS.Core.DTO;
 using System.Threading.Tasks;
+using CSOS.Core.DTO.Requests;
 
 namespace CSOS.UI.Mappings.ToDto
 {
     public static  class AddOrderDtoMapping
     {
-        public static AddOfferDto ToAddOfferDto(this AddOfferViewModel viewModel)
+        public static OfferAddRequest ToAddOfferDto(this AddOfferViewModel viewModel)
         {
-            return new AddOfferDto()
+            return new OfferAddRequest()
             {
                 Description = viewModel.Description,
                 IsOfferPrivate = viewModel.IsOfferPrivate,

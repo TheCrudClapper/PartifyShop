@@ -1,20 +1,19 @@
-﻿using ComputerServiceOnlineShop.Abstractions;
-using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
+﻿using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
 using CSOS.Core.Domain.ExternalServicesContracts;
-using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.Helpers;
 using CSOS.Core.ServiceContracts;
-using CSOS.UI;
 using CSOS.UI.Helpers;
 using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
+using CSOS.UI.ViewModels.OfferViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ComputerServiceOnlineShop.Controllers
+namespace CSOS.UI.Controllers
 {
     [Authorize]
     public class OfferController : Controller
@@ -58,7 +57,7 @@ namespace ComputerServiceOnlineShop.Controllers
                 return View(viewModel);
             }
 
-            AddOfferDto dto = viewModel.ToAddOfferDto();
+            OfferAddRequest dto = viewModel.ToAddOfferDto();
             var result = await _offerService.Add(dto);
 
             if(result.IsFailure)
@@ -73,7 +72,7 @@ namespace ComputerServiceOnlineShop.Controllers
             var response = await _offerService.GetOfferForEdit(id);
 
             if(response.IsFailure)
-                return View("OfferDoesNotExist", id);
+                return View("Error", response.Error.Description);
 
             var viewModel = response.Value.ToEditOfferViewModel();
             await _offerViewModelInitializer.InitializeAllAsync(viewModel);
@@ -81,7 +80,7 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditOffer([FromRoute] int id, EditOfferViewModel viewModel)
+        public async Task<IActionResult> EditOffer(EditOfferViewModel viewModel)
         {
             var pictureValidationResponse = PicturesValidatorHelper.ValidatePictureExtensions(viewModel.UploadedImages, _pictureHandlerService);
             if (pictureValidationResponse != null)
@@ -89,14 +88,14 @@ namespace ComputerServiceOnlineShop.Controllers
 
             if (!ModelState.IsValid)
             {
-                var images = await _productImageService.GetOfferPicturesAsync(id);
+                var images = await _productImageService.GetOfferPicturesAsync(viewModel.Id);
                 viewModel.ExistingImagesUrls = images.ToSelectListItem();
                 await _offerViewModelInitializer.InitializeAllAsync(viewModel);
                 return View(viewModel);
             }
 
             var dto = viewModel.ToEditOfferDto();
-            var result =  await _offerService.Edit(id, dto);
+            var result =  await _offerService.Edit(dto);
 
             if (result.IsFailure)
                 return View("Error", result.Error.Description);
@@ -119,7 +118,9 @@ namespace ComputerServiceOnlineShop.Controllers
         public async Task<IActionResult> AllUserOffers(string? title)
         {
             IEnumerable<UserOffersResponseDto> response = await _offerService.GetFilteredUserOffers(title);
-            List<UserOffersViewModel> userOffers = response.ToViewModelCollection(_configurationReader);
+            List<UserOffersViewModel> userOffers = response.Select(item => item.ToUserOffersViewModel(_configurationReader))
+                .ToList();
+            
             return View(userOffers);
         }
 
@@ -130,7 +131,7 @@ namespace ComputerServiceOnlineShop.Controllers
             var response = await _offerService.GetOffer(id);
 
             if(response.IsFailure)
-                return View("OfferDoesNotExist", id);
+                return View("Error", response.Error.Description);
 
             var viewModel = response.Value.ToSingleOfferViewModel(_configurationReader);
             return View(viewModel);

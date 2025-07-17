@@ -1,6 +1,6 @@
 ﻿using CSOS.Core.DTO;
 
-namespace ComputerServiceOnlineShop.Abstractions
+namespace CSOS.Core.ServiceContracts
 {
     public interface ICountriesGetterService
     {   /// <summary>

@@ -1,4 +1,4 @@
-﻿using ComputerServiceOnlineShop.ViewModels.SharedViewModels;
+﻿using CSOS.UI.ViewModels.SharedViewModels;
 
 namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
 {

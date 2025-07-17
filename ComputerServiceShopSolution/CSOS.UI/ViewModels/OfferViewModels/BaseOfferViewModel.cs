@@ -1,10 +1,10 @@
-﻿using ComputerServiceOnlineShop.ViewModels.SharedViewModels;
+﻿using System.ComponentModel.DataAnnotations;
 using CSOS.UI.CustomValidators;
+using CSOS.UI.ViewModels.SharedViewModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
 
-namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
+namespace CSOS.UI.ViewModels.OfferViewModels
 {
     /// <summary>
     /// This base class contains elements that are the same for edit and add view offer view models
@@ -40,6 +40,7 @@ namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
         [EmptyListValidator(ErrorMessage = "Those deliveries are required")]
         public List<int> SelectedOtherDeliveries { get; set; } = new List<int>();
 
+        //Collections for holding select list data
         [BindNever]
         public IEnumerable<DeliveryTypeViewModel> ParcelLockerDeliveriesList { get; set; } = Enumerable.Empty<DeliveryTypeViewModel>();
 

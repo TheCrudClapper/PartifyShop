@@ -1,26 +1,25 @@
-﻿using CSOS.Core.DTO;
+﻿using CSOS.Core.DTO.Requests;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
 
-namespace ComputerServiceOnlineShop.Abstractions
+namespace CSOS.Core.ServiceContracts
 {
     public interface IOfferService
     {
         /// <summary>
         /// Adds a new offer for the current user to the database.
         /// </summary>
-        /// <param name="dto">DTO containing offer data.</param>
+        /// <param name="addRequest">DTO containing offer data.</param>
         /// <returns>Result indicating success or failure.</returns>
-        Task<Result> Add(AddOfferDto dto);
+        Task<Result> Add(OfferAddRequest addRequest);
 
         /// <summary>
         /// Edits an existing offer and saves changes to the database.
         /// </summary>
-        /// <param name="id">The ID of the offer to edit.</param>
-        /// <param name="dto">DTO containing updated offer data.</param>
+        /// <param name="updateRequest">DTO containing updated offer data.</param>
         /// <returns>Result indicating success or failure.</returns>
-        Task<Result> Edit(int id, EditOfferDto dto);
+        Task<Result> Edit(OfferUpdateRequest updateRequest);
 
         /// <summary>
         /// Retrieves a specific offer by its ID.

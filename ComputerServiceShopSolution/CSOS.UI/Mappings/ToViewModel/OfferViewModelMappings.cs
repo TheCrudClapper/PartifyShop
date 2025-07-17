@@ -1,8 +1,9 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
-using ComputerServiceOnlineShop.ViewModels.SharedViewModels;
 using CSOS.Core.DTO.Responses.Offers;
 using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.Universal;
+using CSOS.UI.ViewModels.OfferViewModels;
+using CSOS.UI.ViewModels.SharedViewModels;
 
 namespace CSOS.UI.Mappings.ToViewModel
 {
@@ -92,10 +93,5 @@ namespace CSOS.UI.Mappings.ToViewModel
                 StockQuantity = dto.StockQuantity,
             };
         }
-        public static List<UserOffersViewModel> ToViewModelCollection(this IEnumerable<UserOffersResponseDto> dtos, IConfigurationReader configurationReader)
-        {
-            return dtos.Select(dto => dto.ToUserOffersViewModel(configurationReader)).ToList();
-        }
-
     }
 }

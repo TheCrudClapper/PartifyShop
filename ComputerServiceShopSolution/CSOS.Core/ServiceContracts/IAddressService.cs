@@ -1,8 +1,9 @@
 ﻿using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 using CSOS.Core.DTO.Responses.Addresses;
 using CSOS.Core.ErrorHandling;
 
-namespace ComputerServiceOnlineShop.ServiceContracts
+namespace CSOS.Core.ServiceContracts
 {
     public interface IAddressService
     {

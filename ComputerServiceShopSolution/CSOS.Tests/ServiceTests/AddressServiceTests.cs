@@ -3,10 +3,11 @@ using CSOS.Core.ServiceContracts;
 using Moq;
 using AutoFixture;
 using ComputerServiceOnlineShop.Entities.Models;
-using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 using CSOS.Core.ErrorHandling;
+using CSOS.Core.Services;
 using FluentAssertions;
 
 namespace CSOS.Tests

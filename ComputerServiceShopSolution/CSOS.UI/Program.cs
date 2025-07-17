@@ -1,8 +1,5 @@
-using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using ComputerServiceOnlineShop.Models.Services;
-using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.Services;
 using CSOS.Core.Domain.ExternalServicesContracts;
 using CSOS.Core.Domain.RepositoryContracts;

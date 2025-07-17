@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using ComputerServiceOnlineShop.Controllers;
-using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.Core.DTO.Responses.Cart;
 using CSOS.Core.ErrorHandling;
+using CSOS.Core.ServiceContracts;
 using CSOS.UI;
 using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.ToViewModel;

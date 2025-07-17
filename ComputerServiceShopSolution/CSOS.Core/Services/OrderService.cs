@@ -1,6 +1,6 @@
-﻿using ComputerServiceOnlineShop.ServiceContracts;
+﻿using CSOS.Core.ServiceContracts;
 
-namespace ComputerServiceOnlineShop.Services
+namespace CSOS.Core.Services
 {
     public class OrderService : IOrderService
     {

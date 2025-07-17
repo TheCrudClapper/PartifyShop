@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
+using CSOS.UI.ViewModels.OfferViewModels;
 
 namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
 {

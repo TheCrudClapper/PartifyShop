@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Controllers;
 using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
 using CSOS.Core.DTO;

@@ -1,5 +1,6 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 
 namespace CSOS.UI.Mappings.ToDto
 {

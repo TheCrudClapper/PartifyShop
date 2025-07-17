@@ -1,11 +1,12 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 
 namespace CSOS.Core.Mappings.ToEntity.ProductMappings
 {
     public static class ProductsMappings
     {
-        public static Product ToProductEntity(this AddOfferDto dto, Offer offer)
+        public static Product ToProductEntity(this OfferAddRequest dto, Offer offer)
         {
             return new Product
             {

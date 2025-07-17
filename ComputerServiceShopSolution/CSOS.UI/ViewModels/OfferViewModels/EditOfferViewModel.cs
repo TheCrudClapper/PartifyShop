@@ -1,18 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
+namespace CSOS.UI.ViewModels.OfferViewModels
 {
     /// <summary>
     /// View model for editing existing offer in shop
     /// </summary>
     public class EditOfferViewModel : BaseOfferViewModel
     {
+        [Required]
+        [FromRoute]
         public int Id { get; set; }
 
         //Uploaded images by user
         public List<IFormFile> UploadedImages { get; set; } = null!;
-
-        //Uploaded images by user processed to urls (already saved on drive)
+        
         public List<string>? UploadedImagesUrls { get; set; }
 
         //Images taken from database

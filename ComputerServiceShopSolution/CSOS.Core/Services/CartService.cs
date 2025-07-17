@@ -1,12 +1,11 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
-using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.Responses.Cart;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 
-namespace ComputerServiceOnlineShop.Services
+namespace CSOS.Core.Services
 {
     public class CartService : ICartService
     {

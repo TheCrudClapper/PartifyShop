@@ -1,4 +1,4 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels.SharedViewModels
+﻿namespace CSOS.UI.ViewModels.SharedViewModels
 {
     public class DeliveryTypeViewModel
     {

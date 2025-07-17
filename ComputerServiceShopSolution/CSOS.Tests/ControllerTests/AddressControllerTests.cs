@@ -1,11 +1,11 @@
 ﻿using AutoFixture;
-using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Controllers;
-using ComputerServiceOnlineShop.ServiceContracts;
 using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 using CSOS.Core.DTO.Responses.Addresses;
 using CSOS.Core.ErrorHandling;
+using CSOS.Core.ServiceContracts;
 using CSOS.UI;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;

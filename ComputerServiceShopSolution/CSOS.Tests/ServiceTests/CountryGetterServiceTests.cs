@@ -1,9 +1,10 @@
 ﻿using AutoFixture;
-using ComputerServiceOnlineShop.Abstractions;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Services;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
+using CSOS.Core.ServiceContracts;
+using CSOS.Core.Services;
 using FluentAssertions;
 using Moq;
 

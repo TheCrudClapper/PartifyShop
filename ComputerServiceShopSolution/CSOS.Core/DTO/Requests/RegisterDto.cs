@@ -1,4 +1,4 @@
-﻿namespace CSOS.Core.DTO
+﻿namespace CSOS.Core.DTO.Requests
 {
     public class RegisterDto
     {

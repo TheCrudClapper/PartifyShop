@@ -1,9 +1,9 @@
 ﻿using CSOS.Core.DTO.DtoContracts;
 using Microsoft.AspNetCore.Http;
 
-namespace CSOS.Core.DTO
+namespace CSOS.Core.DTO.Requests
 {
-    public class EditOfferDto : IOfferDeliveryDto, IOfferImageDto
+    public class OfferAddRequest : IOfferDeliveryDto, IOfferImageDto
     {
         public string ProductName { get; set; } = null!;
         public string Description { get; set; } = null!;
@@ -15,7 +15,6 @@ namespace CSOS.Core.DTO
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
         public List<int> SelectedOtherDeliveries { get; set; } = null!;
-        public List<string>? ImagesToDelete { get; set; } = new List<string>();
         public int? SelectedParcelLocker { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 using CSOS.Core.DTO.Responses.Cart;
 using CSOS.Core.ErrorHandling;
 
-namespace ComputerServiceOnlineShop.ServiceContracts
+namespace CSOS.Core.ServiceContracts
 {
     public interface ICartService
     {

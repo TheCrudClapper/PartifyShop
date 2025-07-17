@@ -1,5 +1,5 @@
-﻿using ComputerServiceOnlineShop.ViewModels.SharedViewModels;
-using CSOS.Core.DTO.Responses.Deliveries;
+﻿using CSOS.Core.DTO.Responses.Deliveries;
+using CSOS.UI.ViewModels.SharedViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CSOS.UI.Mappings.ToViewModel

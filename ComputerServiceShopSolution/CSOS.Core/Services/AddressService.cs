@@ -1,13 +1,13 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using ComputerServiceOnlineShop.ServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
+using CSOS.Core.DTO.Requests;
 using CSOS.Core.DTO.Responses.Addresses;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 
-namespace ComputerServiceOnlineShop.Services
+namespace CSOS.Core.Services
 {
     public class AddressService : IAddressService
     {

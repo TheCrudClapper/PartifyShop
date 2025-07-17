@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSOS.Core.ErrorHandling
+﻿namespace CSOS.Core.ErrorHandling
 {
     public class AccountErrors
     {
@@ -20,6 +14,12 @@ namespace CSOS.Core.ErrorHandling
 
         public static readonly Error PasswordChangeFailed = new Error(
            "User.PasswordChangeFailed", "Failed to change passwords");
+        
+        public static readonly Error MissingAccountUpdateRequest = new Error (
+            "MissingAccountUpdateRequest", "User's account update request not found");
+        
+        public static readonly Error MissingPasswordChangeRequest = new Error (
+            "MissingPasswordChangeRequest", "User's password request not found");
 
     }
 }

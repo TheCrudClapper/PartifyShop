@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+using ComputerServiceOnlineShop.Entities.Models;
 
-namespace ComputerServiceOnlineShop.Entities.Models
+namespace CSOS.Core.Domain.Entities
 {
     public class DeliveryType : BaseModel
     {

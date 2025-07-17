@@ -1,7 +1,9 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Deliveries;
-using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.DTO.DeliveryTypeDto;
+using CSOS.Core.DTO.OfferDto;
+using CSOS.Core.DTO.Universal;
 
 namespace CSOS.Core.Mappings.ToDto
 {
@@ -9,12 +11,12 @@ namespace CSOS.Core.Mappings.ToDto
     {
         // Usunięty DefaultImagePath
 
-        public static IEnumerable<MainPageCardResponseDto> ToIEnumerableMainPageCardDto(this IEnumerable<Offer> offers)
+        public static IEnumerable<MainPageCardResponse> ToIEnumerableMainPageCardDto(this IEnumerable<Offer> offers)
         {
             return offers.Select(item =>
             {
                 var activeImage = item.Product.ProductImages.FirstOrDefault(img => img.IsActive);
-                return new MainPageCardResponseDto()
+                return new MainPageCardResponse()
                 {
                     Id = item.Id,
                     ImageUrl = activeImage?.ImagePath,
@@ -26,9 +28,9 @@ namespace CSOS.Core.Mappings.ToDto
             .ToList();
         }
 
-        public static OfferResponseDto ToOfferResponseDto(this Offer offer)
+        public static OfferResponse ToOfferResponse(this Offer offer)
         {
-            return new OfferResponseDto()
+            return new OfferResponse()
             {
                 Id = offer.Id,
                 Condition = offer.Product.Condition.ConditionTitle,
@@ -48,7 +50,7 @@ namespace CSOS.Core.Mappings.ToDto
                         .Select(item => item.ImagePath)
                         .ToList(),
                 AvaliableDeliveryTypes = offer.OfferDeliveryTypes
-                    .Select(item => new DeliveryTypeResponseDto()
+                    .Select(item => new DeliveryTypeResponse()
                     {
                         Title = item.DeliveryType.Title,
                         Price = item.DeliveryType.Price,
@@ -94,7 +96,7 @@ namespace CSOS.Core.Mappings.ToDto
                     Price = item.Price,
                     StockQuantity = item.StockQuantity,
                     ProductCategory = item.Product.ProductCategory.Name,
-                    ProductStatus = item.IsOfferPrivate,
+                    IsOfferPrivate = item.IsOfferPrivate,
                     ProductName = item.Product.ProductName,
                     ImageUrl = activeImage?.ImagePath 
                 };
@@ -102,9 +104,13 @@ namespace CSOS.Core.Mappings.ToDto
            .ToList();
         }
 
-        public static EditOfferResponseDto ToEditOfferResponseDto(this Offer offer)
+        // public static IEnumerable<OfferResponse> ToIEnumerableOfferResponse(this IEnumerable<Offer> offers)
+        // {
+        //     
+        // }
+        public static EditOfferResponse ToEditOfferResponseDto(this Offer offer)
         {
-            return new EditOfferResponseDto()
+            return new EditOfferResponse()
             {
                 Id = offer.Id,
                 ProductName = offer.Product.ProductName,

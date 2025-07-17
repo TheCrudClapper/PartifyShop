@@ -1,6 +1,6 @@
-﻿namespace CSOS.Core.DTO.Responses.CartItem
+﻿namespace CSOS.Core.DTO.CartItemDto
 {
-    public class CartItemResponseDto
+    public class CartItemResponse
     {
         public int Id { get; set; }
         public int OfferId { get; set; }

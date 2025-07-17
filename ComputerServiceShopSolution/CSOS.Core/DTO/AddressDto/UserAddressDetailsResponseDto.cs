@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSOS.Core.DTO.Responses.Addresses
+﻿namespace CSOS.Core.DTO.AddressDto
 {
-    public class UserAddresDetailsResponseDto
+    public class UserAddressDetailsResponseDto
     {
         public int AddressId { get; set; }
         public string CustomerName { get; set; } = null!;

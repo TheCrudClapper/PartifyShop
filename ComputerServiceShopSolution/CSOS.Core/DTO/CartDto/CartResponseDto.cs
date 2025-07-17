@@ -1,10 +1,10 @@
-﻿using CSOS.Core.DTO.Responses.CartItem;
+﻿using CSOS.Core.DTO.CartItemDto;
 
-namespace CSOS.Core.DTO.Responses.Cart
+namespace CSOS.Core.DTO.CartDto
 {
     public class CartResponseDto
     {
-        public IEnumerable<CartItemResponseDto> CartItems { get; set; } = new List<CartItemResponseDto>();
+        public IEnumerable<CartItemResponse> CartItems { get; set; } = new List<CartItemResponse>();
         public decimal? TotalCartValue { get; set; }
         public decimal? TotalDeliveryValue { get; set; }
         public decimal? TotalItemsValue { get; set; }

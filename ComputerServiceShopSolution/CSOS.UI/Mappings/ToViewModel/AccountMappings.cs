@@ -1,15 +1,12 @@
-﻿using CSOS.Core.DTO.Responses.Account;
+﻿using CSOS.Core.DTO.AccountDto;
 using CSOS.UI.ViewModels.AccountViewModels;
 
 namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class AccountMappings
     {
-        public static UserDetailsViewModel ToUserDetailsViewModel(this AccountDto dto)
+        public static UserDetailsViewModel ToUserDetailsViewModel(this AccountResponse dto)
         {
-            if(dto == null)
-                return new UserDetailsViewModel();
-
             return new UserDetailsViewModel()
             {
                 FirstName = dto.FirstName,

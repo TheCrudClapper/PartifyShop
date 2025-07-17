@@ -1,6 +1,6 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
+﻿using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.DTO.Responses.Cart;
+using CSOS.Core.DTO.CartDto;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;

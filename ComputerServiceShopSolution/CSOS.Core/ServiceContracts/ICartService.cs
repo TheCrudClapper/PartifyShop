@@ -1,5 +1,5 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
-using CSOS.Core.DTO.Responses.Cart;
+﻿using CSOS.Core.Domain.Entities;
+using CSOS.Core.DTO.CartDto;
 using CSOS.Core.ErrorHandling;
 
 namespace CSOS.Core.ServiceContracts

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ComputerServiceOnlineShop.Controllers
+namespace CSOS.UI.Controllers
 {
     public class ContactController : Controller
     {
-        public IActionResult Contact()
+        public IActionResult Index()
         {
             return View();
         }

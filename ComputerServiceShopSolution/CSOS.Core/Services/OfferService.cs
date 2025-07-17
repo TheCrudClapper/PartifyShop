@@ -1,10 +1,9 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
-using CSOS.Core.Domain.ExternalServicesContracts;
+﻿using CSOS.Core.Domain.Entities;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.DTO;
 using CSOS.Core.DTO.DtoContracts;
-using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.DTO.OfferDto;
+using CSOS.Core.DTO.Universal;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
 using CSOS.Core.Mappings.ToDto;
@@ -125,33 +124,33 @@ namespace CSOS.Core.Services
             return Result.Success();
         }
 
-        public async Task<IEnumerable<UserOffersResponseDto>> GetFilteredUserOffers(string? title)
+        public async Task<IEnumerable<OfferResponse>> GetFilteredUserOffers(string? title)
         {
             Guid userId = _currentUserService.GetUserId();
             var offers = await _offerRepo.GetFilteredUserOffersAsync(title, userId);
 
-            var items = offers.ToIEnumerableUserOffersResponseDto();
+            var items = offers.Select(item => item.ToOfferResponse());
             return items;
         }
 
-        public async Task<Result<EditOfferResponseDto>> GetOfferForEdit(int id)
+        public async Task<Result<EditOfferResponse>> GetOfferForEdit(int id)
         {
             Guid userId = _currentUserService.GetUserId();
             var offer = await _offerRepo.GetOfferWithAllDetailsByUserAsync(id, userId);
             if (offer == null)
-                return Result.Failure<EditOfferResponseDto>(OfferErrors.OfferDoesNotExist);
+                return Result.Failure<EditOfferResponse>(OfferErrors.OfferDoesNotExist);
 
             var dto = offer.ToEditOfferResponseDto();
             return dto;
         }
 
-        public async Task<OfferBrowserResponseDto> GetFilteredOffers(OfferFilter filter)
+        public async Task<OfferIndexResponse> GetFilteredOffers(OfferFilter filter)
         {
             var offers = await _offerRepo.GetFilteredOffersAsync(filter);
 
-            var items = offers.ToListOfferItemBrowserResponseDto();
+            var items = offers.Select(item => item.ToOfferResponse());
 
-            return new OfferBrowserResponseDto()
+            return new OfferIndexResponse()
             {
                 Items = items.ToList(),
                 Filter = filter,
@@ -160,7 +159,7 @@ namespace CSOS.Core.Services
             };
         }
 
-        public async Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers()
+        public async Task<IEnumerable<MainPageCardResponse>> GetIndexPageOffers()
         {
             var offers = await _offerRepo.GetOffersByTakeAsync();
             return offers.ToIEnumerableMainPageCardDto();
@@ -171,12 +170,12 @@ namespace CSOS.Core.Services
             return await _offerRepo.IsOfferInDbAsync(id);
         }
 
-        public async Task<IEnumerable<MainPageCardResponseDto>> GetDealsOfTheDay()
+        public async Task<IEnumerable<MainPageCardResponse>> GetDealsOfTheDay()
         {
             //add daily reshuffle logic
             var count = await _offerRepo.GetNonPrivateOfferCount();
             if (count == 0)
-                return Enumerable.Empty<MainPageCardResponseDto>();
+                return Enumerable.Empty<MainPageCardResponse>();
 
             var take = Math.Min(count, 7);
 
@@ -185,14 +184,14 @@ namespace CSOS.Core.Services
             return offers.ToIEnumerableMainPageCardDto();
         }
 
-        public async Task<Result<OfferResponseDto>> GetOffer(int id)
+        public async Task<Result<OfferResponse>> GetOffer(int id)
         {
             var offer = await _offerRepo.GetOfferWithAllDetailsAsync(id);
 
             if (offer == null || offer.IsOfferPrivate)
-                return Result.Failure<OfferResponseDto>(OfferErrors.OfferDoesNotExist);
+                return Result.Failure<OfferResponse>(OfferErrors.OfferDoesNotExist);
 
-            var dto = offer.ToOfferResponseDto();
+            var dto = offer.ToOfferResponse();
 
             return dto;
         }

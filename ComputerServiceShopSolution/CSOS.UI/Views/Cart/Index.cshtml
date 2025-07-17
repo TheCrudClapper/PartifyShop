@@ -1,7 +1,7 @@
 ﻿@using ComputerServiceOnlineShop.ViewModels.CartViewModels
 @model CartViewModel;
 @{
-    ViewBag.Title = "Your Cart";
+    ViewBag.Title = "Your Index";
 }
 
 @section Styles {
@@ -16,7 +16,7 @@
                 <div class="mb-3 midesection-style shadow">
                     <div class="row">
                         <div class="col-4">
-                            <span class="fw-bold">Your Cart</span>
+                            <span class="fw-bold">Your Index</span>
                             <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                 <div class="progress-bar" style="width: 100%"></div>
                             </div>
@@ -45,14 +45,14 @@
                                 </div>
                                 <div class="col-md-7">
                                     <div class="card-body">
-                                        <a class="offer-link" href="@Url.Action("ShowOffer", "Offer", new {id = item.OfferId})">
+                                        <a class="offer-link" href="@Url.Action("Details", "Offer", new {id = item.OfferId})">
                                             <h5 class="card-title fw-bold">@item.Title</h5>
                                         </a>
                                         <p class="card-text">
                                             <span class="fw-bold">Condition:</span> @item.Condition<br>
                                             <span class="fw-bold">Category:</span> @item.Category<br>
                                             <span class="fw-bold">Price:</span> @item.Price PLN<br>
-                                            <span class="fw-bold">Added To Cart:</span> @item.DateAdded.ToString("dd-MM-yyyy");
+                                            <span class="fw-bold">Added To Index:</span> @item.DateAdded.ToString("dd-MM-yyyy");
                                         </p>
                                         <div class="d-flex justify-content-between">
                                             <div class="w-25">

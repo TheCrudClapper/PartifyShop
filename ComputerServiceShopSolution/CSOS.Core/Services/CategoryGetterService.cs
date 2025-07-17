@@ -1,6 +1,6 @@
 ﻿using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.DTO.Universal;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 
@@ -14,11 +14,11 @@ namespace CSOS.Core.Services
             _productCategoryRepo = productCategoryRepository;
         }
 
-        public async Task<IEnumerable<MainPageCardResponseDto>> GetProductCategoriesAsMainPageCardResponseDto()
+        public async Task<IEnumerable<MainPageCardResponse>> GetProductCategoriesAsMainPageCardResponseDto()
         {
             var categories = await _productCategoryRepo.GetAllProductCategoriesAsync();
 
-            return categories.Select(item => new MainPageCardResponseDto()
+            return categories.Select(item => new MainPageCardResponse()
             {
                 Id = item.Id,
                 ImageUrl = item.CategoryImage,

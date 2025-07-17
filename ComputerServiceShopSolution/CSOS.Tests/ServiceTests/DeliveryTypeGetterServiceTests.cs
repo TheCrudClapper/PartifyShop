@@ -1,8 +1,9 @@
 ﻿using AutoFixture;
 using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Deliveries;
+using CSOS.Core.DTO.DeliveryTypeDto;
 using CSOS.Core.ServiceContracts;
 using CSOS.Core.Services;
 using FluentAssertions;
@@ -116,7 +117,7 @@ namespace CSOS.Tests
 
             //Assert
             deliveries.Should().BeEmpty();
-            deliveries.Should().AllBeOfType<DeliveryTypeResponseDto>();
+            deliveries.Should().AllBeOfType<DeliveryTypeResponse>();
         }
         [Fact]
         public async Task GetParcelLockerDeliveryTypes_DeliveryExists_ReturnsDeliveries()

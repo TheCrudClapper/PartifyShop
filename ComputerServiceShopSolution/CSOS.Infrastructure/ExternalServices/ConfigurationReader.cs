@@ -1,4 +1,4 @@
-﻿using CSOS.UI.Helpers.Contracts;
+﻿using CSOS.Core.Domain.InfrastructureServiceContracts;
 using Microsoft.Extensions.Configuration;
 
 namespace CSOS.UI.Helpers

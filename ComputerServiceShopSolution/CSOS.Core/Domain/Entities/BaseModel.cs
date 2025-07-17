@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-
-namespace ComputerServiceOnlineShop.Entities.Models
+﻿namespace CSOS.Core.Domain.Entities
 {
     /// <summary>
     /// Class that defines base properties for all entities in database

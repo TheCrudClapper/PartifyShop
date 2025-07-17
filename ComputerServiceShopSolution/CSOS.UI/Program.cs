@@ -1,13 +1,12 @@
 using ComputerServiceOnlineShop.Entities.Contexts;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using ComputerServiceOnlineShop.Services;
-using CSOS.Core.Domain.ExternalServicesContracts;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.ServiceContracts;
 using CSOS.Core.Services;
 using CSOS.Infrastructure.Repositories;
 using CSOS.UI.Helpers;
-using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,6 @@
-﻿namespace ComputerServiceOnlineShop.Entities.Models
+﻿using ComputerServiceOnlineShop.Entities.Models;
+
+namespace CSOS.Core.Domain.Entities
 {
     public class Country : BaseModel
     {

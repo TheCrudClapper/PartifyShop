@@ -1,6 +1,7 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
-using CSOS.Core.DTO.Responses.Offers;
-using CSOS.UI.Helpers.Contracts;
+using CSOS.Core.Domain.Entities;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
+using CSOS.Core.DTO.OfferDto;
 using CSOS.UI.Mappings.Universal;
 using CSOS.UI.ViewModels.OfferViewModels;
 using CSOS.UI.ViewModels.SharedViewModels;
@@ -9,7 +10,7 @@ namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class OfferViewModelMappings
     {
-        public static EditOfferViewModel ToEditOfferViewModel(this EditOfferResponseDto dto)
+        public static EditOfferViewModel ToEditOfferViewModel(this EditOfferResponse dto)
         {
             return new EditOfferViewModel()
             {
@@ -27,15 +28,14 @@ namespace CSOS.UI.Mappings.ToViewModel
             };
             
         }
-
-        public static OfferBrowserViewModel ToOfferBrowserViewModel(this OfferBrowserResponseDto dto, IConfigurationReader configurationReader)
+        public static OfferBrowserViewModel ToOfferIndexViewModel(this OfferIndexResponse dto, IConfigurationReader configurationReader)
         {
             return new OfferBrowserViewModel()
             {
                 Filter = dto.Filter,
                 SortingOptions = dto.SortingOptions.ToSelectListItem(),
                 DeliveryOptions = dto.DeliveryOptions.ToSelectListItem(),
-                Items = dto.Items.Select(item => new OfferBrowserItemViewModel()
+                Items = dto.Items.Select(item => new OfferIndexItemViewModel()
                 {
                     Category = item.Category,
                     Condition = item.Condition,
@@ -44,14 +44,14 @@ namespace CSOS.UI.Mappings.ToViewModel
                     Id = item.Id,
                     ImageUrl = string.IsNullOrEmpty(item.ImageUrl) ? configurationReader.DefaultProductImage : item.ImageUrl,
                     Price = item.Price,
-                    QuantityAvailable = item.QuantityAvailable,
-                    SellerName = item.SellerName,
+                    QuantityAvailable = item.Quantity,
+                    SellerName = item.Seller,
                     Title = item.Title,
                 }).ToList(),
             };
         }
 
-        public static SingleOfferViewModel ToSingleOfferViewModel(this OfferResponseDto dto, IConfigurationReader configurationReader)
+        public static SingleOfferViewModel ToOfferDetailsViewModel(this OfferResponse dto, IConfigurationReader configurationReader)
         {
             
             return new SingleOfferViewModel()
@@ -78,7 +78,7 @@ namespace CSOS.UI.Mappings.ToViewModel
             };
         }
 
-        public static UserOffersViewModel ToUserOffersViewModel(this UserOffersResponseDto dto, IConfigurationReader configurationReader)
+        public static UserOffersViewModel ToUserOffersViewModel(this OfferResponse dto, IConfigurationReader configurationReader)
         {
             return new UserOffersViewModel()
             {
@@ -86,10 +86,10 @@ namespace CSOS.UI.Mappings.ToViewModel
                 Id = dto.Id,
                 ImageUrl = string.IsNullOrEmpty(dto.ImageUrl) ? configurationReader.DefaultProductImage : dto.ImageUrl,
                 Price = dto.Price,
-                ProductCategory = dto.ProductCategory,
-                ProductCondition = dto.ProductCondition,
-                ProductName = dto.ProductName,
-                ProductStatus = dto.ProductStatus,
+                ProductCategory = dto.Category,
+                ProductCondition = dto.Condition,
+                ProductName = dto.Title,
+                ProductStatus = dto.IsOfferPrivate,
                 StockQuantity = dto.StockQuantity,
             };
         }

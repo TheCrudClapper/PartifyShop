@@ -1,4 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.DtoContracts;
 

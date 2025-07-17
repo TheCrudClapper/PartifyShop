@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using ComputerServiceOnlineShop.Entities.Models;
 
-namespace ComputerServiceOnlineShop.Entities.Models
+namespace CSOS.Core.Domain.Entities
 {
     public class Product : BaseModel
     {

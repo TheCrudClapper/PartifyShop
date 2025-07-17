@@ -1,7 +1,7 @@
 ﻿@using ComputerServiceOnlineShop.ViewModels.OfferViewModels
 @model OfferBrowserViewModel
 @{
-    ViewData["Title"] = "Auction Browser";
+    ViewData["Title"] = "Offer Browser";
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/offer-browser-styles.css" />
@@ -23,7 +23,7 @@
         <div class="col-12">
             <div class="mb-3">
 
-                <form method="get" asp-controller="Offer" asp-action="OfferBrowser">
+                <form method="get" asp-controller="Offer" asp-action="Index">
 
                     <input type="hidden" name="SearchPhrase" value="@Model.Filter.SearchPhrase" />
                     <input type="hidden" name="CategoryId" value="@Model.Filter.CategoryId" />
@@ -76,7 +76,7 @@
                                     <div class="col-md-5 d-flex flex-column">
                                         <div>
 
-                                            <a href="@Url.Action("ShowOffer", "Offer", new { id = offer.Id })" class="offer-link ">
+                                            <a href="@Url.Action("Details", "Offer", new { id = offer.Id })" class="offer-link ">
                                                 <h5 class="card-title mt-3 mt-md-0 fw-bold">@offer.Title</h5>
                                             </a>
                                             @for (int j = 0; j < 5; j++)
@@ -116,7 +116,7 @@
                                         }
                                         else
                                         {
-                                            <a class="btn custom-button mt-2 w-100" href="@Url.Action("EditOffer", "Offer", new { id = offer.Id })">Edit</a>
+                                            <a class="btn custom-button mt-2 w-100" href="@Url.Action("Edit", "Offer", new { id = offer.Id })">Edit</a>
                                         }
                                     </div>
                                 </div>
@@ -136,3 +136,4 @@
 @section Scripts {
     <script src="~/js/offer-scripts.js"></script>
 }
+

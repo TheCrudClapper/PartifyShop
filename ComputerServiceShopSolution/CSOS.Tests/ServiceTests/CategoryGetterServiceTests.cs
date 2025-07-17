@@ -5,8 +5,10 @@ using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.ServiceContracts;
 using CSOS.Core.Services;
 using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.Domain.Entities;
+using CSOS.Core.DTO.OfferDto;
 using FluentAssertions;
-using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.DTO.Universal;
 using Xunit.Abstractions;
 
 namespace CSOS.Tests
@@ -49,7 +51,7 @@ namespace CSOS.Tests
             //Assert
             categoriesFromDb.Should().NotBeNull();
             categoriesFromDb.Should().HaveCount(categories.Count);
-            categoriesFromDb.Should().AllBeOfType<MainPageCardResponseDto>();
+            categoriesFromDb.Should().AllBeOfType<MainPageCardResponse>();
 
         }
 
@@ -66,7 +68,7 @@ namespace CSOS.Tests
             //Assert
             categoriesFromDb.Should().NotBeNull();
             categoriesFromDb.Should().BeEmpty();
-            categoriesFromDb.Should().AllBeOfType<MainPageCardResponseDto>();
+            categoriesFromDb.Should().AllBeOfType<MainPageCardResponse>();
         }
     }
 }

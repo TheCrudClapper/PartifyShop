@@ -1,8 +1,6 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Addresses;
+using CSOS.Core.DTO.AddressDto;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
@@ -24,47 +22,50 @@ namespace CSOS.Core.Services
             _accountRepository = accountRepository;
         }
 
-        public async Task<Result> Edit(int id, AddressDto dto)
+        public async Task<Result> EditUserAddress(AddressUpdateRequest? request)
         {
-            var address = await _addressRepository.GetAddressByIdAsync(id);
+            if (request == null)
+                return Result.Failure(AddressErrors.MissingAddressUpdateRequest);
+            
+            var address = await _addressRepository.GetAddressByIdAsync(request.Id);
 
             if (address == null)
                 return Result.Failure(AddressErrors.AddressNotFound);
 
-            address.Street = dto.Street;
-            address.HouseNumber = dto.HouseNumber;
-            address.CountryId = dto.CountryId;
+            address.Street = request.Street;
+            address.HouseNumber = request.HouseNumber;
+            address.CountryId = request.CountryId;
             address.DateEdited = DateTime.UtcNow;
-            address.Place = dto.Place;
-            address.PostalCity = dto.PostalCity;
-            address.PostalCode = dto.PostalCode;
+            address.Place = request.Place;
+            address.PostalCity = request.PostalCity;
+            address.PostalCode = request.PostalCode;
 
             await _unitOfWork.SaveChangesAsync();
 
             return Result.Success();
         }
 
-        public async Task<Result<EditAddressResponseDto>> GetAddressForEdit()
+        public async Task<Result<AddressResponse>> GetUserAddressForEdit()
         {
-            var userAndAddress = await GetCurrentUserAddress();
+            var userAndAddress = await GetCurrentUserWithAddress();
 
             if (userAndAddress == null)
-                return Result.Failure<EditAddressResponseDto>(AddressErrors.AddressNotFound);
-
-            return userAndAddress.ToEditAddresResponse();
+                return Result.Failure<AddressResponse>(AddressErrors.AddressNotFound);
+            
+            return userAndAddress.ToAddressResponse();
         }
 
-        public async Task<Result<UserAddresDetailsResponseDto>> GetUserAddresInfo()
+        public async Task<Result<UserAddressDetailsResponseDto>> GetUserAddressDetails()
         {
-            var userAndAddress = await GetCurrentUserAddress();
+            var userAndAddress = await GetCurrentUserWithAddress();
 
             if (userAndAddress == null)
-                return Result.Failure<UserAddresDetailsResponseDto>(AddressErrors.MissingAddressData);
+                return Result.Failure<UserAddressDetailsResponseDto>(AddressErrors.MissingAddressData);
 
             return userAndAddress.ToUserAddresDetailsResponse();
         }
 
-        private async Task<ApplicationUser?> GetCurrentUserAddress()
+        private async Task<ApplicationUser?> GetCurrentUserWithAddress()
         {
             var userId = _currentUserService.GetUserId();
             return await _accountRepository.GetUserWithAddressAsync(userId);

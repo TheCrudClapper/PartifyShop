@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ComputerServiceOnlineShop.ViewModels.AddressViewModels
 {
     public class EditAddressViewModel
     {
+        [FromRoute]
+        [Required]
         public int Id { get; set; }
         [Required(ErrorMessage = "Place is required")]
         public string Place { get; set; } = null!;

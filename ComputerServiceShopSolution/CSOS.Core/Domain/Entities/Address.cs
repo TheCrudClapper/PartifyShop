@@ -1,7 +1,7 @@
-﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 
-namespace ComputerServiceOnlineShop.Entities.Models
+namespace CSOS.Core.Domain.Entities
 {
     public class Address : BaseModel
     {

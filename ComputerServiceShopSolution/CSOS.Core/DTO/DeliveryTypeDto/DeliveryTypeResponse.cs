@@ -1,10 +1,9 @@
-﻿namespace CSOS.Core.DTO.Responses.Offers
+﻿namespace CSOS.Core.DTO.DeliveryTypeDto
 {
-    public class MainPageCardResponseDto
+    public class DeliveryTypeResponse
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public decimal Price { get; set; }
-        public string ImageUrl { get; set; } = null!;
     }
 }

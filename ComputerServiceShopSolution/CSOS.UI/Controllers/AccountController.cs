@@ -1,9 +1,7 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Account;
+using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.ServiceContracts;
-using CSOS.UI;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
@@ -12,19 +10,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ComputerServiceOnlineShop.Controllers
+namespace CSOS.UI.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
-        private readonly IAddressService _addressService;
         private readonly ICountriesGetterService _countriesGetterService;
         public AccountController(IAccountService accountService, ICountriesGetterService countriesGetterService, IAddressService addressService)
         {
             _accountService = accountService;
             _countriesGetterService = countriesGetterService;
-            _addressService = addressService;
         }
 
 
@@ -51,8 +47,8 @@ namespace ComputerServiceOnlineShop.Controllers
                 return View(viewModel);
             }
 
-            RegisterDto dto = viewModel.ToRegisterDto();
-            IdentityResult result = await _accountService.Register(dto);
+            RegisterRequest request = viewModel.ToRegisterRequest();
+            IdentityResult result = await _accountService.Register(request);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
@@ -84,8 +80,8 @@ namespace ComputerServiceOnlineShop.Controllers
                 return View(viewModel);
             }
 
-            LoginDto dto = viewModel.ToLoginDto();
-            var result = await _accountService.Login(dto);
+            LoginRequest request = viewModel.ToLoginRequest();
+            var result = await _accountService.Login(request);
             if (result.Succeeded)
             {
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -118,8 +114,8 @@ namespace ComputerServiceOnlineShop.Controllers
 
             var viewModel = new AccountDetailsViewModel
             {
-                EditAddress = result.Value.EditAddressResponseDto.ToViewModel(),
-                UserDetails = result.Value.AccountDto.ToUserDetailsViewModel()
+                EditAddress = result.Value.AddressResponse.ToEditAddressViewModel(),
+                UserDetails = result.Value.AccountResponse.ToUserDetailsViewModel(),
             };
 
             viewModel.EditAddress.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
@@ -133,8 +129,8 @@ namespace ComputerServiceOnlineShop.Controllers
             if (!ModelState.IsValid)
                 return PartialView("AccountPartials/_UserDetailsForm", viewModel);
 
-            AccountDto dto = viewModel.ToAccountDto();
-            var result = await _accountService.Edit(dto);
+            AccountUpdateRequest request = viewModel.ToAccountUpdateRequest();
+            var result = await _accountService.Edit(request);
 
             if (result.IsFailure)
                 return Json(new JsonResponseModel() { Success = false, Message = $"Error: {result.Error.Description}" });

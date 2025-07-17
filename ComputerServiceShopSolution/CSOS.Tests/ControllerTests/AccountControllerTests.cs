@@ -1,9 +1,8 @@
 using Moq;
 using AutoFixture;
-using ComputerServiceOnlineShop.Controllers;
 using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
+using CSOS.Core.DTO.AccountDto;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +11,9 @@ using CSOS.Core.ErrorHandling;
 using CSOS.UI.ViewModels.AccountViewModels;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
-using CSOS.Core.DTO.Responses.Account;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI;
+using CSOS.UI.Controllers;
 
 namespace CSOS.Tests.ControllerTests
 {
@@ -76,7 +75,7 @@ namespace CSOS.Tests.ControllerTests
                 .With(item => item.SelectedCountry, "1")
                 .Create();
 
-            _accountServiceMock.Setup(item => item.Register(It.IsAny<RegisterDto>())).ReturnsAsync(IdentityResult.Success);
+            _accountServiceMock.Setup(item => item.Register(It.IsAny<RegisterRequest>())).ReturnsAsync(IdentityResult.Success);
 
             _accountController = CreateController();
 
@@ -97,7 +96,7 @@ namespace CSOS.Tests.ControllerTests
                 .With(item => item.SelectedCountry, "1")
                 .Create();
 
-            _accountServiceMock.Setup(item => item.Register(It.IsAny<RegisterDto>())).ReturnsAsync(IdentityResult.Failed());
+            _accountServiceMock.Setup(item => item.Register(It.IsAny<RegisterRequest>())).ReturnsAsync(IdentityResult.Failed());
 
             _accountController = CreateController();
 
@@ -149,7 +148,7 @@ namespace CSOS.Tests.ControllerTests
             //Arrange
             LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
             _accountController = CreateController();
-            _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginDto>())).ReturnsAsync(SignInResult.Success);
+            _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginRequest>())).ReturnsAsync(SignInResult.Success);
 
             //Act
             IActionResult result = await _accountController.Login(viewModel, String.Empty);
@@ -166,11 +165,11 @@ namespace CSOS.Tests.ControllerTests
             //Arrange
             LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
 
-            string localUrl = "~/Offer/OfferBrowser";
+            string localUrl = "~/Offer/Index";
 
             _accountController = CreateController();
 
-            _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginDto>())).ReturnsAsync(SignInResult.Success);
+            _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginRequest>())).ReturnsAsync(SignInResult.Success);
 
             var urlHelperMock = new Mock<IUrlHelper>();
             urlHelperMock.Setup(item => item.IsLocalUrl(localUrl)).Returns(true);
@@ -191,7 +190,7 @@ namespace CSOS.Tests.ControllerTests
             //Arrange
             LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
             _accountController = CreateController();
-            _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginDto>())).ReturnsAsync(SignInResult.Failed);
+            _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginRequest>())).ReturnsAsync(SignInResult.Failed);
 
             //Act
             IActionResult result = await _accountController.Login(viewModel, String.Empty);
@@ -228,7 +227,7 @@ namespace CSOS.Tests.ControllerTests
         {
             //Arrange
             _accountController = CreateController();
-            _accountServiceMock.Setup(item => item.GetAccountDetailsAsync()).ReturnsAsync(Result.Failure<AccountDetailsDto>(AddressErrors.AddressNotFound));
+            _accountServiceMock.Setup(item => item.GetAccountDetailsAsync()).ReturnsAsync(Result.Failure<AccountDetailsResponse>(AddressErrors.AddressNotFound));
 
             //Act
             IActionResult result = await _accountController.AccountDetails();
@@ -247,20 +246,19 @@ namespace CSOS.Tests.ControllerTests
         {
             //Arrange
             _accountController = CreateController();
-            AccountDetailsDto accountDetailsDto = _fixture.Create<AccountDetailsDto>();
+            AccountDetailsResponse accountDetailsResponse = _fixture.Create<AccountDetailsResponse>();
            
             AccountDetailsViewModel expectedViewModel = new AccountDetailsViewModel()
             {
-                EditAddress = accountDetailsDto.EditAddressResponseDto.ToViewModel(),
-                UserDetails = accountDetailsDto.AccountDto.ToUserDetailsViewModel(),
+                EditAddress = accountDetailsResponse.AddressResponse.ToEditAddressViewModel(),
+                UserDetails = accountDetailsResponse.AccountResponse.ToUserDetailsViewModel(),
             };
             
             IEnumerable<SelectListItemDto> countries = _fixture.CreateMany<SelectListItemDto>();
 
             expectedViewModel.EditAddress.CountriesSelectionList = countries.ToSelectListItem();
-            accountDetailsDto.EditAddressResponseDto.CountriesSelectionList = countries.ToList();
 
-            _accountServiceMock.Setup(item => item.GetAccountDetailsAsync()).ReturnsAsync(Result.Success(accountDetailsDto));
+            _accountServiceMock.Setup(item => item.GetAccountDetailsAsync()).ReturnsAsync(Result.Success(accountDetailsResponse));
 
             //Act
             IActionResult result = await _accountController.AccountDetails();
@@ -273,7 +271,7 @@ namespace CSOS.Tests.ControllerTests
         }
         #endregion
 
-        #region Edit POST Method Tests
+        #region EditUserAddress POST Method Tests
         [Fact]
         public async Task Edit_InvalidModelState_ReturnsPartial()
         {
@@ -296,7 +294,7 @@ namespace CSOS.Tests.ControllerTests
             //Arrange
             UserDetailsViewModel viewModel = _fixture.Create<UserDetailsViewModel>();
             _accountController = CreateController();
-            _accountServiceMock.Setup(item => item.Edit(It.IsAny<AccountDto>())).ReturnsAsync(Result.Failure(AccountErrors.AccountNotFound));
+            _accountServiceMock.Setup(item => item.Edit(It.IsAny<AccountUpdateRequest>())).ReturnsAsync(Result.Failure(AccountErrors.AccountNotFound));
 
             //Act
             IActionResult result = await _accountController.Edit(viewModel);
@@ -314,7 +312,7 @@ namespace CSOS.Tests.ControllerTests
             //Arrange
             UserDetailsViewModel viewModel = _fixture.Create<UserDetailsViewModel>();
             _accountController = CreateController();
-            _accountServiceMock.Setup(item => item.Edit(It.IsAny<AccountDto>())).ReturnsAsync(Result.Success);
+            _accountServiceMock.Setup(item => item.Edit(It.IsAny<AccountUpdateRequest>())).ReturnsAsync(Result.Success);
 
             //Act
             IActionResult result = await _accountController.Edit(viewModel);

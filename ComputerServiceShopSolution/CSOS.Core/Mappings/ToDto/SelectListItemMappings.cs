@@ -1,6 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.DTO;
 using System.IO;
+using CSOS.Core.Domain.Entities;
 
 namespace CSOS.Core.Mappings.ToDto
 {

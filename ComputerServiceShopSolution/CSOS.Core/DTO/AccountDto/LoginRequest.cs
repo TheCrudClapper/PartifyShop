@@ -1,10 +1,9 @@
-﻿namespace CSOS.Core.DTO.Requests
+﻿namespace CSOS.Core.DTO.AccountDto
 {
-    public class LoginDto
+    public class LoginRequest
     {
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
-
-        public bool isPersistent { get; set; }
+        public bool IsPersistent { get; set; }
     }
 }

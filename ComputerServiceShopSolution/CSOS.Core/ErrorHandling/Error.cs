@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSOS.Core.ErrorHandling
+﻿namespace CSOS.Core.ErrorHandling
 {
     public sealed record Error(string ErrorCode, string Description)
     {

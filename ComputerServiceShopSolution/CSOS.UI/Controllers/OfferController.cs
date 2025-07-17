@@ -1,11 +1,9 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
-using CSOS.Core.Domain.ExternalServicesContracts;
-using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
+using CSOS.Core.DTO.OfferDto;
 using CSOS.Core.Helpers;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Helpers;
-using CSOS.UI.Helpers.Contracts;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
@@ -37,7 +35,7 @@ namespace CSOS.UI.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> AddOffer()
+        public async Task<IActionResult> Create()
         {
             var viewModel = new AddOfferViewModel();
             await _offerViewModelInitializer.InitializeAllAsync(viewModel);
@@ -45,7 +43,7 @@ namespace CSOS.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddOffer(AddOfferViewModel viewModel)
+        public async Task<IActionResult> Create(AddOfferViewModel viewModel)
         {
             var pictureValidationResponse = PicturesValidatorHelper.ValidatePictureExtensions(viewModel.UploadedImages, _pictureHandlerService);
             if(pictureValidationResponse != null)
@@ -63,11 +61,11 @@ namespace CSOS.UI.Controllers
             if(result.IsFailure)
                 return View("Error", result.Error.Description);
 
-            return RedirectToAction(nameof(AllUserOffers));
+            return RedirectToAction(nameof(UserOffers));
         }
         
         [HttpGet]
-        public async Task<IActionResult> EditOffer([FromRoute] int id)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
             var response = await _offerService.GetOfferForEdit(id);
 
@@ -80,7 +78,7 @@ namespace CSOS.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditOffer(EditOfferViewModel viewModel)
+        public async Task<IActionResult> Edit(EditOfferViewModel viewModel)
         {
             var pictureValidationResponse = PicturesValidatorHelper.ValidatePictureExtensions(viewModel.UploadedImages, _pictureHandlerService);
             if (pictureValidationResponse != null)
@@ -100,11 +98,11 @@ namespace CSOS.UI.Controllers
             if (result.IsFailure)
                 return View("Error", result.Error.Description);
 
-            return RedirectToAction(nameof(AllUserOffers));
+            return RedirectToAction(nameof(UserOffers));
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteOffer([FromRoute]int id)
+        public async Task<IActionResult> Delete([FromRoute]int id)
         {
             var result = await _offerService.DeleteOffer(id);
 
@@ -115,9 +113,9 @@ namespace CSOS.UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AllUserOffers(string? title)
+        public async Task<IActionResult> UserOffers(string? title)
         {
-            IEnumerable<UserOffersResponseDto> response = await _offerService.GetFilteredUserOffers(title);
+            IEnumerable<OfferResponse> response = await _offerService.GetFilteredUserOffers(title);
             List<UserOffersViewModel> userOffers = response.Select(item => item.ToUserOffersViewModel(_configurationReader))
                 .ToList();
             
@@ -126,23 +124,23 @@ namespace CSOS.UI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ShowOffer([FromRoute] int id)
+        public async Task<IActionResult> Details([FromRoute] int id)
         {
             var response = await _offerService.GetOffer(id);
 
             if(response.IsFailure)
                 return View("Error", response.Error.Description);
 
-            var viewModel = response.Value.ToSingleOfferViewModel(_configurationReader);
+            var viewModel = response.Value.ToOfferDetailsViewModel(_configurationReader);
             return View(viewModel);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> OfferBrowser([FromQuery] OfferFilter filter)
+        public async Task<IActionResult> Index([FromQuery] OfferFilter filter)
         {
-            OfferBrowserResponseDto response = await _offerService.GetFilteredOffers(filter);
-            OfferBrowserViewModel viewModel = response.ToOfferBrowserViewModel(_configurationReader);
+            OfferIndexResponse response = await _offerService.GetFilteredOffers(filter);
+            OfferBrowserViewModel viewModel = response.ToOfferIndexViewModel(_configurationReader);
             return View(viewModel);
         }
     }

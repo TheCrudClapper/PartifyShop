@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
-
-namespace CSOS.Core.DTO.Responses.Offers
+﻿namespace CSOS.Core.DTO.OfferDto
 {
-    public class EditOfferResponseDto
+    public class EditOfferResponse
     {
         public int Id { get; set; }
         public string ProductName { get; set; } = null!;

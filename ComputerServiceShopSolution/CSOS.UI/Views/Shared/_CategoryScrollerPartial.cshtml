@@ -4,7 +4,7 @@
     @foreach (var category in Model)
     {
         <div class="col-6 col-sm-4 col-md-3 col-lg-2 flex-shrink-0 text-center">
-            <a href="@Url.Action("OfferBrowser", "Offer", new {CategoryId = category.Id})" class="text-decoration-none text-dark">
+            <a href="@Url.Action("Index", "Offer", new {CategoryId = category.Id})" class="text-decoration-none text-dark">
                 <div class="card border-0">
                     <img src="@category.ImageUrl" class="rounded-circle category-img mx-auto d-block" alt="Category Image">
                     <div class="card-body p-2">

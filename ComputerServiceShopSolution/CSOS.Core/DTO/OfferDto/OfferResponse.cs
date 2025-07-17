@@ -1,18 +1,22 @@
-﻿using CSOS.Core.DTO.Responses.Deliveries;
+﻿using CSOS.Core.DTO.DeliveryTypeDto;
 
-namespace CSOS.Core.DTO.Responses.Offers
+namespace CSOS.Core.DTO.OfferDto
 {
-    public class OfferResponseDto
+    public class OfferResponse
     {
         public int Id { get; set; }
+        public string Title { get; set; } = null!;
+        public string Description { get; set; } = null!;
         public string Condition { get; set; } = null!;
         public DateTime DateCreated { get; set; }
         public string Category { get; set; } = null!;
+        public bool IsOfferPrivate { get; set; } 
         public bool IsSellerCompany { get; set; }
-        public string Title { get; set; } = null!;
         public string Seller { get; set; } = null!;
         public int StockQuantity { get; set; }
-        public string Description { get; set; } = null!;
+        
+        public string ImageUrl { get; set; } = null!;
+        public int Quantity { get; set; }
         public string PostalCity { get; set; } = null!;
         public string PostalCode { get; set; } = null!;
         public string Place { get; set; } = null!;
@@ -20,6 +24,6 @@ namespace CSOS.Core.DTO.Responses.Offers
 
         public List<string> ProductImages = new List<string>();
 
-        public List<DeliveryTypeResponseDto> AvaliableDeliveryTypes = new List<DeliveryTypeResponseDto>();
+        public List<DeliveryTypeResponse> AvaliableDeliveryTypes = new List<DeliveryTypeResponse>();
     }
 }

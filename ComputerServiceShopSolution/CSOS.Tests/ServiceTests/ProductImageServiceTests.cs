@@ -4,6 +4,7 @@ using CSOS.Core.ServiceContracts;
 using Moq;
 using AutoFixture;
 using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Services;
@@ -70,7 +71,7 @@ namespace CSOS.Tests
         #region  DeleteImagesFromOffer Method Tests
 
         [Fact]
-        public async Task DeleteImagesFromOffer_EmptyProductImages_ReturnsFailureResult()
+        public void DeleteImagesFromOffer_EmptyProductImages_ReturnsFailureResult()
         {
             //Arrange
             List<string> imageUrls = [];
@@ -85,7 +86,7 @@ namespace CSOS.Tests
         }
 
         [Fact]
-        public async Task DeleteImagesFromOffer_ProductImagesNotEmpty_ReturnsSuccessResult()
+        public void DeleteImagesFromOffer_ProductImagesNotEmpty_ReturnsSuccessResult()
         {
             //Arrange
             //List holds image Urls to delete (deactivate)

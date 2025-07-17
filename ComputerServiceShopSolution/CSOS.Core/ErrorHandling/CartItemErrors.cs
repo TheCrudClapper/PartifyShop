@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSOS.Core.ErrorHandling
+﻿namespace CSOS.Core.ErrorHandling
 {
     public static class CartItemErrors
     {
         public static readonly Error CartItemDoesNotExists = new Error(
-            "CartItem.ItemDoesNotExists", "Item of given id does not exists");
+            "CartItemDto.ItemDoesNotExists", "Item of given id does not exists");
 
         public static readonly Error QuantityLowerThanZero = new Error(
-            "CartItem.QuantityLowerThanZero", "Quantity must be greater that zero !");
+            "CartItemDto.QuantityLowerThanZero", "Quantity must be greater that zero !");
 
         public static readonly Error CannotAddMoreToCart = new Error(
-            "CartItem.CannotAddMoreToCart", "Cannot add more than is in shop");
+            "CartItemDto.CannotAddMoreToCart", "Cannot add more than is in shop");
 
         public static readonly Error InvalidItemQuantity = new Error(
-            "CartItem.InvalidItemQuantity", "Invalid item quantity");
+            "CartItemDto.InvalidItemQuantity", "Invalid item quantity");
     }
 }

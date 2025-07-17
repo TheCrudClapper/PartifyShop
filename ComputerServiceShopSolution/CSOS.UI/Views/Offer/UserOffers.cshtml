@@ -1,6 +1,4 @@
-﻿@using ComputerServiceOnlineShop.ViewModels
-@using ComputerServiceOnlineShop.ViewModels.OfferViewModels
-@model List<UserOffersViewModel>
+﻿@model List<UserOffersViewModel>
 @{
     ViewBag.Title = "Your Offers";
 }
@@ -11,7 +9,7 @@
 <div class="container mt-3">
     <h3 class="fw-bold ps-2">Your Active Listings</h3>
     <div class="midesection-style mb-3">
-        <form method="get" asp-action="AllUserOffers">
+        <form method="get" asp-action="UserOffers">
             <div class="row">
                 <div class="col-12 col-md-10">
                     <input type="text" name="title" class="form-control" id="searchPhrase" value= "@Context.Request.Query["title"]" placeholder="Search for listing">
@@ -33,7 +31,7 @@
                         <div class="card shadow h-100 w-100 border-1">
                             <img src="@userOffer.ImageUrl" class="card-img-top offer-image img-fluid object-cover" alt="offer image">
                             <div class="card-body">
-                                <a asp-action="ShowOffer" asp-route-id="@userOffer.Id" class="offer-link">
+                                <a asp-action="Details" asp-route-id="@userOffer.Id" class="offer-link">
                                     <h5><span class="fw-bold">Title: </span>@userOffer.ProductName</h5>
                                 </a>
                                 
@@ -49,7 +47,7 @@
                                 <div class="mt-3">
                                     <form class="d-inline" method="get">
                                         <button class="btn custom-button"
-                                                asp-action="EditOffer"
+                                                asp-action="Edit"
                                                 asp-route-id="@userOffer.Id">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
@@ -101,7 +99,7 @@
         $(document).on('click', '.yes-btn', function (){
             if(offerIdToDelete !== null && tokenToUse !== null){
                 $.ajax({
-                    url: '/Offer/DeleteOffer/' + offerIdToDelete,
+                    url: '/Offer/Delete/' + offerIdToDelete,
                     type: 'POST',
                     headers:{
                         'RequestVerificationToken': tokenToUse

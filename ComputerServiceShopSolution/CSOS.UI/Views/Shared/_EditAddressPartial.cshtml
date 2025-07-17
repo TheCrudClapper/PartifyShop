@@ -4,11 +4,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header purple-background">
-                <h1 class="modal-title text-white fs-5" id="staticBackdropLabel">Edit Address</h1>
+                <h1 class="modal-title text-white fs-5" id="staticBackdropLabel">EditUserAddress Address</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="editAddressModalBody">
-                <form asp-action="Edit" asp-controller="Address" asp-route-id="@Model.Id" id="editAddressForm" data-action="/Address/Edit/@Model.Id" method="post">
+                <form asp-action="Edit" asp-controller="Address" asp-route-id="@Model.Id" id="editAddressForm" data-action="/Address/EditUserAddress/@Model.Id" method="post">
                     @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="Id" />
                     <input type="hidden" name="Source" value="AddOrder" />

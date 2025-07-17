@@ -1,7 +1,7 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.CartItemViewModels;
 using ComputerServiceOnlineShop.ViewModels.CartViewModels;
-using CSOS.Core.DTO.Responses.Cart;
-using CSOS.UI.Helpers.Contracts;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
+using CSOS.Core.DTO.CartDto;
 
 namespace CSOS.UI.Mappings.ToViewModel
 {

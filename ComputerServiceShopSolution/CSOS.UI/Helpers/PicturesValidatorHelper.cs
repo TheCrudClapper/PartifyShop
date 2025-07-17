@@ -1,4 +1,4 @@
-﻿using CSOS.Core.Domain.ExternalServicesContracts;
+﻿using CSOS.Core.Domain.InfrastructureServiceContracts;
 
 namespace CSOS.UI.Helpers
 {

@@ -28,7 +28,7 @@
 
                     @* Search bar and category select *@
                     <div class="col-lg-7 my-auto">
-                        <form role="search" asp-controller="Offer" asp-action="OfferBrowser" method="get">
+                        <form role="search" asp-controller="Offer" asp-action="Index" method="get">
                             <div class="input-group">
                                 <input type="search" name="SearchPhrase" value="@Context.Request.Query["SearchPhrase"]" placeholder="Explore Partify" class="form-control" />
                                 @await Component.InvokeAsync("CategoryDropdown")
@@ -53,9 +53,9 @@
                                         <i class="fa fa-user"></i> Account
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" asp-controller="Offer" asp-action="AddOffer"><i class="fa-solid fa-plus me-2 list-icons"></i> Add Offer</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Offer" asp-action="AllUserOffers"><i class="fa-solid fa-boxes-stacked me-2"></i> Your Offers</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Cart" asp-action="Cart"><i class="fa-solid fa-bag-shopping me-2"></i> Cart</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Offer" asp-action="Create"><i class="fa-solid fa-plus me-2 list-icons"></i> Add Offer</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Offer" asp-action="UserOffers"><i class="fa-solid fa-boxes-stacked me-2"></i> Your Offers</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Cart" asp-action="Index"><i class="fa-solid fa-bag-shopping me-2"></i> Cart </a></li>
                                         <li><a class="dropdown-item" asp-controller="Account" asp-action="AccountDetails"><i class="fa-solid fa-id-card me-2"></i> Profile</a></li>
                                         <li><a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a></li>
                                     </ul>
@@ -112,7 +112,7 @@
                                 <a class="nav-link" href="/#allCategories">All Categories</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/Contact/Contact">Contact Us</a>
+                                <a class="nav-link" href="/Contact/Contact">About Us</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Fashions</a>
@@ -179,10 +179,10 @@
                             <span>Shipping</span>
                         </li>
                         <li>
-                            <span><a asp-controller="Cart" asp-action="Cart">Cart</a></span>
+                            <span><a asp-controller="Cart" asp-action="Index">Index</a></span>
                         </li>
                         <li>
-                            <span><a asp-controller="Contact" asp-action="Contact">Contact</a></span>
+                            <span><a asp-controller="Contact" asp-action="Index">Index</a></span>
                         </li>
                     </ul>
                 </div>

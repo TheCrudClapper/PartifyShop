@@ -1,21 +1,21 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
-using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
+using CSOS.Core.Domain.Entities;
+using CSOS.Core.DTO.AccountDto;
 
-namespace CSOS.Core.Mappings.ToEntity.AddressMappings
+namespace CSOS.Core.Mappings.ToDomainEntity.AddressMappings
 {
     public static class AddressMappings
     {
-        public static Address ToAddressEntity(this RegisterDto dto)
+        public static Address ToAddressEntity(this RegisterRequest request)
         {
             return new Address()
             {
-                Place = dto.Place,
-                Street = dto.Street,
-                PostalCity = dto.PostalCity,
-                PostalCode = dto.PostalCode,
-                HouseNumber = dto.HouseNumber,
-                CountryId = dto.SelectedCountry,
+                Place = request.Place,
+                Street = request.Street,
+                PostalCity = request.PostalCity,
+                PostalCode = request.PostalCode,
+                HouseNumber = request.HouseNumber,
+                CountryId = request.SelectedCountry,
                 IsActive = true,
                 DateCreated = DateTime.UtcNow,
             };

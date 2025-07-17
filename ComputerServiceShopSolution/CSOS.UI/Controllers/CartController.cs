@@ -1,10 +1,9 @@
-﻿using CSOS.Core.ServiceContracts;
-using CSOS.UI;
-using CSOS.UI.Helpers.Contracts;
+﻿using CSOS.Core.Domain.InfrastructureServiceContracts;
+using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ComputerServiceOnlineShop.Controllers
+namespace CSOS.UI.Controllers
 {
     public class CartController : Controller
     {
@@ -18,7 +17,7 @@ namespace ComputerServiceOnlineShop.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Cart()
+        public async Task<IActionResult> Index()
         {
             var result = await _cartService.GetLoggedUserCart();
 
@@ -39,7 +38,7 @@ namespace ComputerServiceOnlineShop.Controllers
             if (result.IsFailure)
                 return Json(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
 
-            return Json(new JsonResponseModel { Success = true, Message = "Item Successfully Added to Cart" });
+            return Json(new JsonResponseModel { Success = true, Message = "Item Successfully Added to Index" });
         }
 
         [HttpPost]

@@ -1,6 +1,6 @@
 ﻿namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
 {
-    public class OfferBrowserItemViewModel
+    public class OfferIndexItemViewModel
     {
         public int Id { get; set; }
         public string? Condition { get; set; }

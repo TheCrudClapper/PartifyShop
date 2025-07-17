@@ -1,6 +1,6 @@
-﻿namespace CSOS.Core.DTO.Requests
+﻿namespace CSOS.Core.DTO.AccountDto
 {
-    public class RegisterDto
+    public class RegisterRequest
     {
         public string FirstName { get; set; } = null!;
         public string Surname { get; set; } = null!;

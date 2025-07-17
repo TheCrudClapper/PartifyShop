@@ -1,5 +1,6 @@
-﻿using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Offers;
+﻿using CSOS.Core.Domain.Entities;
+using CSOS.Core.DTO.OfferDto;
+using CSOS.Core.DTO.Universal;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
 
@@ -26,14 +27,14 @@ namespace CSOS.Core.ServiceContracts
         /// </summary>
         /// <param name="id">The ID of the offer.</param>
         /// <returns>Result containing the offer data if found.</returns>
-        Task<Result<OfferResponseDto>> GetOffer(int id);
+        Task<Result<OfferResponse>> GetOffer(int id);
 
         /// <summary>
         /// Retrieves all user offers with optional filtering by product title.
         /// </summary>
         /// <param name="title">Optional title to filter offers by.</param>
         /// <returns>List of offers matching the filter.</returns>
-        Task<IEnumerable<UserOffersResponseDto>> GetFilteredUserOffers(string? title);
+        Task<IEnumerable<OfferResponse>> GetFilteredUserOffers(string? title);
 
         /// <summary>
         /// Deletes an offer by its ID.
@@ -47,7 +48,7 @@ namespace CSOS.Core.ServiceContracts
         /// </summary>
         /// <param name="id">The ID of the offer.</param>
         /// <returns>Result containing the editable offer data.</returns>
-        Task<Result<EditOfferResponseDto>> GetOfferForEdit(int id);
+        Task<Result<EditOfferResponse>> GetOfferForEdit(int id);
 
         /// <summary>
         /// Checks whether an offer exists and belongs to the current user.
@@ -61,18 +62,18 @@ namespace CSOS.Core.ServiceContracts
         /// </summary>
         /// <param name="filter">Filter parameters for offer searching.</param>
         /// <returns>Filtered offers suitable for offer browsing views.</returns>
-        Task<OfferBrowserResponseDto> GetFilteredOffers(OfferFilter filter);
+        Task<OfferIndexResponse> GetFilteredOffers(OfferFilter filter);
 
         /// <summary>
         /// Retrieves highlighted offers for display on the main index page.
         /// </summary>
         /// <returns>List of offers formatted for main page display.</returns>
-        Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers();
+        Task<IEnumerable<MainPageCardResponse>> GetIndexPageOffers();
 
         /// <summary>
         /// Retrieves current deals of the day.
         /// </summary>
         /// <returns>List of offers labeled as deals of the day.</returns>
-        Task<IEnumerable<MainPageCardResponseDto>> GetDealsOfTheDay();
+        Task<IEnumerable<MainPageCardResponse>> GetDealsOfTheDay();
     }
 }

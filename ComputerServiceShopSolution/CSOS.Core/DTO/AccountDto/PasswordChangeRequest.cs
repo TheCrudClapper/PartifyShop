@@ -1,4 +1,4 @@
-﻿namespace CSOS.Core.DTO
+﻿namespace CSOS.Core.DTO.AccountDto
 {
     public class PasswordChangeRequest
     {

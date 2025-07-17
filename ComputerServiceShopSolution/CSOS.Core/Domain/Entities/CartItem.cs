@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ComputerServiceOnlineShop.Entities.Models
+namespace CSOS.Core.Domain.Entities
 {
     public class CartItem : BaseModel
     {

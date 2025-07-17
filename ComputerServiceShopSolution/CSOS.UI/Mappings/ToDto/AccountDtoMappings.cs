@@ -1,16 +1,15 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Account;
+using CSOS.Core.DTO.AccountDto;
 using CSOS.UI.ViewModels.AccountViewModels;
 
 namespace CSOS.UI.Mappings.ToDto
 {
     public static class AccountDtoMappings
     {
-        public static RegisterDto ToRegisterDto(this RegisterViewModel viewModel)
+        public static RegisterRequest ToRegisterRequest(this RegisterViewModel viewModel)
         {
-            return new RegisterDto()
+            return new RegisterRequest()
             {
                 FirstName = viewModel.FirstName,
                 Surname = viewModel.Surname,
@@ -27,19 +26,19 @@ namespace CSOS.UI.Mappings.ToDto
                 Title = viewModel.Title,
             };
         }
-        public static LoginDto ToLoginDto(this LoginViewModel viewModel)
+        public static LoginRequest ToLoginRequest(this LoginViewModel viewModel)
         {
-            return new LoginDto()
+            return new LoginRequest()
             {
                 Email = viewModel.Email,
                 Password = viewModel.Password,
-                isPersistent = viewModel.isPersistent,
+                IsPersistent = viewModel.isPersistent,
             };
         }
 
-        public static AccountDto ToAccountDto(this UserDetailsViewModel viewModel)
+        public static AccountUpdateRequest ToAccountUpdateRequest(this UserDetailsViewModel viewModel)
         {
-            return new AccountDto()
+            return new AccountUpdateRequest()
             {
                 FirstName = viewModel.FirstName,
                 Surname = viewModel.Surname,

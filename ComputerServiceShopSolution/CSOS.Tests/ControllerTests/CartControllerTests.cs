@@ -1,10 +1,10 @@
 ﻿using AutoFixture;
-using ComputerServiceOnlineShop.Controllers;
-using CSOS.Core.DTO.Responses.Cart;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
+using CSOS.Core.DTO.CartDto;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI;
-using CSOS.UI.Helpers.Contracts;
+using CSOS.UI.Controllers;
 using CSOS.UI.Mappings.ToViewModel;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +31,7 @@ namespace CSOS.Tests.ControllerTests
             _fixture = new Fixture();
         }
 
-        #region Cart Method Tests
+        #region Index Method Tests
 
         [Fact]
         public async Task Cart_CartResultFailure_ReturnsErrorView()
@@ -41,7 +41,7 @@ namespace CSOS.Tests.ControllerTests
                 .ReturnsAsync(Result.Failure<CartResponseDto>(CartErrors.CartDoesNotExists));
 
             //Act
-            IActionResult result = await _cartController.Cart();
+            IActionResult result = await _cartController.Index();
 
             //Assert
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
@@ -57,7 +57,7 @@ namespace CSOS.Tests.ControllerTests
             _cartServiceMock.Setup(item => item.GetLoggedUserCart()).ReturnsAsync(Result.Success(cartResponseDto));
 
             //Act
-            IActionResult result = await _cartController.Cart();
+            IActionResult result = await _cartController.Index();
 
             //Assert
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
@@ -105,7 +105,7 @@ namespace CSOS.Tests.ControllerTests
                 .Subject.Should().BeEquivalentTo(new JsonResponseModel
                 {
                     Success = true,
-                    Message = "Item Successfully Added to Cart",
+                    Message = "Item Successfully Added to Index",
                 });
         }
 

@@ -15,26 +15,24 @@ namespace CSOS.Core.Services
             _productImageRepo = productImageRepository;
         }
 
-        public async Task<IEnumerable<SelectListItemDto>> GetOfferPictures(int offerId)
+        public async Task<IEnumerable<SelectListItemDto>> GetOfferPicturesAsync(int offerId)
         {
             var items = await _productImageRepo.GetImagesFromOfferAsync(offerId);
 
             return items.Select(item => item.ToSelectListItem()).ToList();
         }
-
-        //change this to take productiamges instead of downloading once again offer
-        public async Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls)
+        
+        public Result DeleteImagesFromOffer(IEnumerable<ProductImage> images, IEnumerable<string> imageUrls)
         {
-            IEnumerable<ProductImage> productImages = await _productImageRepo.GetImagesFromOfferAsync(offerId);
-            if (productImages.Count() == 0)
+            if (!images.Any())
                 return Result.Failure(ProductImageErrors.ProductImagesAreEmpty);
 
-            foreach (var image in productImages)
+            foreach (var imageToDelete in images)
             {
-                if (imageUrls.Any(url => image.ImagePath.Contains(url)))
+                if (imageUrls.Any(url => imageToDelete.ImagePath.Contains(url, StringComparison.OrdinalIgnoreCase)))
                 {
-                    image.DateDeleted = DateTime.UtcNow;
-                    image.IsActive = false;
+                    imageToDelete.DateDeleted = DateTime.UtcNow;
+                    imageToDelete.IsActive = false;
                 }
             }
             return Result.Success();

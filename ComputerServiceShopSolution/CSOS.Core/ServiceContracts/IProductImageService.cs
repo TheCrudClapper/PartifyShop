@@ -1,4 +1,5 @@
-﻿using CSOS.Core.DTO;
+﻿using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.DTO;
 using CSOS.Core.ErrorHandling;
 namespace CSOS.Core.ServiceContracts
 {
@@ -9,13 +10,14 @@ namespace CSOS.Core.ServiceContracts
         /// </summary>
         /// <param name="offerId">Id of offer to fetch pictures from</param>
         /// <returns>Returns List of SelectListItemDto</returns>
-        Task<IEnumerable<SelectListItemDto>> GetOfferPictures(int offerId);
+        Task<IEnumerable<SelectListItemDto>> GetOfferPicturesAsync(int offerId);
+        
         /// <summary>
         /// Removes specific images from an offer.
         /// </summary>
-        /// <param name="offerId">The ID of the offer.</param>
+        /// <param name="images">List of product images</param>
         /// <param name="imageUrls">List of image URLs to delete.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task<Result> DeleteImagesFromOffer(int offerId, List<string> imageUrls);
+        Result DeleteImagesFromOffer(IEnumerable<ProductImage> images, IEnumerable<string> imageUrls);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.ServiceContracts;
 using Moq;
@@ -36,7 +37,7 @@ namespace CSOS.Tests
                 .ReturnsAsync(productImages);
             
             //Act
-            List<SelectListItemDto> productImagesFromService = (await _productImageService.GetOfferPictures(invalidOfferId)).ToList();
+            List<SelectListItemDto> productImagesFromService = (await _productImageService.GetOfferPicturesAsync(invalidOfferId)).ToList();
             
           
             productImagesFromService.Should().BeEmpty();
@@ -56,7 +57,7 @@ namespace CSOS.Tests
             _productImageRepositoryMock.Setup(item => item.GetImagesFromOfferAsync(offerId)).ReturnsAsync(productImages);
             
             //Act
-            List<SelectListItemDto> productImagesFromService = (await _productImageService.GetOfferPictures(offerId)).ToList();
+            List<SelectListItemDto> productImagesFromService = (await _productImageService.GetOfferPicturesAsync(offerId)).ToList();
             
             //Assert
             productImagesFromService.Should().NotBeEmpty();
@@ -69,16 +70,14 @@ namespace CSOS.Tests
         #region  DeleteImagesFromOffer Method Tests
 
         [Fact]
-        public async Task DeleteImagesFromOffer_InvalidOfferId_ReturnsFailureResult()
+        public async Task DeleteImagesFromOffer_EmptyProductImages_ReturnsFailureResult()
         {
             //Arrange
-            int invalidOfferId = -1;
             List<string> imageUrls = [];
-
-            _productImageRepositoryMock.Setup(item => item.GetImagesFromOfferAsync(invalidOfferId)).ReturnsAsync([]);
-
+            IEnumerable<ProductImage> productImages = _fixture.CreateMany<ProductImage>(0);
+            
             //Act
-            var result = await _productImageService.DeleteImagesFromOffer(invalidOfferId, imageUrls);
+            var result = _productImageService.DeleteImagesFromOffer(productImages, imageUrls);
             
             //Assert
             result.IsFailure.Should().BeTrue();
@@ -86,11 +85,9 @@ namespace CSOS.Tests
         }
 
         [Fact]
-        public async Task DeleteImagesFromOffer_ValidOfferId_ReturnsSuccessResult()
+        public async Task DeleteImagesFromOffer_ProductImagesNotEmpty_ReturnsSuccessResult()
         {
             //Arrange
-            int validOfferId = _fixture.Create<int>();
-            
             //List holds image Urls to delete (deactivate)
             List<string> imageUrls = new List<string>()
             {
@@ -116,12 +113,9 @@ namespace CSOS.Tests
                     .Create(),
             };
 
-            _productImageRepositoryMock.Setup(item => item.GetImagesFromOfferAsync(validOfferId))
-                .ReturnsAsync(productImages);
-                
             
             //Act
-            var result = await _productImageService.DeleteImagesFromOffer(validOfferId, imageUrls);
+            var result = _productImageService.DeleteImagesFromOffer(productImages, imageUrls);
             
             //Assert
             result.IsSuccess.Should().BeTrue();

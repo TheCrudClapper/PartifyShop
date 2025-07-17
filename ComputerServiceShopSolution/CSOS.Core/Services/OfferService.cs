@@ -23,7 +23,6 @@ namespace ComputerServiceOnlineShop.Services
         private readonly IProductImageService _productImageService;
         private readonly IProductRepository _productRepo;
         private readonly IOfferDeliveryTypeRepository _offerDeliveryTypeRepo;
-        private readonly IProductImageRepository _productImageRepo;
         private readonly IDeliveryTypeGetterService _deliveryTypeGetterService;
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
@@ -34,7 +33,6 @@ namespace ComputerServiceOnlineShop.Services
             IOfferRepository offerRepo,
             IProductRepository productRepo,
             IOfferDeliveryTypeRepository offerDeliveryTypeRepo,
-            IProductImageRepository productImageRepo,
             ICurrentUserService currentUserService,
             IPictureHandlerService pictureHandlerService,
             IProductImageService productImageService,
@@ -47,7 +45,6 @@ namespace ComputerServiceOnlineShop.Services
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
             _deliveryTypeGetterService = deliveryTypeGetterService;
-            _productImageRepo = productImageRepo;
             _pictureHandlerService = pictureHandlerService;
             _productImageService = productImageService;
             _sortingOptionService = sortingOptionService;
@@ -95,7 +92,7 @@ namespace ComputerServiceOnlineShop.Services
             //deletes images checked by user
             if (dto.ImagesToDelete?.Count > 0)
             {
-                var result = await _productImageService.DeleteImagesFromOffer(id, dto.ImagesToDelete);
+                var result =  _productImageService.DeleteImagesFromOffer(product.ProductImages, dto.ImagesToDelete);
 
                 if (result.IsFailure)
                     return Result.Failure(result.Error);

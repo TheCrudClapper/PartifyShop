@@ -89,7 +89,7 @@ namespace ComputerServiceOnlineShop.Controllers
 
             if (!ModelState.IsValid)
             {
-                var images = await _productImageService.GetOfferPictures(id);
+                var images = await _productImageService.GetOfferPicturesAsync(id);
                 viewModel.ExistingImagesUrls = images.ToSelectListItem();
                 await _offerViewModelInitializer.InitializeAllAsync(viewModel);
                 return View(viewModel);

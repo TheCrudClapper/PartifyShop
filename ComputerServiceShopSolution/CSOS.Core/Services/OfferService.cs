@@ -6,10 +6,10 @@ using CSOS.Core.DTO.OfferDto;
 using CSOS.Core.DTO.Universal;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
+using CSOS.Core.Mappings.ToDomainEntity.OfferMappings;
+using CSOS.Core.Mappings.ToDomainEntity.ProductMappings;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.Mappings.ToEntity.OfferDeliveryTypeMappings;
-using CSOS.Core.Mappings.ToEntity.OfferMappings;
-using CSOS.Core.Mappings.ToEntity.ProductMappings;
 using CSOS.Core.ServiceContracts;
 
 namespace CSOS.Core.Services
@@ -124,12 +124,12 @@ namespace CSOS.Core.Services
             return Result.Success();
         }
 
-        public async Task<IEnumerable<OfferResponse>> GetFilteredUserOffers(string? title)
+        public async Task<IEnumerable<UserOfferResponse>> GetFilteredUserOffers(string? title)
         {
             Guid userId = _currentUserService.GetUserId();
             var offers = await _offerRepo.GetFilteredUserOffersAsync(title, userId);
 
-            var items = offers.Select(item => item.ToOfferResponse());
+            var items = offers.ToIEnumerableUserOffersResponseDto();
             return items;
         }
 
@@ -148,7 +148,7 @@ namespace CSOS.Core.Services
         {
             var offers = await _offerRepo.GetFilteredOffersAsync(filter);
 
-            var items = offers.Select(item => item.ToOfferResponse());
+            var items = offers.ToListOfferItemBrowserResponseDto();
 
             return new OfferIndexResponse()
             {

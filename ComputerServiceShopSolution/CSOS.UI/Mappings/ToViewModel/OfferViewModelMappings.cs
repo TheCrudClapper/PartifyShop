@@ -51,10 +51,10 @@ namespace CSOS.UI.Mappings.ToViewModel
             };
         }
 
-        public static SingleOfferViewModel ToOfferDetailsViewModel(this OfferResponse dto, IConfigurationReader configurationReader)
+        public static OfferDetailsViewModel ToOfferDetailsViewModel(this OfferResponse dto, IConfigurationReader configurationReader)
         {
             
-            return new SingleOfferViewModel()
+            return new OfferDetailsViewModel()
             {
                 AvaliableDeliveryTypes = dto.AvaliableDeliveryTypes.Select(item => new DeliveryTypeViewModel
                 {

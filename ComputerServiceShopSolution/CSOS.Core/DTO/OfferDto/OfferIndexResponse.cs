@@ -4,7 +4,7 @@ namespace CSOS.Core.DTO.OfferDto
 {
     public class OfferIndexResponse
     {
-        public List<OfferResponse> Items = new List<OfferResponse>();
+        public List<OfferBrowserItemResponseDto> Items = new List<OfferBrowserItemResponseDto>();
         public OfferFilter Filter { get; set; } = null!;
 
         public List<SelectListItemDto> DeliveryOptions = new List<SelectListItemDto>();

@@ -1,8 +1,7 @@
 ﻿using CSOS.UI.ViewModels.SharedViewModels;
-
-namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
+namespace CSOS.UI.ViewModels.OfferViewModels
 {
-    public class SingleOfferViewModel
+    public class OfferDetailsViewModel
     {
         public int Id { get; set; }
         public string Condition { get; set; } = null!;

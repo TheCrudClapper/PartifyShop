@@ -1,5 +1,4 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
-using CSOS.Core.Domain.Entities;
+﻿using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.DeliveryTypeDto;
 using CSOS.Core.DTO.OfferDto;
@@ -82,13 +81,13 @@ namespace CSOS.Core.Mappings.ToDto
             .ToList();
         }
 
-        public static IEnumerable<UserOffersResponseDto> ToIEnumerableUserOffersResponseDto(this IEnumerable<Offer> offers)
+        public static IEnumerable<UserOfferResponse> ToIEnumerableUserOffersResponseDto(this IEnumerable<Offer> offers)
         {
             return offers.Select(item =>
             {
                 var activeImage = item.Product.ProductImages.FirstOrDefault(img => img.IsActive);
 
-                return new UserOffersResponseDto()
+                return new UserOfferResponse()
                 {
                     Id = item.Id,
                     DateCreated = item.DateCreated,

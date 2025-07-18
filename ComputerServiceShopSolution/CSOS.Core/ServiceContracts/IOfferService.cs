@@ -34,7 +34,7 @@ namespace CSOS.Core.ServiceContracts
         /// </summary>
         /// <param name="title">Optional title to filter offers by.</param>
         /// <returns>List of offers matching the filter.</returns>
-        Task<IEnumerable<OfferResponse>> GetFilteredUserOffers(string? title);
+        Task<IEnumerable<UserOfferResponse>> GetFilteredUserOffers(string? title);
 
         /// <summary>
         /// Deletes an offer by its ID.

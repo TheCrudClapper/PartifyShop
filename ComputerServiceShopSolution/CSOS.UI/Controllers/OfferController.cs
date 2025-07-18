@@ -115,7 +115,7 @@ namespace CSOS.UI.Controllers
         [HttpGet]
         public async Task<IActionResult> UserOffers(string? title)
         {
-            IEnumerable<OfferResponse> response = await _offerService.GetFilteredUserOffers(title);
+            IEnumerable<UserOfferResponse> response = await _offerService.GetFilteredUserOffers(title);
             List<UserOffersViewModel> userOffers = response.Select(item => item.ToUserOffersViewModel(_configurationReader))
                 .ToList();
             

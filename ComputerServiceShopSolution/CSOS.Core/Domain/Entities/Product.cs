@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using ComputerServiceOnlineShop.Entities.Models;
 
 namespace CSOS.Core.Domain.Entities
 {

@@ -1,4 +1,4 @@
-﻿namespace CSOS.Core.DTO.Responses.Offers
+﻿namespace CSOS.Core.DTO.OfferDto
 {
     public class OfferBrowserItemResponseDto
     {

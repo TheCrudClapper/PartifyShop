@@ -8,10 +8,8 @@
         public string ProductCategory { get; set; } = null!;
         public string ProductCondition { get; set; } = null!;
         public bool IsOfferPrivate { get; set; }
-        
-        public int StockQuantity;
-        
-        public decimal Price;
+        public int StockQuantity { get; set; }
+        public decimal Price { get; set; }
         public DateTime DateCreated { get; set; }
     }
 }

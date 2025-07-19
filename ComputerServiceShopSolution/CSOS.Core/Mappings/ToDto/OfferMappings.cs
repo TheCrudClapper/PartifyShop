@@ -2,41 +2,34 @@
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.DeliveryTypeDto;
 using CSOS.Core.DTO.OfferDto;
-using CSOS.Core.DTO.Universal;
+using CSOS.Core.DTO.UniversalDto;
 
 namespace CSOS.Core.Mappings.ToDto
 {
     public static class OfferMappings
     {
-        // Usunięty DefaultImagePath
-
-        public static IEnumerable<MainPageCardResponse> ToIEnumerableMainPageCardDto(this IEnumerable<Offer> offers)
+        public static MainPageCardResponse ToMainPageCardResponse(this Offer offer)
         {
-            return offers.Select(item =>
+            var firstActiveImage = offer.Product.ProductImages.FirstOrDefault(item => item.IsActive);
+            return new MainPageCardResponse()
             {
-                var activeImage = item.Product.ProductImages.FirstOrDefault(img => img.IsActive);
-                return new MainPageCardResponse()
-                {
-                    Id = item.Id,
-                    ImageUrl = activeImage?.ImagePath,
-                    Price = item.Price,
-                    Title = item.Product.ProductName
-                };
-
-            })
-            .ToList();
+                Id = offer.Id,
+                ImageUrl = firstActiveImage?.ImagePath,
+                Price = offer.Price,
+                Title = offer.Product.ProductName,
+            };
         }
-
+        
         public static OfferResponse ToOfferResponse(this Offer offer)
         {
             return new OfferResponse()
             {
                 Id = offer.Id,
-                Condition = offer.Product.Condition.ConditionTitle,
+                ProductCondition = offer.Product.Condition.ConditionTitle,
                 DateCreated = offer.DateCreated.Date,
                 Seller = offer.Seller.UserName!,
                 Description = offer.Product.Description,
-                Category = offer.Product.ProductCategory.Name,
+                ProductCategory = offer.Product.ProductCategory.Name,
                 Price = offer.Price,
                 StockQuantity = offer.StockQuantity,
                 IsSellerCompany = offer.Seller.NIP != null,
@@ -58,55 +51,42 @@ namespace CSOS.Core.Mappings.ToDto
             };
         }
 
-        public static IEnumerable<OfferBrowserItemResponseDto> ToListOfferItemBrowserResponseDto(this IEnumerable<Offer> offers)
+        public static UserOfferResponse ToUserOfferResponse(this Offer offer)
         {
-            return offers.Select(item =>
+            var activeImage = offer.Product.ProductImages.FirstOrDefault(img => img.IsActive);
+            
+            return new UserOfferResponse
             {
-                var activeImage = item.Product.ProductImages.FirstOrDefault(img => img.IsActive);
-                return new OfferBrowserItemResponseDto()
-                {
-                    Id = item.Id,
-                    Title = item.Product.ProductName,
-                    Category = item.Product.ProductCategory.Name,
-                    Condition = item.Product.Condition.ConditionTitle,
-                    DateCreated = item.DateCreated.Date,
-                    Price = item.Price,
-                    SellerName = item.Seller.UserName!,
-                    Description = item.Product.Description,
-                    QuantityAvailable = item.StockQuantity,
-                    ImageUrl = activeImage?.ImagePath
-                };
-
-            })
-            .ToList();
+                Id = offer.Id,
+                ProductName = offer.Product.ProductName,
+                Price = offer.Price,
+                ImageUrl = activeImage?.ImagePath,
+                IsOfferPrivate = offer.IsOfferPrivate,
+                ProductCategory = offer.Product.ProductCategory.Name,
+                ProductCondition = offer.Product.Condition.ConditionTitle,
+                DateCreated = offer.DateCreated,
+                StockQuantity = offer.StockQuantity,
+            };
         }
 
-        public static IEnumerable<UserOfferResponse> ToIEnumerableUserOffersResponseDto(this IEnumerable<Offer> offers)
+        public static OfferBrowserItemResponseDto ToOfferBrowserItemResponse(this Offer offer)
         {
-            return offers.Select(item =>
+            var activeImage = offer.Product.ProductImages.FirstOrDefault(img => img.IsActive);
+            return new OfferBrowserItemResponseDto
             {
-                var activeImage = item.Product.ProductImages.FirstOrDefault(img => img.IsActive);
-
-                return new UserOfferResponse()
-                {
-                    Id = item.Id,
-                    DateCreated = item.DateCreated,
-                    ProductCondition = item.Product.Condition.ConditionTitle,
-                    Price = item.Price,
-                    StockQuantity = item.StockQuantity,
-                    ProductCategory = item.Product.ProductCategory.Name,
-                    IsOfferPrivate = item.IsOfferPrivate,
-                    ProductName = item.Product.ProductName,
-                    ImageUrl = activeImage?.ImagePath 
-                };
-            })
-           .ToList();
+                Id = offer.Id,
+                ProductName = offer.Product.ProductName,
+                ProductCategory = offer.Product.ProductCategory.Name,
+                ProductCondition = offer.Product.Condition.ConditionTitle,
+                DateCreated = offer.DateCreated.Date,
+                Price = offer.Price,
+                Seller = offer.Seller.UserName!,
+                Description = offer.Product.Description,
+                StockQuantity = offer.StockQuantity,
+                ImageUrl = activeImage?.ImagePath
+            };
         }
-
-        // public static IEnumerable<OfferResponse> ToIEnumerableOfferResponse(this IEnumerable<Offer> offers)
-        // {
-        //     
-        // }
+        
         public static EditOfferResponse ToEditOfferResponseDto(this Offer offer)
         {
             return new EditOfferResponse()

@@ -61,7 +61,7 @@ namespace CSOS.Tests.ControllerTests
 
             //Assert
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
-            viewResult.ViewData.Model.Should().BeEquivalentTo(cartResponseDto.ToViewModel(_configurationReader));
+            viewResult.ViewData.Model.Should().BeEquivalentTo(cartResponseDto.ToCartViewModel(_configurationReader));
         }
 
         #endregion

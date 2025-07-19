@@ -30,7 +30,7 @@ namespace CSOS.UI.Helpers
         public async Task PopulateParcelLockerDeliveries<TViewModel>(TViewModel viewModel) where TViewModel : BaseOfferViewModel
         {
             viewModel.ParcelLockerDeliveriesList =
-                (await _deliveryTypeGetterService.GetParcelLockerDeliveryTypes()).ConvertToDeliveryTypeViewModelList();
+                (await _deliveryTypeGetterService.GetParcelLockerDeliveryTypes()).Select(item => item.ToDeliveryTypeViewModel());
         }
 
         public async Task PopulateConditions<TViewModel>(TViewModel viewModel) where TViewModel : BaseOfferViewModel

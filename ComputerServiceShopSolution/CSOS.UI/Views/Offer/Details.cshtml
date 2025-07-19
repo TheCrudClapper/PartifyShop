@@ -1,5 +1,4 @@
-﻿@using ComputerServiceOnlineShop.ViewModels.OfferViewModels
-@model CSOS.UI.ViewModels.OfferViewModels.OfferDetailsViewModel;
+﻿@model CSOS.UI.ViewModels.OfferViewModels.OfferDetailsViewModel;
 @{
     ViewBag.Title = "Offer";
 }
@@ -15,12 +14,12 @@
 
 <div class="container mt-3">
     <div class="row g-3 mb-2">
-        <span class="fs-6">Partify <b>/</b> @Model.Category </span>
+        <span class="fs-6">Partify <b>/</b> @Model.ProdcutCategory </span>
     </div>
     <div class="row g-3">
         <div class="col-12 col-lg-8">
             <div class="midesection-style shadow">
-                <span class="mb-2"><span class="fw-bold">Condition: </span>@Model.Condition</span>
+                <span class="mb-2"><span class="fw-bold">Condition: </span>@Model.ProductCondition</span>
                 <span class="mb-2"><span class="fw-bold">Created: </span>@Model.DateCreated.ToString("dd-MM-yyyy")</span>
                 <h2>@Model.Title</h2>
                 @for (int i = 0; i < 5; i++)

@@ -32,7 +32,7 @@ namespace CSOS.UI.Mappings.ToDto
             {
                 Email = viewModel.Email,
                 Password = viewModel.Password,
-                IsPersistent = viewModel.isPersistent,
+                IsPersistent = viewModel.IsPersistent,
             };
         }
 

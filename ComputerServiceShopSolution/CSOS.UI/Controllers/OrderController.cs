@@ -24,7 +24,7 @@ namespace CSOS.UI.Controllers
 
             var viewModel = new AddOrderViewModel()
             {
-                UserAddressDetails = response.Value.ToViewModel()
+                UserAddressDetails = response.Value.ToUserAddressDetailsViewModel()
             };
             return View(viewModel);
         }

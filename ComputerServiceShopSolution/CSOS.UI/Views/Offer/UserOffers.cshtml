@@ -1,4 +1,4 @@
-﻿@model List<UserOffersViewModel>
+﻿@model IEnumerable<CSOS.UI.ViewModels.OfferViewModels.UserOffersViewModel>
 @{
     ViewBag.Title = "Your Offers";
 }
@@ -38,7 +38,7 @@
                                 <p class="mb-3">
                                     <span class="fw-bold">Condition: </span>@userOffer.ProductCondition<br>
                                     <span class="fw-bold">Category: </span>@userOffer.ProductCategory<br>
-                                    <span class="fw-bold">Visibility: </span> @(userOffer.ProductStatus ? "Private" : "Public") <br>
+                                    <span class="fw-bold">Visibility: </span> @(userOffer.IsOfferPrivate ? "Private" : "Public") <br>
                                     <span class="fw-bold">Quantity: </span>@userOffer.StockQuantity<br>
                                     <span class="fw-bold">Price: </span>@userOffer.Price PLN<br>
                                     <span class="fw-bold">Date Created: </span>@userOffer.DateCreated<br>

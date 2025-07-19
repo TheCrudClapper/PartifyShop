@@ -7,7 +7,7 @@ namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class CartViewModelMappings
     {
-        public static CartViewModel ToViewModel(this CartResponseDto dto, IConfigurationReader configuration)
+        public static CartViewModel ToCartViewModel(this CartResponseDto dto, IConfigurationReader configuration)
         {
             return new CartViewModel()
             {

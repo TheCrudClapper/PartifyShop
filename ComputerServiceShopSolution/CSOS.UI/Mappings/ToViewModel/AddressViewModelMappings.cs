@@ -1,13 +1,11 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
-using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.DTO.AddressDto;
-using CSOS.UI.Mappings.Universal;
 
 namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class AddressViewModelMappings
     {
-        public static UserAddressDetailsViewModel ToViewModel(this UserAddressDetailsResponseDto dto)
+        public static UserAddressDetailsViewModel ToUserAddressDetailsViewModel(this UserAddressDetailsResponseDto dto)
         {
             return new UserAddressDetailsViewModel()
             {
@@ -18,19 +16,7 @@ namespace CSOS.UI.Mappings.ToViewModel
                 PostalInfo = dto.PostalInfo,
             };
         }
-        public static EditAddressViewModel ToViewModel(this AddressResponse dto)
-        {
-            return new EditAddressViewModel()
-            {
-                Street = dto.Street,
-                HouseNumber = dto.HouseNumber,
-                Id = dto.Id,
-                Place = dto.Place,
-                PostalCity = dto.PostalCity,
-                PostalCode = dto.PostalCode,
-            };
-        }
-
+        
         public static EditAddressViewModel ToEditAddressViewModel(this AddressResponse response)
         {
             return new EditAddressViewModel()

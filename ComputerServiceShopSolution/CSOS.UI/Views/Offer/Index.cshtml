@@ -1,5 +1,4 @@
-﻿@using ComputerServiceOnlineShop.ViewModels.OfferViewModels
-@model OfferBrowserViewModel
+﻿@model CSOS.UI.ViewModels.OfferViewModels.OfferBrowserViewModel
 @{
     ViewData["Title"] = "Offer Browser";
 }
@@ -77,7 +76,7 @@
                                         <div>
 
                                             <a href="@Url.Action("Details", "Offer", new { id = offer.Id })" class="offer-link ">
-                                                <h5 class="card-title mt-3 mt-md-0 fw-bold">@offer.Title</h5>
+                                                <h5 class="card-title mt-3 mt-md-0 fw-bold">@offer.ProductName</h5>
                                             </a>
                                             @for (int j = 0; j < 5; j++)
                                             {
@@ -86,8 +85,8 @@
                                         </div>
                                         <div>
                                             <ul class="ps-3 mb-0">
-                                                <li><span class="fw-bold">Condition:</span> @offer.Condition</li>
-                                                <li><span class="fw-bold">Category:</span> @offer.Category</li>
+                                                <li><span class="fw-bold">Condition:</span> @offer.ProductCondition</li>
+                                                <li><span class="fw-bold">Category:</span> @offer.ProductCategory</li>
                                                 <li><span class="fw-bold">Added To Shop:</span> @offer.DateCreated.ToString("dd-MM-yyyy")</li>
                                                 <li>
                                                     <div><span class="fw-bold">Description:</span></div>
@@ -102,12 +101,12 @@
                                         <h5 class="fw-bold mt-3 mt-md-0">Price: @offer.Price PLN</h5>
                                         <p>
                                             Sells and sends:
-                                            <br><span class="fw-bold">@offer.SellerName</span>
+                                            <br><span class="fw-bold">@offer.Seller</span>
                                         </p>
                                         <p>
-                                            Available: <span class="fw-bold">@offer.QuantityAvailable</span>
+                                            Available: <span class="fw-bold">@offer.StockQuantity</span>
                                         </p>
-                                        @if (User.Identity?.Name != offer.SellerName)
+                                        @if (User.Identity?.Name != offer.Seller)
                                         {
                                             <form method="post">
                                                 @Html.AntiForgeryToken()

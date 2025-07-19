@@ -8,7 +8,6 @@ using CSOS.Core.Mappings.ToDomainEntity.ApplicationUserMappings;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
 using Microsoft.AspNetCore.Identity;
-
 namespace CSOS.Core.Services
 {
     public class AccountService : IAccountService
@@ -35,8 +34,7 @@ namespace CSOS.Core.Services
             _addressService = addressService;
             _currentUserService = currentUserService;
         }
-
-
+        
         public async Task<IdentityResult> Register(RegisterRequest? request)
         {
             if(request == null)
@@ -96,8 +94,7 @@ namespace CSOS.Core.Services
                 return Result.Failure(userResult.Error);
 
             var user = userResult.Value;
-
-            //updating fields
+            
             user.Title = request.Title;
             user.PhoneNumber = request.PhoneNumber;
             user.NIP = request.NIP;

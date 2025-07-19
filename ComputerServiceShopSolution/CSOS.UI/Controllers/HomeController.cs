@@ -27,10 +27,10 @@ namespace CSOS.UI.Controllers
         {
             var viewModel = new IndexPageViewModel()
             {
-                Cards = (await _offerService.GetIndexPageOffers()).ToViewModel(_configurationReader),
+                Cards = (await _offerService.GetIndexPageOffers()).Select((item => item.ToMainPageCardViewModel(_configurationReader))),
                 Categories = (await _categoryGetterService.GetProductCategoriesAsSelectList()).ToSelectListItem(),
-                CategoriesSlider = (await _categoryGetterService.GetProductCategoriesAsMainPageCardResponseDto()).ToViewModel(_configurationReader),
-                BestDeals = (await _offerService.GetDealsOfTheDay()).ToViewModel(_configurationReader),
+                CategoriesSlider = (await _categoryGetterService.GetProductCategoriesAsMainPageCardResponseDto()).Select(item => item.ToMainPageCardViewModel(_configurationReader)),
+                BestDeals = (await _offerService.GetDealsOfTheDay()).Select(item=>item.ToMainPageCardViewModel(_configurationReader)),
             };
             return View(viewModel);
         }

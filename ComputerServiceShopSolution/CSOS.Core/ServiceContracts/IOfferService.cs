@@ -1,6 +1,6 @@
 ﻿using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO.OfferDto;
-using CSOS.Core.DTO.Universal;
+using CSOS.Core.DTO.UniversalDto;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
 

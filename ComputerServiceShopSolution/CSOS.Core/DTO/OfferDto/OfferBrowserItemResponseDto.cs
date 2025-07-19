@@ -3,14 +3,14 @@
     public class OfferBrowserItemResponseDto
     {
         public int Id { get; set; }
-        public string Condition { get; set; } = null!;
-        public string Title { get; set; } = null!;
-        public string ImageUrl { get; set; } = null!;
-        public string Category { get; set; } = null!;
+        public string ProductCondition { get; set; } = null!;
+        public string ProductName { get; set; } = null!;
+        public string? ImageUrl { get; set; }
+        public string ProductCategory { get; set; } = null!;
         public DateTime DateCreated { get; set; }
         public string Description { get; set; } = null!;
-        public int QuantityAvailable { get; set; }
+        public int StockQuantity { get; set; }
         public decimal Price { get; set; }
-        public string SellerName { get; set; } = null!;
+        public string Seller { get; set; } = null!;
     }
 }

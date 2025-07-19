@@ -7,8 +7,8 @@ using CSOS.Core.Services;
 using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO.OfferDto;
+using CSOS.Core.DTO.UniversalDto;
 using FluentAssertions;
-using CSOS.Core.DTO.Universal;
 using Xunit.Abstractions;
 
 namespace CSOS.Tests

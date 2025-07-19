@@ -10,13 +10,13 @@
 
 <div class="container mt-3">
     <div class="row g-3">
-        @if (Model.CartItems.Count() > 0)
+        @if (Model.CartItems.Any())
         {
             <div class="col-12 col-lg-8">
                 <div class="mb-3 midesection-style shadow">
                     <div class="row">
                         <div class="col-4">
-                            <span class="fw-bold">Your Index</span>
+                            <span class="fw-bold">Your Cart</span>
                             <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                 <div class="progress-bar" style="width: 100%"></div>
                             </div>
@@ -52,7 +52,7 @@
                                             <span class="fw-bold">Condition:</span> @item.Condition<br>
                                             <span class="fw-bold">Category:</span> @item.Category<br>
                                             <span class="fw-bold">Price:</span> @item.Price PLN<br>
-                                            <span class="fw-bold">Added To Index:</span> @item.DateAdded.ToString("dd-MM-yyyy");
+                                            <span class="fw-bold">Added to Cart:</span> @item.DateAdded.ToString("dd-MM-yyyy");
                                         </p>
                                         <div class="d-flex justify-content-between">
                                             <div class="w-25">

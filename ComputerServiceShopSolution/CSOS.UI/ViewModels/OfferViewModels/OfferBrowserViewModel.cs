@@ -1,7 +1,7 @@
 ﻿using CSOS.Core.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
+namespace CSOS.UI.ViewModels.OfferViewModels
 {
     public class OfferBrowserViewModel
     {

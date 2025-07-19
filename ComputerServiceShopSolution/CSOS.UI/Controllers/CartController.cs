@@ -24,7 +24,7 @@ namespace CSOS.UI.Controllers
             if (result.IsFailure)
                 return View("Error", result.Error.Description);
 
-            var cart = result.Value.ToViewModel(_configurationReader);
+            var cart = result.Value.ToCartViewModel(_configurationReader);
             return View(cart);
         }
 

@@ -112,7 +112,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.CartItem", b =>
+            modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.CartItemDto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -693,7 +693,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.CartItem", b =>
+            modelBuilder.Entity("ComputerServiceOnlineShop.Entities.Models.CartItemDto", b =>
                 {
                     b.HasOne("ComputerServiceOnlineShop.Entities.Models.Cart", "Cart")
                         .WithMany("CartItems")

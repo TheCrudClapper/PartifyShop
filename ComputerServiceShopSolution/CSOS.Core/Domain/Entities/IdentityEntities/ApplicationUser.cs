@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
+using CSOS.Core.Domain.Entities;
 
 namespace ComputerServiceOnlineShop.Entities.Models.IdentityEntities
 {

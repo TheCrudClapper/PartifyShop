@@ -1,12 +1,12 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
-using CSOS.Core.DTO.Responses.Offers;
-using CSOS.UI.Helpers.Contracts;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
+using CSOS.Core.DTO.UniversalDto;
 
 namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class MainPageCardMappings
     {
-        public static MainPageCardViewModel ToViewModel(this MainPageCardResponseDto dto, IConfigurationReader configurationReader)
+        public static MainPageCardViewModel ToMainPageCardViewModel(this MainPageCardResponse dto, IConfigurationReader configurationReader)
         {
             return new MainPageCardViewModel
             {
@@ -19,9 +19,9 @@ namespace CSOS.UI.Mappings.ToViewModel
             };
         }
 
-        public static IEnumerable<MainPageCardViewModel> ToViewModel(this IEnumerable<MainPageCardResponseDto> dtos, IConfigurationReader configurationReader)
-        {
-            return dtos.Select(dto => dto.ToViewModel(configurationReader));
-        }
+        // public static IEnumerable<MainPageCardViewModel> ToViewModel(this IEnumerable<MainPageCardResponse> dtos, IConfigurationReader configurationReader)
+        // {
+        //     return dtos.Select(dto => dto.ToMainPageCardViewModel(configurationReader));
+        // }
     }
 }

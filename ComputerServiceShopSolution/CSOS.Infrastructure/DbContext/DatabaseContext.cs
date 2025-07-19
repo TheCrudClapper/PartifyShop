@@ -1,5 +1,6 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+using CSOS.Core.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

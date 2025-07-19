@@ -3,7 +3,7 @@ using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ComputerServiceOnlineShop.Controllers
+namespace CSOS.UI.Controllers
 {
     public class OrderController : Controller
     {
@@ -16,7 +16,7 @@ namespace ComputerServiceOnlineShop.Controllers
         [HttpGet]
         public async Task<IActionResult> AddOrder()
         {
-            var response = await _addressService.GetUserAddresInfo();
+            var response = await _addressService.GetUserAddressDetails();
 
             if(response.IsFailure)
                 return View("Error", response.Error.Description);
@@ -24,7 +24,7 @@ namespace ComputerServiceOnlineShop.Controllers
 
             var viewModel = new AddOrderViewModel()
             {
-                UserAddressDetails = response.Value.ToViewModel()
+                UserAddressDetails = response.Value.ToUserAddressDetailsViewModel()
             };
             return View(viewModel);
         }

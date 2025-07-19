@@ -1,6 +1,4 @@
-﻿using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Addresses;
+﻿using CSOS.Core.DTO.AddressDto;
 using CSOS.Core.ErrorHandling;
 
 namespace CSOS.Core.ServiceContracts
@@ -10,25 +8,23 @@ namespace CSOS.Core.ServiceContracts
         /// <summary>
         /// Updates the user's address with the specified ID.
         /// </summary>
-        /// <param name="id">ID of the address to edit.</param>
-        /// <param name="dto">Updated address data.</param>
+        /// <param name="request">Updated address data.</param>
         /// <returns>A <see cref="Result"/> indicating success or failure.</returns>
-        Task<Result> Edit(int id, AddressDto dto);
+        Task<Result> EditUserAddress(AddressUpdateRequest? request);
 
         /// <summary>
         /// Retrieves address details for editing by the currently logged-in user.
         /// </summary>
         /// <returns>
-        /// A <see cref="Result{T}"/> containing <see cref="EditAddressResponseDto"/> if successful.
         /// </returns>
-        Task<Result<EditAddressResponseDto>> GetAddressForEdit();
+        Task<Result<AddressResponse>> GetUserAddressForEdit();
 
         /// <summary>
         /// Retrieves address information of the currently logged-in user.
         /// </summary>
         /// <returns>
-        /// A <see cref="Result{T}"/> containing <see cref="UserAddresDetailsResponseDto"/> if successful.
+        /// A <see cref="Result{T}"/> containing <see cref="UserAddressDetailsResponseDto"/> if successful.
         /// </returns>
-        Task<Result<UserAddresDetailsResponseDto>> GetUserAddresInfo();
+        Task<Result<UserAddressDetailsResponseDto>> GetUserAddressDetails();
     }
 }

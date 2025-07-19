@@ -1,6 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.DTO.Responses.Account;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.ServiceContracts;
 using FluentAssertions;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using AutoFixture;
+using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.Services;
 
 namespace CSOS.Tests.ServiceTests
@@ -24,7 +24,6 @@ namespace CSOS.Tests.ServiceTests
         private readonly Mock<IAccountRepository> _accountRepoMock = new();
         private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
         private readonly Mock<IAddressService> _addressServiceMock = new();
-        private readonly Mock<ICountriesGetterService> _countriesGetterServiceMock = new();
         private readonly IFixture _fixture;
 
         public AccountServiceTests()
@@ -57,10 +56,8 @@ namespace CSOS.Tests.ServiceTests
                 _currentUserServiceMock.Object,
                 _accountRepoMock.Object,
                 _unitOfWorkMock.Object,
-                _addressServiceMock.Object,
-                _countriesGetterServiceMock.Object);
+                _addressServiceMock.Object);
         }
-
 
         #region GetAccountForEdit Method Tests
         [Fact]
@@ -73,7 +70,7 @@ namespace CSOS.Tests.ServiceTests
             var result = await _accountService.GetAccountForEdit();
 
             //Assert
-            result.Should().BeOfType<Result<AccountDto>>();
+            result.Should().BeOfType<Result<AccountResponse>>();
             result.IsFailure.Should().BeTrue();
             result.Error.Should().Be(AccountErrors.AccountNotFound);
 
@@ -96,7 +93,7 @@ namespace CSOS.Tests.ServiceTests
 
             //Assert
             result.Value.Should().NotBeNull();
-            result.Value.Should().BeOfType<AccountDto>();
+            result.Value.Should().BeOfType<AccountResponse>();
             result.IsSuccess.Should().BeTrue();
             result.Value.PhoneNumber.Should().Be(applicationUser.PhoneNumber);
             result.Value.NIP.Should().Be(applicationUser.NIP);
@@ -105,13 +102,13 @@ namespace CSOS.Tests.ServiceTests
         }
         #endregion
         
-        #region Edit Method Tests
+        #region EditUserAddress Method Tests
 
         [Fact]
         public async Task Edit_UserResultFailure_ReturnFailureResult()
         {
             //Arrange 
-            AccountDto dto = _fixture.Create<AccountDto>();
+            AccountUpdateRequest dto = _fixture.Create<AccountUpdateRequest>();
             _currentUserServiceMock.Setup(item => item.GetCurrentUserAsync()).ReturnsAsync(Result.Failure<ApplicationUser>(AccountErrors.AccountNotFound));
             
             //Act
@@ -126,7 +123,7 @@ namespace CSOS.Tests.ServiceTests
         public async Task Edit_ValidUser_ReturnsDto()
         {
             //Arrange
-            AccountDto dto = _fixture.Create<AccountDto>();
+            AccountUpdateRequest dto = _fixture.Create<AccountUpdateRequest>();
             ApplicationUser applicationUser = _fixture.Build<ApplicationUser>()
                 .Without(item => item.Address).Without(item => item.Offers)
                 .Without(item => item.Cart)

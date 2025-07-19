@@ -1,4 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.Domain.Entities;
 
 namespace CSOS.Core.Domain.RepositoryContracts
 {

@@ -1,16 +1,13 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
-using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Account;
+using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.ErrorHandling;
+using CSOS.Core.Mappings.ToDomainEntity.AddressMappings;
+using CSOS.Core.Mappings.ToDomainEntity.ApplicationUserMappings;
 using CSOS.Core.Mappings.ToDto;
-using CSOS.Core.Mappings.ToEntity.AddressMappings;
-using CSOS.Core.Mappings.ToEntity.ApplicationUserMappings;
 using CSOS.Core.ServiceContracts;
 using Microsoft.AspNetCore.Identity;
-
 namespace CSOS.Core.Services
 {
     public class AccountService : IAccountService
@@ -21,7 +18,6 @@ namespace CSOS.Core.Services
         private readonly IAccountRepository _accountRepo;
         private readonly ICurrentUserService _currentUserService;
         private readonly IAddressService _addressService;
-        private readonly ICountriesGetterService _countriesGetterService;
         
         public AccountService
             (UserManager<ApplicationUser> userManager,
@@ -29,44 +25,47 @@ namespace CSOS.Core.Services
             ICurrentUserService currentUserService,
             IAccountRepository accountRepository,
             IUnitOfWork unitOfWork,
-            IAddressService addressService,
-            ICountriesGetterService countriesGetterService)
+            IAddressService addressService)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _accountRepo = accountRepository;
             _signInManager = signInManager;
             _addressService = addressService;
-            _countriesGetterService = countriesGetterService;
             _currentUserService = currentUserService;
         }
-
-
-        public async Task<IdentityResult> Register(RegisterDto dto)
+        
+        public async Task<IdentityResult> Register(RegisterRequest? request)
         {
-            Address address = dto.ToAddressEntity();
+            if(request == null)
+                return IdentityResult.Failed();
+            
+            Address address = request.ToAddressEntity();
 
             Cart cart = new Cart() { IsActive = true, DateCreated = DateTime.UtcNow };
 
+            ApplicationUser user = request.ToApplicationUserEntity(address, cart);
+            var result = await _userManager.CreateAsync(user, request.Password);
+            
             await _unitOfWork.SaveChangesAsync();
-
-            ApplicationUser user = dto.ToApplicationUserEntity(address, cart);
-            var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (result.Succeeded)
                 await _signInManager.SignInAsync(user, isPersistent: false);
-
+            
             return result;
         }
 
-        public async Task<SignInResult> Login(LoginDto dto)
+        public async Task<SignInResult> Login(LoginRequest? request)
         {
-            var response = await _accountRepo.IsUserByEmailInDatabaseAsync(dto.Email);
+            if(request == null)
+                return SignInResult.Failed;
+            
+            var response = await _accountRepo.IsUserByEmailInDatabaseAsync(request.Email);
 
             if (!response)
                 return SignInResult.Failed;
 
-            return await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: dto.isPersistent, lockoutOnFailure: false);
+            return await _signInManager.PasswordSignInAsync(request.Email, request.Password, isPersistent: request.IsPersistent, lockoutOnFailure: false);
         }
 
         public async Task Logout()
@@ -74,51 +73,54 @@ namespace CSOS.Core.Services
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<Result<AccountDto>> GetAccountForEdit()
+        public async Task<Result<AccountResponse>> GetAccountForEdit()
         {
             var userResult = await _currentUserService.GetCurrentUserAsync();
 
             if (userResult.IsFailure)
-                return Result.Failure<AccountDto>(userResult.Error);
+                return Result.Failure<AccountResponse>(userResult.Error);
 
-            var dto = userResult.Value.ToAccountResponseDto();
-
-            return dto;
+            return userResult.Value.ToAccountResponse();
         }
 
-        public async Task<Result> Edit(AccountDto dto)
+        public async Task<Result> Edit(AccountUpdateRequest? request)
         {
+            if(request == null)
+                return Result.Failure(AccountErrors.MissingAccountUpdateRequest);
+                
             var userResult = await _currentUserService.GetCurrentUserAsync();
 
             if (userResult.IsFailure)
                 return Result.Failure(userResult.Error);
 
             var user = userResult.Value;
-
-            //updating fields
-            user.Title = dto.Title;
-            user.PhoneNumber = dto.PhoneNumber;
-            user.NIP = dto.NIP;
-            user.FirstName = dto.FirstName;
-            user.Surname = dto.Surname;
+            
+            user.Title = request.Title;
+            user.PhoneNumber = request.PhoneNumber;
+            user.NIP = request.NIP;
+            user.FirstName = request.FirstName;
+            user.Surname = request.Surname;
             user.DateEdited = DateTime.UtcNow;
 
             await _unitOfWork.SaveChangesAsync();
             return Result.Success();
         }
 
-        public async Task<Result> ChangePassword(PasswordChangeRequest dto)
+        public async Task<Result> ChangePassword(PasswordChangeRequest? request)
         {
+            if(request == null)
+                return Result.Failure(AccountErrors.MissingPasswordChangeRequest);
+            
             var userResult = await _currentUserService.GetCurrentUserAsync();
             if(userResult.IsFailure)
                 return Result.Failure(AccountErrors.AccountNotFound);
 
             var user = userResult.Value;
 
-            if (!await _userManager.CheckPasswordAsync(user, dto.CurrentPassword))
+            if (!await _userManager.CheckPasswordAsync(user, request.CurrentPassword))
                 return Result.Failure(AccountErrors.WrongPassword);
 
-            IdentityResult result = await _userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
 
             if(!result.Succeeded)
                 return Result.Failure(AccountErrors.PasswordChangeFailed);
@@ -126,28 +128,25 @@ namespace CSOS.Core.Services
             return Result.Success();
         }
 
-        public async Task<Result<AccountDetailsDto>> GetAccountDetailsAsync()
+        public async Task<Result<AccountDetailsResponse>> GetAccountDetailsAsync()
         {
-            var addressResult = await _addressService.GetAddressForEdit();
+            var addressResult = await _addressService.GetUserAddressForEdit();
 
             if (addressResult.IsFailure)
-                return Result.Failure<AccountDetailsDto>(AddressErrors.AddressNotFound);
+                return Result.Failure<AccountDetailsResponse>(AddressErrors.AddressNotFound);
 
             var accountResult = await GetAccountForEdit();
             if (accountResult.IsFailure)
-                return Result.Failure<AccountDetailsDto>(AccountErrors.AccountNotFound);
+                return Result.Failure<AccountDetailsResponse>(AccountErrors.AccountNotFound);
+            
+            var addressResponse = addressResult.Value;
 
-            var countries = await _countriesGetterService.GetCountriesSelectionList();
+            var accountResponse = accountResult.Value;
 
-            var addressDto = addressResult.Value;
-            addressDto.CountriesSelectionList = countries.ToList();
-
-            var accountDto = accountResult.Value;
-
-            return new AccountDetailsDto()
+            return new AccountDetailsResponse()
             {
-                EditAddressResponseDto = addressDto,
-                AccountDto = accountDto,
+                AddressResponse = addressResponse,
+                AccountResponse = accountResponse,
             };
         }
 

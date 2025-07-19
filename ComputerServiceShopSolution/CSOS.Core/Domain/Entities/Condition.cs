@@ -1,4 +1,4 @@
-﻿namespace ComputerServiceOnlineShop.Entities.Models
+﻿namespace CSOS.Core.Domain.Entities
 {
     public class Condition : BaseModel
     {

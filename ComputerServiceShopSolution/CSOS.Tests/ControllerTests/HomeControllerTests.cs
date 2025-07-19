@@ -1,10 +1,11 @@
 ﻿using AutoFixture;
-using ComputerServiceOnlineShop.Controllers;
 using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.DTO.OfferDto;
+using CSOS.Core.DTO.UniversalDto;
 using CSOS.Core.ServiceContracts;
-using CSOS.UI.Helpers.Contracts;
+using CSOS.UI.Controllers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -36,22 +37,21 @@ namespace CSOS.Tests.ControllerTests
         }
         private HomeController CreateController()
         {
-            var homeController = new HomeController(_offerService, _categoryGetterService, _configurationReader);
-            return homeController;
+            return new HomeController(_offerService, _categoryGetterService, _configurationReader);
         }
         #region Index Method Tests
         [Fact]
         public async Task Index_ReturnViewsWithCorrectViewModel()
         {
             //Arrange
-            IEnumerable<MainPageCardResponseDto> offers = _fixture.CreateMany<MainPageCardResponseDto>();
+            IEnumerable<MainPageCardResponse> offers = _fixture.CreateMany<MainPageCardResponse>();
             IEnumerable<SelectListItemDto> categories = _fixture.CreateMany<SelectListItemDto>();
 
             _offerServiceMock.Setup(item => item.GetIndexPageOffers()).ReturnsAsync(offers);
 
             _categoryGetterServiceMock.Setup(item => item.GetProductCategoriesAsSelectList()).ReturnsAsync(categories);
 
-            _categoryGetterServiceMock.Setup(item => item.GetProductCategoriesAsMainPageCardResponseDto()).ReturnsAsync(_fixture.CreateMany<MainPageCardResponseDto>());
+            _categoryGetterServiceMock.Setup(item => item.GetProductCategoriesAsMainPageCardResponseDto()).ReturnsAsync(_fixture.CreateMany<MainPageCardResponse>());
 
             _offerServiceMock.Setup(item => item.GetDealsOfTheDay()).ReturnsAsync(offers);
 

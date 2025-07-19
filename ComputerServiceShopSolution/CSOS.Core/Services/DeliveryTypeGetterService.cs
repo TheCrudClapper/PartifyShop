@@ -1,7 +1,7 @@
 ﻿using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Deliveries;
 using CSOS.Core.ServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
+using CSOS.Core.DTO.DeliveryTypeDto;
 using CSOS.Core.Mappings.ToDto;
 
 namespace CSOS.Core.Services
@@ -30,7 +30,7 @@ namespace CSOS.Core.Services
                 .Select(item => item.ToSelectListItem()).ToList();
         }
 
-        public async Task<IEnumerable<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes()
+        public async Task<IEnumerable<DeliveryTypeResponse>> GetParcelLockerDeliveryTypes()
         {
             var types = await _deliveryTypeRepository.GetAllDeliveryTypesAsync();
 

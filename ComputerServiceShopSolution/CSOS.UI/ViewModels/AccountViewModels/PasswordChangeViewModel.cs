@@ -1,5 +1,6 @@
 ﻿using CSOS.Core.DTO;
 using System.ComponentModel.DataAnnotations;
+using CSOS.Core.DTO.AccountDto;
 
 namespace CSOS.UI.ViewModels.AccountViewModels
 {

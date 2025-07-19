@@ -1,13 +1,13 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.CartItemViewModels;
 using ComputerServiceOnlineShop.ViewModels.CartViewModels;
-using CSOS.Core.DTO.Responses.Cart;
-using CSOS.UI.Helpers.Contracts;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
+using CSOS.Core.DTO.CartDto;
 
 namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class CartViewModelMappings
     {
-        public static CartViewModel ToViewModel(this CartResponseDto dto, IConfigurationReader configuration)
+        public static CartViewModel ToCartViewModel(this CartResponseDto dto, IConfigurationReader configuration)
         {
             return new CartViewModel()
             {

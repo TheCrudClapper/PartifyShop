@@ -1,14 +1,14 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using CSOS.Core.DTO.Responses.Account;
-using CSOS.Core.DTO.Responses.Addresses;
+using CSOS.Core.DTO.AccountDto;
+using CSOS.Core.DTO.AddressDto;
 
 namespace CSOS.Core.Mappings.ToDto
 {
     public static class AccountMappings
     {
-        public static AccountDto ToAccountResponseDto(this ApplicationUser account)
+        public static AccountResponse ToAccountResponse(this ApplicationUser account)
         {
-            return new AccountDto()
+            return new AccountResponse()
             {
                 FirstName = account.FirstName,
                 NIP = account.NIP,
@@ -17,10 +17,9 @@ namespace CSOS.Core.Mappings.ToDto
                 Title = account.Title,
             };
         }
-
-        public static UserAddresDetailsResponseDto ToUserAddresDetailsResponse(this ApplicationUser account)
+        public static UserAddressDetailsResponseDto ToUserAddresDetailsResponse(this ApplicationUser account)
         {
-            return new UserAddresDetailsResponseDto()
+            return new UserAddressDetailsResponseDto()
             {
                 CustomerName = account.FirstName + " " + account.Surname,
                 PostalInfo = account.Address.PostalCode + " " + account.Address.PostalCity,
@@ -30,9 +29,9 @@ namespace CSOS.Core.Mappings.ToDto
             };
         }
 
-        public static EditAddressResponseDto ToEditAddresResponse(this ApplicationUser account)
+        public static AddressResponse ToAddressResponse(this ApplicationUser account)
         {
-            return new EditAddressResponseDto()
+            return new AddressResponse()
             {
                 Id = account.AdressId,
                 HouseNumber = account.Address.HouseNumber,
@@ -40,7 +39,7 @@ namespace CSOS.Core.Mappings.ToDto
                 PostalCity = account.Address.PostalCity,
                 PostalCode = account.Address.PostalCode,
                 Street = account.Address.Street,
-                SelectedCountry = account.Address.CountryId.ToString(),
+                SelectedCountry = account.Address.CountryId,
             };
         }
     }

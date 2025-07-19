@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
-namespace ComputerServiceOnlineShop.ViewModels.AccountViewModels
+namespace CSOS.UI.ViewModels.AccountViewModels
 {
     public class LoginViewModel
     {
@@ -11,6 +10,6 @@ namespace ComputerServiceOnlineShop.ViewModels.AccountViewModels
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; } = null!;
 
-        public bool isPersistent { get; set; }
+        public bool IsPersistent { get; set; }
     }
 }

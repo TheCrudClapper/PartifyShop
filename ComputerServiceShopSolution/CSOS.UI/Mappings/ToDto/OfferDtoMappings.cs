@@ -1,4 +1,4 @@
-﻿using CSOS.Core.DTO.Requests;
+﻿using CSOS.Core.DTO.OfferDto;
 using CSOS.UI.ViewModels.OfferViewModels;
 
 namespace CSOS.UI.Mappings.ToDto

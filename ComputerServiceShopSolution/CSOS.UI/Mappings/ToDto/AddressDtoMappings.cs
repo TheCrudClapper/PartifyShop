@@ -1,15 +1,14 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
-using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
-
+using CSOS.Core.DTO.AddressDto;
 namespace CSOS.UI.Mappings.ToDto
 {
     public static class AddressDtoMappings
     {
-        public static AddressDto ToDto(this EditAddressViewModel viewModel)
+        public static AddressUpdateRequest ToAddressUpdateRequest(this EditAddressViewModel viewModel)
         {
-            return new AddressDto()
+            return new AddressUpdateRequest()
             {
+                Id = viewModel.Id,
                 CountryId = int.Parse(viewModel.SelectedCountry),
                 HouseNumber = viewModel.HouseNumber,
                 Place = viewModel.Place,

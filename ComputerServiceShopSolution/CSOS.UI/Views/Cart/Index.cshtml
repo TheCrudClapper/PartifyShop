@@ -1,0 +1,125 @@
+﻿@using ComputerServiceOnlineShop.ViewModels.CartViewModels
+@model CartViewModel;
+@{
+    ViewBag.Title = "Your Index";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/auction-styles.css" asp-append-version="true" />
+}
+
+<div class="container mt-3">
+    <div class="row g-3">
+        @if (Model.CartItems.Any())
+        {
+            <div class="col-12 col-lg-8">
+                <div class="mb-3 midesection-style shadow">
+                    <div class="row">
+                        <div class="col-4">
+                            <span class="fw-bold">Your Cart</span>
+                            <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <span>Delivery</span>
+                            <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-secondary" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <span>Summary</span>
+                            <div class="progress" style="height: 20%" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-secondary" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="cartItemsContainer">
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <div class="card mb-3 shadow">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <img src="@item.ImageUrl" class="img-fluid rounded-start offer-browser-image" alt="Product Image">
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="card-body">
+                                        <a class="offer-link" href="@Url.Action("Details", "Offer", new {id = item.OfferId})">
+                                            <h5 class="card-title fw-bold">@item.Title</h5>
+                                        </a>
+                                        <p class="card-text">
+                                            <span class="fw-bold">Condition:</span> @item.Condition<br>
+                                            <span class="fw-bold">Category:</span> @item.Category<br>
+                                            <span class="fw-bold">Price:</span> @item.Price PLN<br>
+                                            <span class="fw-bold">Added to Cart:</span> @item.DateAdded.ToString("dd-MM-yyyy");
+                                        </p>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="w-25">
+                                                 <form method="post" asp-action="UpdateQuantityInCart" asp-route-cartItemId="@item.Id">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="number"
+                                                    name="quantity"
+                                                    data-original-value = "@item.Quantity"
+                                                    value="@item.Quantity"
+                                                    class="form-control text-center" 
+                                                    onblur="submitIfChanged(this)"
+                                                    onfocus="storeOriginalValue(this)"
+                                                    />
+                                                </form>
+                                            </div>
+                                            <div>
+                                                <form method="post" class="d-inline-flex" asp-action="DeleteFromCart" asp-route-id="@item.Id">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn custom-button ms-2 deleteButton" data-id="@item.Id">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+
+            <div class="col-12 col-lg-4 midesection-style h-25 p-4" id="priceSummaryContainer">
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-between">
+                        <span>Items worth</span>
+                        <span>@Html.Raw(Model.TotalItemsValue) PLN</span>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-12 d-flex justify-content-between">
+                        <span>Delivery from</span>
+                        <span>@Html.Raw(Model.TotalDeliveryValue) PLN</span>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-between">
+                        <span>Total</span>
+                        <h4 class="fw-bold">@Html.Raw(Model.TotalCartValue) PLN</h4>
+                    </div>
+                </div>
+                 
+                <div class="row">
+                    <a asp-action="AddOrder" asp-controller="Order" class="btn custom-button w-100 fw-bold">Delivery and Payment</a>
+                </div>
+                </div>
+        }
+        else
+        {
+            @await Html.PartialAsync("_EmptyCartPartialView")
+        }
+
+    </div>
+</div>
+@section Scripts {
+  <script src="~/js/cart-script.js"></script>
+}

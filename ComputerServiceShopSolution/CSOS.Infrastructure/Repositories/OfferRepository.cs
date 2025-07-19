@@ -1,5 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Entities.Contexts;
-using ComputerServiceOnlineShop.Entities.Models;
+using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -143,7 +143,6 @@ namespace CSOS.Infrastructure.Repositories
         {
             return await _dbContext.Offers
                 .CountAsync(item => item.IsActive && !item.IsOfferPrivate);
-
         }
 
         public async Task<IEnumerable<Offer>> GetOffersByTakeAsync(int take = 12)

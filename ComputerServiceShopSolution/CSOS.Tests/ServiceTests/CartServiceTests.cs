@@ -1,8 +1,9 @@
 ﻿using AutoFixture;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Services;
+using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.DTO.Responses.Cart;
+using CSOS.Core.DTO.CartDto;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ServiceContracts;
@@ -412,7 +413,7 @@ namespace CSOS.Tests
             //Arrange
             int validCartId = _fixture.Create<int>();
 
-            _testHelper.WriteLine("Cart Items:");
+            _testHelper.WriteLine("Index Items:");
             IEnumerable<CartItem> cartItems = _fixture.Build<CartItem>()
                 .With(item => item.Quantity, 10)
                 .CreateMany(4);
@@ -422,7 +423,7 @@ namespace CSOS.Tests
                 _testHelper.WriteLine(item.ToString() + "\n");
             }
 
-            _testHelper.WriteLine("Cart Values before updating costs:");
+            _testHelper.WriteLine("Index Values before updating costs:");
             //creating cart with given cart items 
             Cart cart = _fixture.Build<Cart>()
                 .With(item => item.TotalCartValue, 0)
@@ -430,7 +431,7 @@ namespace CSOS.Tests
                 .With(item => item.MinimalDeliveryValue, 0)
                 .Create();
 
-            _testHelper.WriteLine($"Total Cart Value: {cart.TotalCartValue}\nTotal Items Value: {cart.TotalItemsValue}\n, Minimal Delivery Value: {cart.MinimalDeliveryValue}\n");
+            _testHelper.WriteLine($"Total Index Value: {cart.TotalCartValue}\nTotal Items Value: {cart.TotalItemsValue}\n, Minimal DeliveryTypeDto Value: {cart.MinimalDeliveryValue}\n");
 
             _cartRepositoryMock.Setup(item => item.GetCartItemsForCostsUpdateAsync(validCartId)).ReturnsAsync(cartItems);
             _cartRepositoryMock.Setup(item => item.GetCartByIdAsync(validCartId)).ReturnsAsync(cart);
@@ -445,8 +446,8 @@ namespace CSOS.Tests
             cart.TotalCartValue.Should().NotBe(0);
             cart.MinimalDeliveryValue.Should().NotBe(0);
 
-            _testHelper.WriteLine("Cart Values after updating costs:");
-            _testHelper.WriteLine($"Total Cart Value: {cart.TotalCartValue}\nTotal Items Value: {cart.TotalItemsValue}\nMinimal Delivery Value: {cart.MinimalDeliveryValue}");
+            _testHelper.WriteLine("Index Values after updating costs:");
+            _testHelper.WriteLine($"Total Index Value: {cart.TotalCartValue}\nTotal Items Value: {cart.TotalItemsValue}\nMinimal DeliveryTypeDto Value: {cart.MinimalDeliveryValue}");
         }
         #endregion 
 

@@ -1,4 +1,4 @@
-﻿namespace CSOS.UI.Helpers.Contracts
+﻿namespace CSOS.Core.Domain.InfrastructureServiceContracts
 {
     /// <summary>
     /// Class for reading env variables from config files

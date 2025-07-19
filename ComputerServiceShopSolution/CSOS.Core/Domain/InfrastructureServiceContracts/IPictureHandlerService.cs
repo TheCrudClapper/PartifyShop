@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace CSOS.Core.Domain.ExternalServicesContracts
+namespace CSOS.Core.Domain.InfrastructureServiceContracts
 {
     public interface IPictureHandlerService
     {

@@ -1,20 +1,18 @@
-﻿using CSOS.Core.DTO.Responses.Deliveries;
+﻿using CSOS.Core.Domain.Entities;
+using CSOS.Core.DTO.DeliveryTypeDto;
 using CSOS.UI.ViewModels.SharedViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-
 namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class DeliveryViewModelMappings
     {
-        public static List<DeliveryTypeViewModel> ConvertToDeliveryTypeViewModelList(this IEnumerable<DeliveryTypeResponseDto> items)
+        public static DeliveryTypeViewModel ToDeliveryTypeViewModel(this DeliveryTypeResponse deliveryType)
         {
-            return items.Select(item => new DeliveryTypeViewModel
+            return new DeliveryTypeViewModel
             {
-                Id = item.Id,
-                Price = item.Price,
-                Title = item.Title,
-            })
-             .ToList();
+                Id = deliveryType.Id,
+                Price = deliveryType.Price,
+                Title = deliveryType.Title,
+            };
         }
     }
 }

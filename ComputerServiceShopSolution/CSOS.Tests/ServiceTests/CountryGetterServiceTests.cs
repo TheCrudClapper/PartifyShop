@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Services;
+using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.ServiceContracts;

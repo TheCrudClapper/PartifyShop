@@ -1,12 +1,12 @@
 ﻿using AutoFixture;
-using ComputerServiceOnlineShop.Controllers;
 using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Addresses;
+using CSOS.Core.DTO.AccountDto;
+using CSOS.Core.DTO.AddressDto;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI;
+using CSOS.UI.Controllers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -30,13 +30,13 @@ namespace CSOS.Tests.ControllerTests
             _countriesGetterService = _countriesGetterServiceMock.Object;
             _addressController = new AddressController(_addressService, _countriesGetterService);
         }
-        #region Edit GET Method Tests
+        #region EditUserAddress GET Method Tests
 
         [Fact]
         public async Task Edit_AddressResultFailure_ReturnErrorView()
         {
             //Arrange
-            _addressServiceMock.Setup(item => item.GetAddressForEdit()).ReturnsAsync(Result.Failure<EditAddressResponseDto>(AddressErrors.AddressNotFound));
+            _addressServiceMock.Setup(item => item.GetUserAddressForEdit()).ReturnsAsync(Result.Failure<AddressResponse>(AddressErrors.AddressNotFound));
 
             //Act
             IActionResult result = await _addressController.Edit(It.IsAny<int>());
@@ -51,8 +51,8 @@ namespace CSOS.Tests.ControllerTests
         {
             //Arrange
             List<SelectListItemDto> countries = _fixture.CreateMany<SelectListItemDto>().ToList();
-            EditAddressResponseDto dto = _fixture.Create<EditAddressResponseDto>();
-            _addressServiceMock.Setup(item => item.GetAddressForEdit()).ReturnsAsync(dto);
+            AddressResponse dto = _fixture.Create<AddressResponse>();
+            _addressServiceMock.Setup(item => item.GetUserAddressForEdit()).ReturnsAsync(dto);
             _countriesGetterServiceMock.Setup(item => item.GetCountriesSelectionList()).ReturnsAsync(countries);
 
             //Act
@@ -65,7 +65,7 @@ namespace CSOS.Tests.ControllerTests
         }
         #endregion
 
-        #region Edit POST Method Tests
+        #region EditUserAddress POST Method Tests
         [Fact]
         public async Task Edit_EditAddresSuccessResult_ReturnSuccessJson()
         {
@@ -74,10 +74,10 @@ namespace CSOS.Tests.ControllerTests
                 .With(item => item.SelectedCountry, "21")
                 .Create();
 
-            _addressServiceMock.Setup(item => item.Edit(It.IsAny<int>(), It.IsAny<AddressDto>())).ReturnsAsync(Result.Success);
+            _addressServiceMock.Setup(item => item.EditUserAddress(It.IsAny<AddressUpdateRequest>())).ReturnsAsync(Result.Success);
 
             //Act
-            IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
+            IActionResult result = await _addressController.Edit(viewModel);
 
             //Assert
             JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
@@ -94,10 +94,10 @@ namespace CSOS.Tests.ControllerTests
                 .With(item => item.SelectedCountry, "21")
                 .Create();
 
-            _addressServiceMock.Setup(item => item.Edit(It.IsAny<int>(), It.IsAny<AddressDto>())).ReturnsAsync(Result.Failure(AddressErrors.AddressNotFound));
+            _addressServiceMock.Setup(item => item.EditUserAddress(It.IsAny<AddressUpdateRequest>())).ReturnsAsync(Result.Failure(AddressErrors.AddressNotFound));
 
             //Act
-            IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
+            IActionResult result = await _addressController.Edit(viewModel);
 
             //Assert
             JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
@@ -120,7 +120,7 @@ namespace CSOS.Tests.ControllerTests
             _addressController.ModelState.AddModelError("TestError", "ErrorTest");
 
             //Act
-            IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
+            IActionResult result = await _addressController.Edit(viewModel);
 
             //Assert
             PartialViewResult partialView = result.Should().BeOfType<PartialViewResult>().Subject;
@@ -142,13 +142,13 @@ namespace CSOS.Tests.ControllerTests
             _addressController.ModelState.AddModelError("TestError", "ErrorTest");
 
             //Act
-            IActionResult result = await _addressController.Edit(viewModel.Id, viewModel);
+            IActionResult result = await _addressController.Edit(viewModel);
 
             //Assert
             PartialViewResult partialView = result.Should().BeOfType<PartialViewResult>().Subject;
             partialView.Should().NotBeNull();
             partialView.Model.Should().Be(viewModel);
-            partialView.ViewName.Should().Be("AccountPartials/_AddresChangePartial");
+            partialView.ViewName.Should().Be("AccountPartials/_AddressChangeForm");
         }
         #endregion
     }

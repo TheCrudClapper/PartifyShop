@@ -1,27 +1,27 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
+using CSOS.Core.Domain.Entities;
+using CSOS.Core.DTO.AccountDto;
 
-namespace CSOS.Core.Mappings.ToEntity.ApplicationUserMappings
+namespace CSOS.Core.Mappings.ToDomainEntity.ApplicationUserMappings
 {
     public static class ApplicationUserMappings
     {
-        public static ApplicationUser ToApplicationUserEntity (this RegisterDto dto, Address address, Cart cart)
+        public static ApplicationUser ToApplicationUserEntity (this RegisterRequest request, Address address, Cart cart)
         {
             return new ApplicationUser()
             {
-                UserName = dto.Email,
+                UserName = request.Email,
                 Address = address,
-                FirstName = dto.FirstName,
-                Title = dto.Title,
-                Surname = dto.Surname,
-                PhoneNumber = dto.PhoneNumber,
+                FirstName = request.FirstName,
+                Title = request.Title,
+                Surname = request.Surname,
+                PhoneNumber = request.PhoneNumber,
                 Cart = cart,
                 DateCreated = DateTime.Now,
                 IsActive = true,
-                Email = dto.Email,
-                NIP = dto.NIP,
+                Email = request.Email,
+                NIP = request.NIP,
             };
            
         }

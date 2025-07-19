@@ -1,5 +1,5 @@
 ﻿using CSOS.Core.DTO;
-using CSOS.Core.DTO.Responses.Deliveries;
+using CSOS.Core.DTO.DeliveryTypeDto;
 
 namespace CSOS.Core.ServiceContracts
 {
@@ -8,8 +8,8 @@ namespace CSOS.Core.ServiceContracts
         /// <summary>
         /// Retrieves a list of delivery types that are parcel locker options.
         /// </summary>
-        /// <returns>A list of <see cref="DeliveryTypeResponseDto"/> representing parcel locker delivery types.</returns>
-        Task<IEnumerable<DeliveryTypeResponseDto>> GetParcelLockerDeliveryTypes();
+        /// <returns>A list of <see cref="DeliveryTypeResponse"/> representing parcel locker delivery types.</returns>
+        Task<IEnumerable<DeliveryTypeResponse>> GetParcelLockerDeliveryTypes();
 
         /// <summary>
         /// Retrieves delivery types that are not parcel locker options, returned as select list items.

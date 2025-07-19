@@ -4,8 +4,9 @@ using Moq;
 using AutoFixture;
 using ComputerServiceOnlineShop.Entities.Models;
 using ComputerServiceOnlineShop.Services;
+using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO;
-using CSOS.Core.DTO.Requests;
+using CSOS.Core.DTO.AddressDto;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Services;
 using FluentAssertions;
@@ -40,28 +41,26 @@ namespace CSOS.Tests
             _addressService = new AddressService(_currentUserService, _addressRepository, _unitOfWork, _accountRepository);
 
         }
-        #region Edit Method Tests
+        #region EditUserAddress Method Tests
         [Fact]
         public async Task Edit_ValidDetails_EditsAddress()
         {
             //Arrange
-            int validAddressId = _fixture.Create<int>();
             Address address = _fixture.Build<Address>()
                 .Without(item => item.Country)
                 .Without(item => item.User)
-                .With(item => item.Id, validAddressId)
                 .Create();
 
-            AddressDto addressDto = _fixture.Create<AddressDto>();
+            AddressUpdateRequest addressDto = _fixture.Create<AddressUpdateRequest>();
             
-            _addressRepoMock.Setup(item => item.GetAddressByIdAsync(validAddressId))
+            _addressRepoMock.Setup(item => item.GetAddressByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(address);
 
             _unitOfWorkMock.Setup(item => item.SaveChangesAsync(CancellationToken.None))
                 .ReturnsAsync(1);
             
             //Act
-            var result = await _addressService.Edit(validAddressId, addressDto);
+            var result = await _addressService.EditUserAddress(addressDto);
             
             //Assert
             result.IsSuccess.Should().BeTrue();
@@ -80,11 +79,11 @@ namespace CSOS.Tests
         {
             //Arrange
             int invalidAddressId = _fixture.Create<int>();
-            AddressDto addressDto = _fixture.Create<AddressDto>();
+            AddressUpdateRequest addressDto = _fixture.Create<AddressUpdateRequest>();
             _addressRepoMock.Setup(item => item.GetAddressByIdAsync(invalidAddressId)).ReturnsAsync((Address?)null); 
             
             //Act
-            var result = await _addressService.Edit(invalidAddressId, addressDto);
+            var result = await _addressService.EditUserAddress(addressDto);
 
             //Assert
             result.IsFailure.Should().BeTrue();

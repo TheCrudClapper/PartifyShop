@@ -1,13 +1,14 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
-using CSOS.Core.DTO.Responses.Deliveries;
+using CSOS.Core.Domain.Entities;
+using CSOS.Core.DTO.DeliveryTypeDto;
 
 namespace CSOS.Core.Mappings.ToDto
 {
     public static class DeliveryTypeMappings
     {
-        public static DeliveryTypeResponseDto ToDeliveryTypeResponseDto(this DeliveryType deliveryType)
+        public static DeliveryTypeResponse ToDeliveryTypeResponseDto(this DeliveryType deliveryType)
         {
-            return new DeliveryTypeResponseDto
+            return new DeliveryTypeResponse
             {
 
                 Id = deliveryType.Id,

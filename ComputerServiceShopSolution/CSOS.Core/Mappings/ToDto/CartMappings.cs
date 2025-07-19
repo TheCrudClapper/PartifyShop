@@ -1,6 +1,7 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models;
-using CSOS.Core.DTO.Responses.Cart;
-using CSOS.Core.DTO.Responses.CartItem;
+using CSOS.Core.Domain.Entities;
+using CSOS.Core.DTO.CartDto;
+using CSOS.Core.DTO.CartItemDto;
 
 namespace CSOS.Core.Mappings.ToDto
 {
@@ -12,7 +13,7 @@ namespace CSOS.Core.Mappings.ToDto
             return new CartResponseDto()
             {
                 CartItems = cart.CartItems.Where(item => item.IsActive)
-                    .Select(item => new CartItemResponseDto
+                    .Select(item => new CartItemResponse
                     {
                         Category = item.Offer.Product.ProductCategory.Name,
                         Condition = item.Offer.Product.Condition.ConditionTitle,

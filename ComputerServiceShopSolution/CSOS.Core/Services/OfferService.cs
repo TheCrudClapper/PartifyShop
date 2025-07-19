@@ -1,16 +1,15 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
-using CSOS.Core.Domain.ExternalServicesContracts;
+﻿using CSOS.Core.Domain.Entities;
+using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.DTO;
 using CSOS.Core.DTO.DtoContracts;
-using CSOS.Core.DTO.Requests;
-using CSOS.Core.DTO.Responses.Offers;
+using CSOS.Core.DTO.OfferDto;
+using CSOS.Core.DTO.UniversalDto;
 using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
+using CSOS.Core.Mappings.ToDomainEntity.OfferMappings;
+using CSOS.Core.Mappings.ToDomainEntity.ProductMappings;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.Mappings.ToEntity.OfferDeliveryTypeMappings;
-using CSOS.Core.Mappings.ToEntity.OfferMappings;
-using CSOS.Core.Mappings.ToEntity.ProductMappings;
 using CSOS.Core.ServiceContracts;
 
 namespace CSOS.Core.Services
@@ -27,7 +26,6 @@ namespace CSOS.Core.Services
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
         public OfferService(
-            IAccountService accountService,
             IDeliveryTypeGetterService deliveryTypeGetterService,
             IUnitOfWork unitOfWork,
             IOfferRepository offerRepo,
@@ -125,33 +123,31 @@ namespace CSOS.Core.Services
             return Result.Success();
         }
 
-        public async Task<IEnumerable<UserOffersResponseDto>> GetFilteredUserOffers(string? title)
+        public async Task<IEnumerable<UserOfferResponse>> GetFilteredUserOffers(string? title)
         {
             Guid userId = _currentUserService.GetUserId();
             var offers = await _offerRepo.GetFilteredUserOffersAsync(title, userId);
 
-            var items = offers.ToIEnumerableUserOffersResponseDto();
-            return items;
+            return offers.Select(item => item.ToUserOfferResponse());
         }
 
-        public async Task<Result<EditOfferResponseDto>> GetOfferForEdit(int id)
+        public async Task<Result<EditOfferResponse>> GetOfferForEdit(int id)
         {
             Guid userId = _currentUserService.GetUserId();
             var offer = await _offerRepo.GetOfferWithAllDetailsByUserAsync(id, userId);
             if (offer == null)
-                return Result.Failure<EditOfferResponseDto>(OfferErrors.OfferDoesNotExist);
+                return Result.Failure<EditOfferResponse>(OfferErrors.OfferDoesNotExist);
 
-            var dto = offer.ToEditOfferResponseDto();
-            return dto;
+            return offer.ToEditOfferResponseDto();
         }
 
-        public async Task<OfferBrowserResponseDto> GetFilteredOffers(OfferFilter filter)
+        public async Task<OfferIndexResponse> GetFilteredOffers(OfferFilter filter)
         {
             var offers = await _offerRepo.GetFilteredOffersAsync(filter);
 
-            var items = offers.ToListOfferItemBrowserResponseDto();
+            var items = offers.Select(item => item.ToOfferBrowserItemResponse());
 
-            return new OfferBrowserResponseDto()
+            return new OfferIndexResponse()
             {
                 Items = items.ToList(),
                 Filter = filter,
@@ -160,10 +156,10 @@ namespace CSOS.Core.Services
             };
         }
 
-        public async Task<IEnumerable<MainPageCardResponseDto>> GetIndexPageOffers()
+        public async Task<IEnumerable<MainPageCardResponse>> GetIndexPageOffers()
         {
             var offers = await _offerRepo.GetOffersByTakeAsync();
-            return offers.ToIEnumerableMainPageCardDto();
+            return offers.Select(item => item.ToMainPageCardResponse());
         }
 
         public async Task<bool> DoesOfferExist(int id)
@@ -171,30 +167,27 @@ namespace CSOS.Core.Services
             return await _offerRepo.IsOfferInDbAsync(id);
         }
 
-        public async Task<IEnumerable<MainPageCardResponseDto>> GetDealsOfTheDay()
+        public async Task<IEnumerable<MainPageCardResponse>> GetDealsOfTheDay()
         {
-            //add daily reshuffle logic
             var count = await _offerRepo.GetNonPrivateOfferCount();
             if (count == 0)
-                return Enumerable.Empty<MainPageCardResponseDto>();
+                return [];
 
             var take = Math.Min(count, 7);
 
             var offers = await _offerRepo.GetOffersByTakeAsync(take);
 
-            return offers.ToIEnumerableMainPageCardDto();
+            return offers.Select(item => item.ToMainPageCardResponse());
         }
 
-        public async Task<Result<OfferResponseDto>> GetOffer(int id)
+        public async Task<Result<OfferResponse>> GetOffer(int id)
         {
             var offer = await _offerRepo.GetOfferWithAllDetailsAsync(id);
 
             if (offer == null || offer.IsOfferPrivate)
-                return Result.Failure<OfferResponseDto>(OfferErrors.OfferDoesNotExist);
+                return Result.Failure<OfferResponse>(OfferErrors.OfferDoesNotExist);
 
-            var dto = offer.ToOfferResponseDto();
-
-            return dto;
+            return offer.ToOfferResponse();
         }
 
         private async Task SaveNewImagesAsync(IOfferImageDto dto, Product product)
@@ -216,6 +209,7 @@ namespace CSOS.Core.Services
                 }
             }
         }
+        
         private async Task AddDeliveryTypesAsync(IOfferDeliveryDto dto, Offer offer)
         {
             if (dto.SelectedParcelLocker.HasValue)

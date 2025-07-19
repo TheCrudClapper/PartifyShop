@@ -1,6 +1,8 @@
-﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using System.ComponentModel.DataAnnotations.Schema;
-namespace ComputerServiceOnlineShop.Entities.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using ComputerServiceOnlineShop.Entities.Models;
+using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+
+namespace CSOS.Core.Domain.Entities
 {
     /// <summary>
     /// This model represents an Cart, user can have only one cart

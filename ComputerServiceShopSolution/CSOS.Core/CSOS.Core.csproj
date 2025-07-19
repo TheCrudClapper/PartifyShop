@@ -14,12 +14,4 @@
 		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.4" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="DTO\AccountDto\" />
-		<Folder Include="DTO\AddressDto\" />
-		<Folder Include="DTO\OfferDto\" />
-		<Folder Include="DTO\Responses\Category\" />
-		<Folder Include="Mappings\ToDomainEntity\CartItemMappings\" />
-	</ItemGroup>
-
 </Project>

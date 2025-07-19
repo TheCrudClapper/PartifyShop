@@ -17,7 +17,7 @@ namespace CSOS.Core.Mappings.ToDto
                 Title = account.Title,
             };
         }
-        public static UserAddressDetailsResponseDto ToUserAddresDetailsResponse(this ApplicationUser account)
+        public static UserAddressDetailsResponseDto ToUserAddressDetailsResponse(this ApplicationUser account)
         {
             return new UserAddressDetailsResponseDto()
             {

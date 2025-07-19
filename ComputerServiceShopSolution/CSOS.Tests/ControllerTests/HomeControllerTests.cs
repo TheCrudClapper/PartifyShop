@@ -44,14 +44,14 @@ namespace CSOS.Tests.ControllerTests
         public async Task Index_ReturnViewsWithCorrectViewModel()
         {
             //Arrange
-            IEnumerable<MainPageCardResponse> offers = _fixture.CreateMany<MainPageCardResponse>();
+            IEnumerable<CardResponse> offers = _fixture.CreateMany<CardResponse>();
             IEnumerable<SelectListItemDto> categories = _fixture.CreateMany<SelectListItemDto>();
 
             _offerServiceMock.Setup(item => item.GetIndexPageOffers()).ReturnsAsync(offers);
 
             _categoryGetterServiceMock.Setup(item => item.GetProductCategoriesAsSelectList()).ReturnsAsync(categories);
 
-            _categoryGetterServiceMock.Setup(item => item.GetProductCategoriesAsMainPageCardResponseDto()).ReturnsAsync(_fixture.CreateMany<MainPageCardResponse>());
+            _categoryGetterServiceMock.Setup(item => item.GetProductCategoriesAsCardResponse()).ReturnsAsync(_fixture.CreateMany<CardResponse>());
 
             _offerServiceMock.Setup(item => item.GetDealsOfTheDay()).ReturnsAsync(offers);
 

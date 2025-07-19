@@ -1,6 +1,6 @@
-﻿namespace CSOS.Core.ErrorHandling
+﻿namespace CSOS.Core.ResultTypes
 {
-    public class ProductImageErrors
+    public static class ProductImageErrors
     {
         public static readonly Error ProductImageIsNull = new Error(
            "ProductImage.ProductImageIsNull", "Given offer doesnt have any images");

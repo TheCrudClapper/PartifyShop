@@ -1,9 +1,9 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.ErrorHandling;
 using CSOS.Core.ServiceContracts;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using CSOS.Core.ResultTypes;
 
 namespace CSOS.Core.Services
 {

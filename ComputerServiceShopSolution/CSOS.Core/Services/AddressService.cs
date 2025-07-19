@@ -1,8 +1,8 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.AddressDto;
-using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDto;
+using CSOS.Core.ResultTypes;
 using CSOS.Core.ServiceContracts;
 
 namespace CSOS.Core.Services
@@ -62,7 +62,7 @@ namespace CSOS.Core.Services
             if (userAndAddress == null)
                 return Result.Failure<UserAddressDetailsResponseDto>(AddressErrors.MissingAddressData);
 
-            return userAndAddress.ToUserAddresDetailsResponse();
+            return userAndAddress.ToUserAddressDetailsResponse();
         }
 
         private async Task<ApplicationUser?> GetCurrentUserWithAddress()

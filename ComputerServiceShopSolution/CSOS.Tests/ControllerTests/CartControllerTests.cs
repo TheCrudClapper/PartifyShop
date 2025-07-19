@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.DTO.CartDto;
-using CSOS.Core.ErrorHandling;
+using CSOS.Core.ResultTypes;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI;
 using CSOS.UI.Controllers;
@@ -105,7 +105,7 @@ namespace CSOS.Tests.ControllerTests
                 .Subject.Should().BeEquivalentTo(new JsonResponseModel
                 {
                     Success = true,
-                    Message = "Item Successfully Added to Index",
+                    Message = "Item Successfully Added to Cart",
                 });
         }
 

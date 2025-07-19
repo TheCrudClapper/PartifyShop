@@ -1,6 +1,6 @@
 ﻿namespace CSOS.Core.DTO.UniversalDto
 {
-    public class MainPageCardResponse
+    public class CardResponse
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;

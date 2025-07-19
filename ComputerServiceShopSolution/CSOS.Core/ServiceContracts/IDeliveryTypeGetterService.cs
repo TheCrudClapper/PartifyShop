@@ -1,5 +1,6 @@
 ﻿using CSOS.Core.DTO;
 using CSOS.Core.DTO.DeliveryTypeDto;
+using CSOS.Core.DTO.UniversalDto;
 
 namespace CSOS.Core.ServiceContracts
 {

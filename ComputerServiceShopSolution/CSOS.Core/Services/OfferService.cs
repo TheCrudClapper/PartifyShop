@@ -4,12 +4,12 @@ using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.DtoContracts;
 using CSOS.Core.DTO.OfferDto;
 using CSOS.Core.DTO.UniversalDto;
-using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
+using CSOS.Core.Mappings.ToDomainEntity.OfferDeliveryTypeMappings;
 using CSOS.Core.Mappings.ToDomainEntity.OfferMappings;
 using CSOS.Core.Mappings.ToDomainEntity.ProductMappings;
 using CSOS.Core.Mappings.ToDto;
-using CSOS.Core.Mappings.ToEntity.OfferDeliveryTypeMappings;
+using CSOS.Core.ResultTypes;
 using CSOS.Core.ServiceContracts;
 
 namespace CSOS.Core.Services
@@ -17,12 +17,10 @@ namespace CSOS.Core.Services
     public class OfferService : IOfferService
     {
         private readonly IOfferRepository _offerRepo;
-        private readonly ISortingOptionService _sortingOptionService;
         private readonly IPictureHandlerService _pictureHandlerService;
         private readonly IProductImageService _productImageService;
         private readonly IProductRepository _productRepo;
         private readonly IOfferDeliveryTypeRepository _offerDeliveryTypeRepo;
-        private readonly IDeliveryTypeGetterService _deliveryTypeGetterService;
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
         public OfferService(
@@ -42,10 +40,8 @@ namespace CSOS.Core.Services
             _offerRepo = offerRepo;
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
-            _deliveryTypeGetterService = deliveryTypeGetterService;
             _pictureHandlerService = pictureHandlerService;
             _productImageService = productImageService;
-            _sortingOptionService = sortingOptionService;
         }
         public async Task<Result> Add(OfferAddRequest? addRequest)
         {
@@ -138,28 +134,19 @@ namespace CSOS.Core.Services
             if (offer == null)
                 return Result.Failure<EditOfferResponse>(OfferErrors.OfferDoesNotExist);
 
-            return offer.ToEditOfferResponseDto();
+            return offer.ToEditOfferResponse();
         }
 
-        public async Task<OfferIndexResponse> GetFilteredOffers(OfferFilter filter)
+        public async Task<IEnumerable<OfferIndexResponse>> GetFilteredOffers(OfferFilter filter)
         {
             var offers = await _offerRepo.GetFilteredOffersAsync(filter);
-
-            var items = offers.Select(item => item.ToOfferBrowserItemResponse());
-
-            return new OfferIndexResponse()
-            {
-                Items = items.ToList(),
-                Filter = filter,
-                SortingOptions = _sortingOptionService.GetSortingOptions().ToList(),
-                DeliveryOptions = (await _deliveryTypeGetterService.GetAllDeliveryTypesAsSelectionList()).ToList(),
-            };
+            return offers.Select(item => item.ToOfferIndexResponse());
         }
 
-        public async Task<IEnumerable<MainPageCardResponse>> GetIndexPageOffers()
+        public async Task<IEnumerable<CardResponse>> GetIndexPageOffers()
         {
             var offers = await _offerRepo.GetOffersByTakeAsync();
-            return offers.Select(item => item.ToMainPageCardResponse());
+            return offers.Select(item => item.ToCardResponse());
         }
 
         public async Task<bool> DoesOfferExist(int id)
@@ -167,7 +154,7 @@ namespace CSOS.Core.Services
             return await _offerRepo.IsOfferInDbAsync(id);
         }
 
-        public async Task<IEnumerable<MainPageCardResponse>> GetDealsOfTheDay()
+        public async Task<IEnumerable<CardResponse>> GetDealsOfTheDay()
         {
             var count = await _offerRepo.GetNonPrivateOfferCount();
             if (count == 0)
@@ -177,7 +164,7 @@ namespace CSOS.Core.Services
 
             var offers = await _offerRepo.GetOffersByTakeAsync(take);
 
-            return offers.Select(item => item.ToMainPageCardResponse());
+            return offers.Select(item => item.ToCardResponse());
         }
 
         public async Task<Result<OfferResponse>> GetOffer(int id)

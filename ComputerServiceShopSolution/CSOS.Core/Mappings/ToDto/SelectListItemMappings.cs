@@ -1,7 +1,5 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
-using CSOS.Core.DTO;
-using System.IO;
-using CSOS.Core.Domain.Entities;
+﻿using CSOS.Core.Domain.Entities;
+using CSOS.Core.DTO.UniversalDto;
 
 namespace CSOS.Core.Mappings.ToDto
 {

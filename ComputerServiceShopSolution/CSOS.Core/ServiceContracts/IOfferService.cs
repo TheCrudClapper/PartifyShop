@@ -1,8 +1,8 @@
 ﻿using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO.OfferDto;
 using CSOS.Core.DTO.UniversalDto;
-using CSOS.Core.ErrorHandling;
 using CSOS.Core.Helpers;
+using CSOS.Core.ResultTypes;
 
 namespace CSOS.Core.ServiceContracts
 {
@@ -62,18 +62,18 @@ namespace CSOS.Core.ServiceContracts
         /// </summary>
         /// <param name="filter">Filter parameters for offer searching.</param>
         /// <returns>Filtered offers suitable for offer browsing views.</returns>
-        Task<OfferIndexResponse> GetFilteredOffers(OfferFilter filter);
+        Task<IEnumerable<OfferIndexResponse>> GetFilteredOffers(OfferFilter filter);
 
         /// <summary>
         /// Retrieves highlighted offers for display on the main index page.
         /// </summary>
         /// <returns>List of offers formatted for main page display.</returns>
-        Task<IEnumerable<MainPageCardResponse>> GetIndexPageOffers();
+        Task<IEnumerable<CardResponse>> GetIndexPageOffers();
 
         /// <summary>
         /// Retrieves current deals of the day.
         /// </summary>
         /// <returns>List of offers labeled as deals of the day.</returns>
-        Task<IEnumerable<MainPageCardResponse>> GetDealsOfTheDay();
+        Task<IEnumerable<CardResponse>> GetDealsOfTheDay();
     }
 }

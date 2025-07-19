@@ -1,5 +1,5 @@
 ﻿using CSOS.Core.DTO.AccountDto;
-using CSOS.Core.ErrorHandling;
+using CSOS.Core.ResultTypes;
 using Microsoft.AspNetCore.Identity;
 
 namespace CSOS.Core.ServiceContracts

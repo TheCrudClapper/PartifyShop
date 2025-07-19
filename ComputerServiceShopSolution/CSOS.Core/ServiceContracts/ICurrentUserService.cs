@@ -1,5 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
-using CSOS.Core.ErrorHandling;
+using CSOS.Core.ResultTypes;
 
 namespace CSOS.Core.ServiceContracts
 {

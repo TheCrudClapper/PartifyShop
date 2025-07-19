@@ -46,12 +46,12 @@ namespace CSOS.Tests
             _productCategoryMoq.Setup(item => item.GetAllProductCategoriesAsync()).ReturnsAsync((categories));
 
             //Act
-            var categoriesFromDb = await _categoryGetterService.GetProductCategoriesAsMainPageCardResponseDto();
+            var categoriesFromDb = await _categoryGetterService.GetProductCategoriesAsCardResponse();
 
             //Assert
             categoriesFromDb.Should().NotBeNull();
             categoriesFromDb.Should().HaveCount(categories.Count);
-            categoriesFromDb.Should().AllBeOfType<MainPageCardResponse>();
+            categoriesFromDb.Should().AllBeOfType<CardResponse>();
 
         }
 
@@ -63,12 +63,12 @@ namespace CSOS.Tests
             _productCategoryMoq.Setup(item => item.GetAllProductCategoriesAsync()).ReturnsAsync((categories));
 
             //Act
-            var categoriesFromDb = await _categoryGetterService.GetProductCategoriesAsMainPageCardResponseDto();
+            var categoriesFromDb = await _categoryGetterService.GetProductCategoriesAsCardResponse();
 
             //Assert
             categoriesFromDb.Should().NotBeNull();
             categoriesFromDb.Should().BeEmpty();
-            categoriesFromDb.Should().AllBeOfType<MainPageCardResponse>();
+            categoriesFromDb.Should().AllBeOfType<CardResponse>();
         }
     }
 }

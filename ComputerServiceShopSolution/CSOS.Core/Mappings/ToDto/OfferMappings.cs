@@ -8,10 +8,10 @@ namespace CSOS.Core.Mappings.ToDto
 {
     public static class OfferMappings
     {
-        public static MainPageCardResponse ToMainPageCardResponse(this Offer offer)
+        public static CardResponse ToCardResponse(this Offer offer)
         {
             var firstActiveImage = offer.Product.ProductImages.FirstOrDefault(item => item.IsActive);
-            return new MainPageCardResponse()
+            return new CardResponse()
             {
                 Id = offer.Id,
                 ImageUrl = firstActiveImage?.ImagePath,
@@ -69,10 +69,10 @@ namespace CSOS.Core.Mappings.ToDto
             };
         }
 
-        public static OfferBrowserItemResponseDto ToOfferBrowserItemResponse(this Offer offer)
+        public static OfferIndexResponse ToOfferIndexResponse(this Offer offer)
         {
             var activeImage = offer.Product.ProductImages.FirstOrDefault(img => img.IsActive);
-            return new OfferBrowserItemResponseDto
+            return new OfferIndexResponse()
             {
                 Id = offer.Id,
                 ProductName = offer.Product.ProductName,
@@ -87,7 +87,7 @@ namespace CSOS.Core.Mappings.ToDto
             };
         }
         
-        public static EditOfferResponse ToEditOfferResponseDto(this Offer offer)
+        public static EditOfferResponse ToEditOfferResponse(this Offer offer)
         {
             return new EditOfferResponse()
             {

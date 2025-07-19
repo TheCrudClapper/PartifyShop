@@ -1,6 +1,6 @@
-﻿namespace CSOS.Core.ErrorHandling
+﻿namespace CSOS.Core.ResultTypes
 {
-    public class AddressErrors
+    public static class AddressErrors
     {
         public static readonly Error AddressNotFound = new Error(
             "Address.AddressNotFound", "Address of given id not found");

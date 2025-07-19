@@ -1,6 +1,6 @@
 ﻿using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO.CartDto;
-using CSOS.Core.ErrorHandling;
+using CSOS.Core.ResultTypes;
 
 namespace CSOS.Core.ServiceContracts
 {

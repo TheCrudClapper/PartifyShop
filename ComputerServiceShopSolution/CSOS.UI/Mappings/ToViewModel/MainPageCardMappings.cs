@@ -6,7 +6,7 @@ namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class MainPageCardMappings
     {
-        public static MainPageCardViewModel ToMainPageCardViewModel(this MainPageCardResponse dto, IConfigurationReader configurationReader)
+        public static MainPageCardViewModel ToMainPageCardViewModel(this CardResponse dto, IConfigurationReader configurationReader)
         {
             return new MainPageCardViewModel
             {

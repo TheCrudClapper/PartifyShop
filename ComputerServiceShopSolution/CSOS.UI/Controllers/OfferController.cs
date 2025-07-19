@@ -17,21 +17,27 @@ namespace CSOS.UI.Controllers
     public class OfferController : Controller
     {
         private readonly IOfferService _offerService;
+        private readonly IDeliveryTypeGetterService _deliveryTypeGetterService;
         private readonly IPictureHandlerService _pictureHandlerService;
         private readonly OfferViewModelInitializer _offerViewModelInitializer;
         private readonly IProductImageService _productImageService;
         private readonly IConfigurationReader _configurationReader;
+        private readonly ISortingOptionService _sortingOptionService;
         public OfferController(IOfferService offerService,
+            IDeliveryTypeGetterService deliveryTypeGetterService,
             IPictureHandlerService pictureHandlerService,
             OfferViewModelInitializer offerViewModelInitializer,
             IProductImageService productImageService,
+            ISortingOptionService sortingOptionService,
             IConfigurationReader configurationReader)
         {
             _offerService = offerService;
             _pictureHandlerService = pictureHandlerService;
             _offerViewModelInitializer = offerViewModelInitializer;
             _productImageService = productImageService;
+            _sortingOptionService = sortingOptionService;
             _configurationReader = configurationReader;
+            _deliveryTypeGetterService = deliveryTypeGetterService;
         }
         
         [HttpGet]
@@ -140,9 +146,30 @@ namespace CSOS.UI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index([FromQuery] OfferFilter filter)
         {
-            OfferIndexResponse response = await _offerService.GetFilteredOffers(filter);
-            OfferBrowserViewModel viewModel = response.ToOfferIndexViewModel(_configurationReader);
+            IEnumerable<OfferIndexResponse> filteredOffers = await _offerService.GetFilteredOffers(filter);
+            OfferBrowserViewModel viewModel = new OfferBrowserViewModel()
+            {
+                Items = filteredOffers.Select(item => item.ToOfferIndexItemViewModel(_configurationReader))
+                    .ToList(),
+                
+                DeliveryOptions = (await _deliveryTypeGetterService.GetAllDeliveryTypesAsSelectionList())
+                    .ToSelectListItem(),
+                
+                SortingOptions = _sortingOptionService.GetSortingOptions()
+                    .ToSelectListItem(),
+                
+                Filter = filter,  
+            };
             return View(viewModel);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> FilterOffers([FromQuery] OfferFilter filter)
+        {
+            IEnumerable<OfferIndexResponse> filteredOffers = await _offerService.GetFilteredOffers(filter);
+            var viewModel = filteredOffers.Select(item => item.ToOfferIndexItemViewModel(_configurationReader));
+            return PartialView("OfferPartials/_OfferListPartial", viewModel);
         }
     }
 }

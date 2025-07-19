@@ -1,6 +1,8 @@
 ﻿using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO;
-using CSOS.Core.ErrorHandling;
+using CSOS.Core.DTO.UniversalDto;
+using CSOS.Core.ResultTypes;
+
 namespace CSOS.Core.ServiceContracts
 {
     public interface IProductImageService

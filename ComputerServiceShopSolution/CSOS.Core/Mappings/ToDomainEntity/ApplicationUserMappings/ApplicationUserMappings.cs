@@ -1,5 +1,4 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
-using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO.AccountDto;
 

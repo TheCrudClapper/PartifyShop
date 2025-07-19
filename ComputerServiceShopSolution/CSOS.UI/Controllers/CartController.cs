@@ -38,7 +38,7 @@ namespace CSOS.UI.Controllers
             if (result.IsFailure)
                 return Json(new JsonResponseModel { Success = false, Message = $"Error: {result.Error.Description}" });
 
-            return Json(new JsonResponseModel { Success = true, Message = "Item Successfully Added to Index" });
+            return Json(new JsonResponseModel { Success = true, Message = "Item Successfully Added to Cart" });
         }
 
         [HttpPost]

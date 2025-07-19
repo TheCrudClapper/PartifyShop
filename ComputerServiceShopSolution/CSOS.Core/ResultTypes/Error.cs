@@ -1,4 +1,4 @@
-﻿namespace CSOS.Core.ErrorHandling
+﻿namespace CSOS.Core.ResultTypes
 {
     public sealed record Error(string ErrorCode, string Description)
     {

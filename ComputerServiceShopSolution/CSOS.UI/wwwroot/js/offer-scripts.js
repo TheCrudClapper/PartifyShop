@@ -1,4 +1,5 @@
-﻿$(document).on('click', '.addToCartButton', function (e) {
+﻿
+$(document).on('click', '.addToCartButton', function (e) {
     e.preventDefault();
     var offerId = $(this).data('id');
     var token = $('input[name="__RequestVerificationToken"]').val();
@@ -24,11 +25,4 @@
 
 });
 
-function storeOriginalValue(input) {
-    input.dataset.originalValue = input.value;
-}
-function submitIfChanged(input) {
-    if (input.value !== input.dataset.originalValue) {
-        input.form.submit();
-    }
-}
+

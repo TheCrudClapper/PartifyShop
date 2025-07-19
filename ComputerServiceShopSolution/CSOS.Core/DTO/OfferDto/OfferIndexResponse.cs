@@ -1,14 +1,16 @@
-﻿using CSOS.Core.Helpers;
-
-namespace CSOS.Core.DTO.OfferDto
+﻿namespace CSOS.Core.DTO.OfferDto
 {
     public class OfferIndexResponse
     {
-        public List<OfferBrowserItemResponseDto> Items = new List<OfferBrowserItemResponseDto>();
-        public OfferFilter Filter { get; set; } = null!;
-
-        public List<SelectListItemDto> DeliveryOptions = new List<SelectListItemDto>();
-
-        public List<SelectListItemDto> SortingOptions = new List<SelectListItemDto>();
+        public int Id { get; set; }
+        public string ProductCondition { get; set; } = null!;
+        public string ProductName { get; set; } = null!;
+        public string? ImageUrl { get; set; }
+        public string ProductCategory { get; set; } = null!;
+        public DateTime DateCreated { get; set; }
+        public string Description { get; set; } = null!;
+        public int StockQuantity { get; set; }
+        public decimal Price { get; set; }
+        public string Seller { get; set; } = null!;
     }
 }

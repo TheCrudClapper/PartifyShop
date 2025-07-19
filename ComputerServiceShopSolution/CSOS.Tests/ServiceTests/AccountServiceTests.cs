@@ -1,6 +1,5 @@
 ﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.Domain.RepositoryContracts;
-using CSOS.Core.ErrorHandling;
 using CSOS.Core.ServiceContracts;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using AutoFixture;
 using CSOS.Core.DTO.AccountDto;
+using CSOS.Core.ResultTypes;
 using CSOS.Core.Services;
 
 namespace CSOS.Tests.ServiceTests

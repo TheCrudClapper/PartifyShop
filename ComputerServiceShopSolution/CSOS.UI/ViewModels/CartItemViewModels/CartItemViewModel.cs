@@ -1,4 +1,4 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels.CartItemViewModels
+﻿namespace CSOS.UI.ViewModels.CartItemViewModels
 { 
     public class CartItemViewModel
     {

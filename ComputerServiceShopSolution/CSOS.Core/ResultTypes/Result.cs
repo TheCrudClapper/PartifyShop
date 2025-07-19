@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-
-namespace CSOS.Core.ErrorHandling
+namespace CSOS.Core.ResultTypes
 {
     public class Result
     {

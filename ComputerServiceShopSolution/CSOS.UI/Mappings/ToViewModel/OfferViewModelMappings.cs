@@ -1,6 +1,7 @@
 ﻿using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
 using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.DTO.OfferDto;
+using CSOS.Core.Helpers;
 using CSOS.UI.Mappings.Universal;
 using CSOS.UI.ViewModels.OfferViewModels;
 using CSOS.UI.ViewModels.SharedViewModels;
@@ -26,31 +27,24 @@ namespace CSOS.UI.Mappings.ToViewModel
                 ExistingImagesUrls = dto.ExistingImagesUrls.ToSelectListItem()
             };
         }
-        
-        
-        public static OfferBrowserViewModel ToOfferIndexViewModel(this OfferIndexResponse dto, IConfigurationReader configurationReader)
+
+        public static OfferIndexItemViewModel ToOfferIndexItemViewModel(this OfferIndexResponse dto, IConfigurationReader configurationReader)
         {
-            return new OfferBrowserViewModel
+            return new OfferIndexItemViewModel
             {
-                Filter = dto.Filter,
-                SortingOptions = dto.SortingOptions.ToSelectListItem(),
-                DeliveryOptions = dto.DeliveryOptions.ToSelectListItem(),
-                Items = dto.Items.Select(item => new OfferIndexItemViewModel()
-                {
-                    ProductCategory = item.ProductCategory,
-                    ProductCondition = item.ProductCondition,
-                    DateCreated = item.DateCreated,
-                    Description = item.Description,
-                    Id = item.Id,
-                    ImageUrl = string.IsNullOrEmpty(item.ImageUrl) ? configurationReader.DefaultProductImage : item.ImageUrl,
-                    Price = item.Price,
-                    StockQuantity = item.StockQuantity,
-                    Seller = item.Seller,
-                    ProductName = item.ProductName,
-                }).ToList(),
+                Description = dto.Description,
+                Price = dto.Price,
+                ProductName = dto.ProductName,
+                Id = dto.Id,
+                DateCreated = dto.DateCreated,
+                ImageUrl = string.IsNullOrEmpty(dto.ImageUrl) ? configurationReader.DefaultProductImage : dto.ImageUrl,
+                ProductCategory = dto.ProductCategory,
+                ProductCondition = dto.ProductCondition,
+                StockQuantity = dto.StockQuantity,
+                Seller = dto.Seller,
             };
         }
-
+        
         public static OfferDetailsViewModel ToOfferDetailsViewModel(this OfferResponse dto, IConfigurationReader configurationReader)
         {
             

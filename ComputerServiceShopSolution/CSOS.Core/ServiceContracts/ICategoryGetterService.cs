@@ -1,5 +1,4 @@
-﻿using CSOS.Core.DTO;
-using CSOS.Core.DTO.UniversalDto;
+﻿using CSOS.Core.DTO.UniversalDto;
 
 namespace CSOS.Core.ServiceContracts
 {
@@ -9,7 +8,7 @@ namespace CSOS.Core.ServiceContracts
         /// Gets Product categories to display in main page of application
         /// </summary>
         /// <returns>An List of MainPageCardViewModel items</returns>
-        Task<IEnumerable<MainPageCardResponse>> GetProductCategoriesAsMainPageCardResponseDto();
+        Task<IEnumerable<CardResponse>> GetProductCategoriesAsCardResponse();
         /// <summary>
         /// Gets ProductCategories as SelectListItems
         /// </summary>

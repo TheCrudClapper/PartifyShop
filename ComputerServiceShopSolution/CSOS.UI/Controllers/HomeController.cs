@@ -29,7 +29,7 @@ namespace CSOS.UI.Controllers
             {
                 Cards = (await _offerService.GetIndexPageOffers()).Select((item => item.ToMainPageCardViewModel(_configurationReader))),
                 Categories = (await _categoryGetterService.GetProductCategoriesAsSelectList()).ToSelectListItem(),
-                CategoriesSlider = (await _categoryGetterService.GetProductCategoriesAsMainPageCardResponseDto()).Select(item => item.ToMainPageCardViewModel(_configurationReader)),
+                CategoriesSlider = (await _categoryGetterService.GetProductCategoriesAsCardResponse()).Select(item => item.ToMainPageCardViewModel(_configurationReader)),
                 BestDeals = (await _offerService.GetDealsOfTheDay()).Select(item=>item.ToMainPageCardViewModel(_configurationReader)),
             };
             return View(viewModel);

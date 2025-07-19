@@ -1,4 +1,6 @@
-﻿namespace CSOS.Core.DTO.OfferDto
+﻿using CSOS.Core.DTO.UniversalDto;
+
+namespace CSOS.Core.DTO.OfferDto
 {
     public class EditOfferResponse
     {

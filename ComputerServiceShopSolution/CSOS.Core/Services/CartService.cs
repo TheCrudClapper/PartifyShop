@@ -1,8 +1,8 @@
 ﻿using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.CartDto;
-using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDto;
+using CSOS.Core.ResultTypes;
 using CSOS.Core.ServiceContracts;
 
 namespace CSOS.Core.Services

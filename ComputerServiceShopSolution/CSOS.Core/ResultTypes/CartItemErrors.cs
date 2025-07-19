@@ -1,4 +1,4 @@
-﻿namespace CSOS.Core.ErrorHandling
+﻿namespace CSOS.Core.ResultTypes
 {
     public static class CartItemErrors
     {

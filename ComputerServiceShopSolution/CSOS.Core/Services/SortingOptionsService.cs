@@ -1,4 +1,5 @@
 ﻿using CSOS.Core.DTO;
+using CSOS.Core.DTO.UniversalDto;
 using CSOS.Core.ServiceContracts;
 
 namespace CSOS.Core.Services

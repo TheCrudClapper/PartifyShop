@@ -1,6 +1,6 @@
-﻿namespace CSOS.Core.ErrorHandling
+﻿namespace CSOS.Core.ResultTypes
 {
-    public class OfferErrors
+    public static class OfferErrors
     {
         public static readonly Error OfferIsNull = new Error(
              "Offer.OfferIsNull", "Given offer is null");

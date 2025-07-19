@@ -1,5 +1,6 @@
-﻿using ComputerServiceOnlineShop.ViewModels.CartItemViewModels;
-namespace ComputerServiceOnlineShop.ViewModels.CartViewModels
+﻿using CSOS.UI.ViewModels.CartItemViewModels;
+
+namespace CSOS.UI.ViewModels.CartViewModels
 {
     public class CartViewModel
     {

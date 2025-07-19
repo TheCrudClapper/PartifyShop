@@ -2,10 +2,10 @@
 using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.AccountDto;
-using CSOS.Core.ErrorHandling;
 using CSOS.Core.Mappings.ToDomainEntity.AddressMappings;
 using CSOS.Core.Mappings.ToDomainEntity.ApplicationUserMappings;
 using CSOS.Core.Mappings.ToDto;
+using CSOS.Core.ResultTypes;
 using CSOS.Core.ServiceContracts;
 using Microsoft.AspNetCore.Identity;
 namespace CSOS.Core.Services

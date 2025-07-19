@@ -7,7 +7,7 @@ using ComputerServiceOnlineShop.Services;
 using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.AddressDto;
-using CSOS.Core.ErrorHandling;
+using CSOS.Core.ResultTypes;
 using CSOS.Core.Services;
 using FluentAssertions;
 

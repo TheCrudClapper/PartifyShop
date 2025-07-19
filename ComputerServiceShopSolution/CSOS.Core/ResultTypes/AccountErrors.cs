@@ -1,6 +1,6 @@
-﻿namespace CSOS.Core.ErrorHandling
+﻿namespace CSOS.Core.ResultTypes
 {
-    public class AccountErrors
+    public static class AccountErrors
     {
 
         public static readonly Error AccountNotFound = new Error(

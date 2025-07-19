@@ -8,17 +8,17 @@ namespace CSOS.Core.Services
 {
     public class CategoryGetterService : ICategoryGetterService
     {
-        public readonly IProductCategoryRepository _productCategoryRepo;
+        private readonly IProductCategoryRepository _productCategoryRepo;
         public CategoryGetterService(IProductCategoryRepository productCategoryRepository)
         {
             _productCategoryRepo = productCategoryRepository;
         }
 
-        public async Task<IEnumerable<MainPageCardResponse>> GetProductCategoriesAsMainPageCardResponseDto()
+        public async Task<IEnumerable<CardResponse>> GetProductCategoriesAsCardResponse()
         {
             var categories = await _productCategoryRepo.GetAllProductCategoriesAsync();
 
-            return categories.Select(item => new MainPageCardResponse()
+            return categories.Select(item => new CardResponse()
             {
                 Id = item.Id,
                 ImageUrl = item.CategoryImage,

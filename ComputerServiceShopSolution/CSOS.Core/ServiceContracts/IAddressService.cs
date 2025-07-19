@@ -1,5 +1,5 @@
 ﻿using CSOS.Core.DTO.AddressDto;
-using CSOS.Core.ErrorHandling;
+using CSOS.Core.ResultTypes;
 
 namespace CSOS.Core.ServiceContracts
 {

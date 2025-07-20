@@ -123,10 +123,18 @@ namespace CSOS.UI.Controllers
         {
             IEnumerable<UserOfferResponse> response = await _offerService.GetFilteredUserOffers(title);
             IEnumerable<UserOffersViewModel> userOffers = response
-                .Select(item => item.ToUserOffersViewModel(_configurationReader))
-                .AsEnumerable();
+                .Select(item => item.ToUserOffersViewModel(_configurationReader));
             
             return View(userOffers);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FilterUserOffers(string? title)
+        {
+            IEnumerable<UserOfferResponse> response = await _offerService.GetFilteredUserOffers(title);
+            IEnumerable<UserOffersViewModel> viewModel =  response
+                .Select(item  => item.ToUserOffersViewModel(_configurationReader));
+            return PartialView("OfferPartials/_UserOfferListPartial",  viewModel);
         }
 
         [HttpGet]

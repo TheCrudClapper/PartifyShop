@@ -123,7 +123,6 @@ namespace CSOS.Core.Services
         {
             Guid userId = _currentUserService.GetUserId();
             var offers = await _offerRepo.GetFilteredUserOffersAsync(title, userId);
-
             return offers.Select(item => item.ToUserOfferResponse());
         }
 

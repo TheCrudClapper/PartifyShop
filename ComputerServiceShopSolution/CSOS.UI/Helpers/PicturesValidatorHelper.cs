@@ -4,7 +4,7 @@ namespace CSOS.UI.Helpers
 {
     public class PicturesValidatorHelper
     {
-        public static string? ValidatePictureExtensions(List<IFormFile> pictures, IPictureHandlerService service)
+        public static string? ValidatePictureExtensions(List<IFormFile>? pictures, IPictureHandlerService service)
         {
             if (pictures == null || pictures.Count == 0)
                 return null;

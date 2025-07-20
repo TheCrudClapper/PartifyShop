@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CSOS.UI.ViewModels.OfferViewModels
 {
-    public class OfferBrowserViewModel
+    public class OfferIndexViewModel
     {
         public List<OfferIndexItemViewModel> Items = new();
         public OfferFilter Filter { get; set; } = null!;

@@ -1,4 +1,4 @@
-﻿using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
+﻿using CSOS.UI.ViewModels.AddressViewModels;
 
 namespace CSOS.UI.ViewModels.AccountViewModels
 {

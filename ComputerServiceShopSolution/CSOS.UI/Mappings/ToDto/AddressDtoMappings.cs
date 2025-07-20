@@ -1,5 +1,6 @@
-﻿using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
-using CSOS.Core.DTO.AddressDto;
+﻿using CSOS.Core.DTO.AddressDto;
+using CSOS.UI.ViewModels.AddressViewModels;
+
 namespace CSOS.UI.Mappings.ToDto
 {
     public static class AddressDtoMappings

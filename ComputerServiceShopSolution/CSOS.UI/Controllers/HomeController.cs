@@ -1,8 +1,8 @@
-using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
 using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
+using CSOS.UI.ViewModels.HomePageViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;

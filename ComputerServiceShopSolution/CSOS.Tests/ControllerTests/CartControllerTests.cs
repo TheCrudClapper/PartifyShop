@@ -5,6 +5,7 @@ using CSOS.Core.ResultTypes;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI;
 using CSOS.UI.Controllers;
+using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToViewModel;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;

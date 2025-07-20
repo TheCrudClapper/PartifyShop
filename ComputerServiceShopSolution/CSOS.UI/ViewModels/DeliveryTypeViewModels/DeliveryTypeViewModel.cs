@@ -1,4 +1,4 @@
-﻿namespace CSOS.UI.ViewModels.SharedViewModels
+﻿namespace CSOS.UI.ViewModels.DeliveryTypeViewModels
 {
     public class DeliveryTypeViewModel
     {

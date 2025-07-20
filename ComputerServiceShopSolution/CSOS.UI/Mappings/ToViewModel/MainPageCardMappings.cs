@@ -1,6 +1,6 @@
-﻿using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
-using CSOS.Core.Domain.InfrastructureServiceContracts;
+﻿using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.DTO.UniversalDto;
+using CSOS.UI.ViewModels.HomePageViewModels;
 
 namespace CSOS.UI.Mappings.ToViewModel
 {
@@ -18,10 +18,5 @@ namespace CSOS.UI.Mappings.ToViewModel
                     : dto.ImageUrl,
             };
         }
-
-        // public static IEnumerable<MainPageCardViewModel> ToViewModel(this IEnumerable<MainPageCardResponse> dtos, IConfigurationReader configurationReader)
-        // {
-        //     return dtos.Select(dto => dto.ToMainPageCardViewModel(configurationReader));
-        // }
     }
 }

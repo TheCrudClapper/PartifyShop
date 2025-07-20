@@ -1,11 +1,11 @@
 ﻿using AutoFixture;
-using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
 using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.OfferDto;
 using CSOS.Core.DTO.UniversalDto;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Controllers;
+using CSOS.UI.ViewModels.HomePageViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;

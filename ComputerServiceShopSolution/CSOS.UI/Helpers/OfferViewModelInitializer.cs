@@ -1,9 +1,7 @@
-﻿using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
-using CSOS.Core.ServiceContracts;
+﻿using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
 using CSOS.UI.ViewModels.OfferViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CSOS.UI.Helpers
 {

@@ -1,4 +1,4 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels.AddressViewModels
+﻿namespace CSOS.UI.ViewModels.AddressViewModels
 {
     public class UserAddressDetailsViewModel
     {

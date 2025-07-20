@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
-namespace ComputerServiceOnlineShop.ViewModels.AccountViewModels
+namespace CSOS.UI.ViewModels.AccountViewModels
 {
     public class RegisterViewModel
     {

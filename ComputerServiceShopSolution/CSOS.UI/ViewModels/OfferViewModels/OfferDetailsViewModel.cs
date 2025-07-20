@@ -1,4 +1,5 @@
-﻿using CSOS.UI.ViewModels.SharedViewModels;
+﻿using CSOS.UI.ViewModels.DeliveryTypeViewModels;
+using CSOS.UI.ViewModels.SharedViewModels;
 namespace CSOS.UI.ViewModels.OfferViewModels
 {
     public class OfferDetailsViewModel
@@ -8,9 +9,9 @@ namespace CSOS.UI.ViewModels.OfferViewModels
         public DateTime DateCreated { get; set; }
         public string Title { get; set; } = null!;
         public string Seller { get; set; } = null!;
-        public string ProdcutCategory { get; set; } = null!;
+        public string ProductCategory { get; set; } = null!;
         public int StockQuantity { get; set; }
-        public bool isSellerCompany { get; set; }
+        public bool IsSellerCompany { get; set; }
         public string Description { get; set; } = null!;
         public string PostalCity { get; set; } = null!;
         public string PostalCode { get; set; } = null!;
@@ -19,6 +20,6 @@ namespace CSOS.UI.ViewModels.OfferViewModels
 
         public List<string> ProductImages = new List<string>();
 
-        public List<DeliveryTypeViewModel> AvaliableDeliveryTypes = new List<DeliveryTypeViewModel>();
+        public List<DeliveryTypeViewModel> AvaliableDeliveryTypes = [];
     }
 }

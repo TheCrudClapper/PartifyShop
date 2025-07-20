@@ -1,6 +1,4 @@
-﻿using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
-using CSOS.Core.DTO;
-using CSOS.Core.DTO.AccountDto;
+﻿using CSOS.Core.DTO.AccountDto;
 using CSOS.UI.ViewModels.AccountViewModels;
 
 namespace CSOS.UI.Mappings.ToDto

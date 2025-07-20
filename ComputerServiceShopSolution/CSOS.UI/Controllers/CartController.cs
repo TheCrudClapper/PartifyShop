@@ -1,10 +1,13 @@
 ﻿using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.ServiceContracts;
+using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSOS.UI.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
@@ -30,7 +33,6 @@ namespace CSOS.UI.Controllers
 
 
         [HttpPost]
-        //default quantity always 1
         public async Task<IActionResult> AddToCart(int id, int quantity = 1)
         {
             var result = await _cartService.AddToCart(id, quantity);

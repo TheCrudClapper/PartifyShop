@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ComputerServiceOnlineShop.ViewModels.IndexPageViewModel
+namespace CSOS.UI.ViewModels.HomePageViewModels
 {
     public class IndexPageViewModel
     {

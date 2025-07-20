@@ -1,6 +1,4 @@
-﻿using ComputerServiceOnlineShop.ViewModels.IndexPageViewModel;
-
-namespace ComputerServiceOnlineShop.ViewModels.HomePageViewModels
+﻿namespace CSOS.UI.ViewModels.HomePageViewModels
 {
     public class ProductScrollerViewModel
     {

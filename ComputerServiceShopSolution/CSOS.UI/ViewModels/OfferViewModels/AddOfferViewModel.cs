@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
-using CSOS.UI.ViewModels.OfferViewModels;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace ComputerServiceOnlineShop.ViewModels.OfferViewModels
+namespace CSOS.UI.ViewModels.OfferViewModels
 {
     /// <summary>
     /// View model for adding new offer to shop

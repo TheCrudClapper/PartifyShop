@@ -1,5 +1,4 @@
-﻿using CSOS.Core.DTO;
-using CSOS.Core.DTO.UniversalDto;
+﻿using CSOS.Core.DTO.UniversalDto;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CSOS.UI.Mappings.Universal

@@ -1,10 +1,9 @@
-﻿using ComputerServiceOnlineShop.Entities.Models;
-using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
 using CSOS.Core.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ComputerServiceOnlineShop.Entities.Contexts
+namespace CSOS.Infrastructure.DbContext
 {
     public class DatabaseContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {

@@ -1,4 +1,4 @@
-﻿namespace ComputerServiceOnlineShop.ViewModels.IndexPageViewModel
+﻿namespace CSOS.UI.ViewModels.HomePageViewModels
 {
     public class MainPageCardViewModel
     {

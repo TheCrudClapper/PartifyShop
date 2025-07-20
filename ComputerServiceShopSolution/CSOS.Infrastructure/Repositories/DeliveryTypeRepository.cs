@@ -1,7 +1,6 @@
 ﻿using CSOS.Core.Domain.RepositoryContracts;
-using ComputerServiceOnlineShop.Entities.Contexts;
-using ComputerServiceOnlineShop.Entities.Models;
 using CSOS.Core.Domain.Entities;
+using CSOS.Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace CSOS.Infrastructure.Repositories

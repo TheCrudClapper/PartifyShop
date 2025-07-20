@@ -1,5 +1,5 @@
-﻿using CSOS.Core.Domain.Entities;
-using CSOS.Core.DTO.DeliveryTypeDto;
+﻿using CSOS.Core.DTO.DeliveryTypeDto;
+using CSOS.UI.ViewModels.DeliveryTypeViewModels;
 using CSOS.UI.ViewModels.SharedViewModels;
 namespace CSOS.UI.Mappings.ToViewModel
 {

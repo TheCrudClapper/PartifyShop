@@ -1,8 +1,5 @@
-﻿using ComputerServiceOnlineShop.Services;
-using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
-using CSOS.Core.DTO;
-using System.Threading.Tasks;
-using CSOS.Core.DTO.OfferDto;
+﻿using CSOS.Core.DTO.OfferDto;
+using CSOS.UI.ViewModels.OfferViewModels;
 
 namespace CSOS.UI.Mappings.ToDto
 {

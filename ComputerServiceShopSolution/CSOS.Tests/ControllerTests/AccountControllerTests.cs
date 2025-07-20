@@ -1,6 +1,5 @@
 using Moq;
 using AutoFixture;
-using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.DTO.UniversalDto;
@@ -15,6 +14,7 @@ using CSOS.UI.Mappings.Universal;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI;
 using CSOS.UI.Controllers;
+using CSOS.UI.Helpers;
 
 namespace CSOS.Tests.ControllerTests
 {
@@ -42,7 +42,7 @@ namespace CSOS.Tests.ControllerTests
 
         private AccountController CreateController()
         {
-            return new AccountController(_accountService, _countriesGetterService, _addressService);
+            return new AccountController(_accountService, _countriesGetterService);
         }
 
         #region Register GET Method Tests

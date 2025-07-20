@@ -1,7 +1,7 @@
 ﻿using CSOS.Core.ServiceContracts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ComputerServiceOnlineShop.ViewComponents
+namespace CSOS.UI.ViewComponents
 {
     public class NavbarCartViewComponent : ViewComponent
     {

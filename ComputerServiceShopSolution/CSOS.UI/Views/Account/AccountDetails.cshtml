@@ -3,9 +3,11 @@
     Layout = "_AccountSettingsLayout";
     ViewBag.Title = "Account Settings";
 }
+
 @section Styles {
-    <link rel="stylesheet" href="~/css/registration-style.css" />
+    <link rel="stylesheet" href="~/css/registration-style.css"/>
 }
+
 <div class="bg-white shadow py-3 mb-4 rounded-2">
     <h4 class="fw-bold px-3">Account Details</h4>
 
@@ -13,7 +15,7 @@
     <div id="user-details-form-container">
         @await Html.PartialAsync("AccountPartials/_UserDetailsForm", Model.UserDetails)
     </div>
-    
+
 </div>
 
 
@@ -23,7 +25,7 @@
     <div id="addres-change-form-container">
         @await Html.PartialAsync("AccountPartials/_AddressChangeForm", Model.EditAddress)
     </div>
-    
+
 </div>
 
 
@@ -35,10 +37,10 @@
     <div id="password-change-form-container">
         @await Html.PartialAsync("AccountPartials/_PasswordChangeForm", Model.PasswordChange)
     </div>
-    
+
 </div>
 
- @* Account Deletion Option  *@
+@* Account Deletion Option  *@
 <div class="bg-white shadow py-3 mb-4 rounded-2">
     <h4 class="fw-bold px-3">Delete Account</h4>
     <div class="mb-4 px-3">
@@ -54,7 +56,7 @@
 
 @section Scripts{
     <script>
-          $(document).ready(function () {
+        $(document).ready(function () {
             $('#user-details-form-container').on('submit', '#userDetailsForm', function (e) {
                 e.preventDefault();
                 var form = $(this);
@@ -75,8 +77,8 @@
             });
         });
 
-        $(document).ready(function (){
-            $("#addres-change-form-container").on("submit", "#addresChangeForm", function(e){
+        $(document).ready(function () {
+            $("#addres-change-form-container").on("submit", "#addresChangeForm", function (e) {
                 e.preventDefault();
                 var form = $(this);
                 var addressId = form.find("#update-address-button").data("id");
@@ -97,8 +99,8 @@
             });
         });
 
-        $(document).ready(function (){
-            $('#password-change-form-container').on('submit', '#passwordChangeForm', function (e){
+        $(document).ready(function () {
+            $('#password-change-form-container').on('submit', '#passwordChangeForm', function (e) {
                 e.preventDefault();
                 var form = $(this);
                 var url = form.attr('action');

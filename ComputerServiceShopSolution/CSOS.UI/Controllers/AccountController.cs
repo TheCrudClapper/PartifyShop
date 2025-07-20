@@ -1,7 +1,6 @@
-﻿using ComputerServiceOnlineShop.ViewModels.AccountViewModels;
-using CSOS.Core.DTO;
-using CSOS.Core.DTO.AccountDto;
+﻿using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.ServiceContracts;
+using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
@@ -17,7 +16,7 @@ namespace CSOS.UI.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ICountriesGetterService _countriesGetterService;
-        public AccountController(IAccountService accountService, ICountriesGetterService countriesGetterService, IAddressService addressService)
+        public AccountController(IAccountService accountService, ICountriesGetterService countriesGetterService)
         {
             _accountService = accountService;
             _countriesGetterService = countriesGetterService;
@@ -49,19 +48,16 @@ namespace CSOS.UI.Controllers
 
             RegisterRequest request = viewModel.ToRegisterRequest();
             IdentityResult result = await _accountService.Register(request);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else
+            if (!result.Succeeded)
             {
                 foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
                 return View(viewModel);
+                
             }
-
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

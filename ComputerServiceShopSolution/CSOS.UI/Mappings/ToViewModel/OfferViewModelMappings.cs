@@ -1,8 +1,7 @@
-﻿using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
-using CSOS.Core.Domain.InfrastructureServiceContracts;
+﻿using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.DTO.OfferDto;
-using CSOS.Core.Helpers;
 using CSOS.UI.Mappings.Universal;
+using CSOS.UI.ViewModels.DeliveryTypeViewModels;
 using CSOS.UI.ViewModels.OfferViewModels;
 using CSOS.UI.ViewModels.SharedViewModels;
 
@@ -66,7 +65,7 @@ namespace CSOS.UI.Mappings.ToViewModel
                 PostalCity = dto.PostalCity,
                 PostalCode = dto.PostalCode,
                 Seller= dto.Seller,
-                ProdcutCategory = dto.ProductCategory,
+                ProductCategory = dto.ProductCategory,
                 StockQuantity = dto.StockQuantity,
                 ProductImages = dto.ProductImages.Select(img => string.IsNullOrEmpty(img) ? configurationReader.DefaultProductImage : img).ToList(),
             };

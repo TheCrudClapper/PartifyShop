@@ -1,10 +1,12 @@
-﻿using ComputerServiceOnlineShop.ViewModels.OrderViewModels;
-using CSOS.Core.ServiceContracts;
+﻿using CSOS.Core.ServiceContracts;
 using CSOS.UI.Mappings.ToViewModel;
+using CSOS.UI.ViewModels.OrderViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSOS.UI.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IAddressService _addressService;
@@ -20,7 +22,6 @@ namespace CSOS.UI.Controllers
 
             if(response.IsFailure)
                 return View("Error", response.Error.Description);
-
 
             var viewModel = new AddOrderViewModel()
             {

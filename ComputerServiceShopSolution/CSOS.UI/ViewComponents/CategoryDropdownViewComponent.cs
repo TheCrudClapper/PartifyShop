@@ -2,7 +2,7 @@
 using CSOS.UI.Mappings.Universal;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ComputerServiceOnlineShop.ViewComponents
+namespace CSOS.UI.ViewComponents
 {
     public class CategoryDropdownViewComponent : ViewComponent
     {

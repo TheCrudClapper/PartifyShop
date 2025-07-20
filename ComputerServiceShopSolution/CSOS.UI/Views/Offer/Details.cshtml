@@ -14,7 +14,7 @@
 
 <div class="container mt-3">
     <div class="row g-3 mb-2">
-        <span class="fs-6">Partify <b>/</b> @Model.ProdcutCategory </span>
+        <span class="fs-6">Partify <b>/</b> @Model.ProductCategory </span>
     </div>
     <div class="row g-3">
         <div class="col-12 col-lg-8">
@@ -63,7 +63,7 @@
                 </p>
                 <hr/>
                 <h3 class="fw-bold">@Model.Price PLN</h3>
-                <h6><span class="badge bg-secondary text-bg-secondary">Seller: @(Model.isSellerCompany ? "Company" : "Private Person") </span></h6>
+                <h6><span class="badge bg-secondary text-bg-secondary">Seller: @(Model.IsSellerCompany ? "Company" : "Private Person") </span></h6>
                 <div class="row">
                     @if (User.Identity!.Name != Model.Seller)
                     {

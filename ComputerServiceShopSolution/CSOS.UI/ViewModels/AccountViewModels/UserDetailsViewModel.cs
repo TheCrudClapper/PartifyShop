@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace CSOS.UI.ViewModels.AccountViewModels
 {
     public class UserDetailsViewModel

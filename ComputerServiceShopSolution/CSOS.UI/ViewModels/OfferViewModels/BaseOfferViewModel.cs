@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CSOS.UI.CustomValidators;
+using CSOS.UI.ViewModels.DeliveryTypeViewModels;
 using CSOS.UI.ViewModels.SharedViewModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -42,15 +43,15 @@ namespace CSOS.UI.ViewModels.OfferViewModels
 
         //Collections for holding select list data
         [BindNever]
-        public IEnumerable<DeliveryTypeViewModel> ParcelLockerDeliveriesList { get; set; } = Enumerable.Empty<DeliveryTypeViewModel>();
+        public IEnumerable<DeliveryTypeViewModel> ParcelLockerDeliveriesList { get; set; } = [];
 
         [BindNever]
-        public IEnumerable<SelectListItem> ProductConditionsSelectList { get; set; } = Enumerable.Empty<SelectListItem>();
+        public IEnumerable<SelectListItem> ProductConditionsSelectList { get; set; } = [];
 
         [BindNever]
-        public IEnumerable<SelectListItem> ProductCategoriesSelectionList { get; set; } = Enumerable.Empty<SelectListItem>();
+        public IEnumerable<SelectListItem> ProductCategoriesSelectionList { get; set; } = [];
 
         [BindNever]
-        public IEnumerable<SelectListItem> OtherDeliveriesSelectedList { get; set; } = Enumerable.Empty<SelectListItem>();
+        public IEnumerable<SelectListItem> OtherDeliveriesSelectedList { get; set; } = [];
     }
 }

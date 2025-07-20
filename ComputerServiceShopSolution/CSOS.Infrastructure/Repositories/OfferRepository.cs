@@ -1,7 +1,7 @@
-﻿using ComputerServiceOnlineShop.Entities.Contexts;
-using CSOS.Core.Domain.Entities;
+﻿using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.Helpers;
+using CSOS.Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace CSOS.Infrastructure.Repositories

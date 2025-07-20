@@ -1,5 +1,4 @@
-﻿using ComputerServiceOnlineShop.ViewModels.OfferViewModels;
-using CSOS.Core.Domain.InfrastructureServiceContracts;
+﻿using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.DTO.OfferDto;
 using CSOS.Core.Helpers;
 using CSOS.Core.ServiceContracts;
@@ -155,7 +154,7 @@ namespace CSOS.UI.Controllers
         public async Task<IActionResult> Index([FromQuery] OfferFilter filter)
         {
             IEnumerable<OfferIndexResponse> filteredOffers = await _offerService.GetFilteredOffers(filter);
-            OfferBrowserViewModel viewModel = new OfferBrowserViewModel()
+            OfferIndexViewModel viewModel = new OfferIndexViewModel()
             {
                 Items = filteredOffers.Select(item => item.ToOfferIndexItemViewModel(_configurationReader))
                     .ToList(),

@@ -1,5 +1,6 @@
-﻿using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
-namespace ComputerServiceOnlineShop.ViewModels.OrderViewModels
+﻿using CSOS.UI.ViewModels.AddressViewModels;
+
+namespace CSOS.UI.ViewModels.OrderViewModels
 {
     public class AddOrderViewModel
     {

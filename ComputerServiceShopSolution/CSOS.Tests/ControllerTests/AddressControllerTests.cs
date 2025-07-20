@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using ComputerServiceOnlineShop.ViewModels.AddressViewModels;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.DTO.AddressDto;
@@ -8,6 +7,8 @@ using CSOS.Core.ResultTypes;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI;
 using CSOS.UI.Controllers;
+using CSOS.UI.Helpers;
+using CSOS.UI.ViewModels.AddressViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

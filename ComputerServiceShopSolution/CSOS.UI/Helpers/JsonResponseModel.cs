@@ -1,4 +1,4 @@
-﻿namespace CSOS.UI
+﻿namespace CSOS.UI.Helpers
 {
     public class JsonResponseModel
     {

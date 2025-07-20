@@ -31,5 +31,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.5" />
   </ItemGroup>
+	
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Shared\Components\LoadingSpinner\Default.cshtml" />
+  </ItemGroup>
 
 </Project>

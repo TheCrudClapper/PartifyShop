@@ -131,28 +131,28 @@ namespace CSOS.Tests.ControllerTests
         public async Task Login_InvalidModelState_ReturnsView()
         {
             //Arrange
-            LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
+            LoginRequest request = _fixture.Create<LoginRequest>();
             _accountController = CreateController();
             _accountController.ModelState.AddModelError("key1", "Test dummy error");
 
             //Act
-            IActionResult result = await _accountController.Login(viewModel, It.IsAny<string>());
+            IActionResult result = await _accountController.Login(request, It.IsAny<string>());
 
             //Assert
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
-            viewResult.Model.Should().BeEquivalentTo(viewModel);
+            viewResult.Model.Should().BeEquivalentTo(request);
         }
 
         [Fact]
         public async Task Login_SuccededLogin_RedirectsToAction()
         {
             //Arrange
-            LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
+            LoginRequest request = _fixture.Create<LoginRequest>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginRequest>())).ReturnsAsync(SignInResult.Success);
 
             //Act
-            IActionResult result = await _accountController.Login(viewModel, String.Empty);
+            IActionResult result = await _accountController.Login(request, String.Empty);
 
             //Arrange
             RedirectToActionResult redirectToActionResult = result.Should().BeOfType<RedirectToActionResult>().Subject;
@@ -164,7 +164,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Login_ReturnUrlValid_ReturnsLocalRedirect()
         {
             //Arrange
-            LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
+            LoginRequest request = _fixture.Create<LoginRequest>();
 
             string localUrl = "~/Offer/Index";
 
@@ -178,7 +178,7 @@ namespace CSOS.Tests.ControllerTests
             _accountController.Url = urlHelperMock.Object;
 
             //Act
-            IActionResult result = await _accountController.Login(viewModel, localUrl);
+            IActionResult result = await _accountController.Login(request, localUrl);
 
             //Assert
             LocalRedirectResult localRedirectResult = result.Should().BeOfType<LocalRedirectResult>().Subject;
@@ -189,16 +189,16 @@ namespace CSOS.Tests.ControllerTests
         public async Task Login_FailedLogin_ReturnsView()
         {
             //Arrange
-            LoginViewModel viewModel = _fixture.Create<LoginViewModel>();
+            LoginRequest request = _fixture.Create<LoginRequest>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginRequest>())).ReturnsAsync(SignInResult.Failed);
 
             //Act
-            IActionResult result = await _accountController.Login(viewModel, String.Empty);
+            IActionResult result = await _accountController.Login(request, String.Empty);
 
             //Arrange
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
-            viewResult.Model.Should().BeEquivalentTo(viewModel);
+            viewResult.Model.Should().BeEquivalentTo(request);
             _accountController.ModelState.IsValid.Should().BeFalse();
             _accountController.ModelState["Login"]!.Errors.Should().NotBeNull();
         }

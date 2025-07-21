@@ -69,28 +69,22 @@ namespace CSOS.UI.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginViewModel viewModel, string? returnUrl)
+        public async Task<IActionResult> Login(LoginRequest request, string? returnUrl)
         {
             if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
-
-            LoginRequest request = viewModel.ToLoginRequest();
+                return View(request);
+            
             var result = await _accountService.Login(request);
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                {
-                    return LocalRedirect(returnUrl);
-                }
-                return RedirectToAction("Index", "Home");
+                ModelState.AddModelError("", "Invalid email or password");
+                return View(request);
             }
-            else
-            {
-                ModelState.AddModelError("Login", "Invalid email or password");
-                return View(viewModel);
-            }
+            
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return LocalRedirect(returnUrl);
+            
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

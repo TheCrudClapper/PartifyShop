@@ -64,12 +64,14 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 builder.Services.AddAuthentication("Cookies").AddCookie("Cookies", options =>
 {
     options.LoginPath = "/Account/Login";
+
 });
 builder.Services.AddAuthorization(options =>
 {
     //enforces authorization policy
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
     .RequireAuthenticatedUser().Build();
+    
 });
 builder.Services.ConfigureApplicationCookie(options =>
 {

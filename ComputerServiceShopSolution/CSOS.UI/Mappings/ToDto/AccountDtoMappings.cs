@@ -24,15 +24,6 @@ namespace CSOS.UI.Mappings.ToDto
                 Title = viewModel.Title,
             };
         }
-        public static LoginRequest ToLoginRequest(this LoginViewModel viewModel)
-        {
-            return new LoginRequest()
-            {
-                Email = viewModel.Email,
-                Password = viewModel.Password,
-                IsPersistent = viewModel.IsPersistent,
-            };
-        }
 
         public static AccountUpdateRequest ToAccountUpdateRequest(this UserDetailsViewModel viewModel)
         {

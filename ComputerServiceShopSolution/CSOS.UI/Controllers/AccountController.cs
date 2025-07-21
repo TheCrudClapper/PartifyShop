@@ -129,13 +129,12 @@ namespace CSOS.UI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(PasswordChangeViewModel viewModel)
+        public async Task<IActionResult> ChangePassword(PasswordChangeRequest request)
         {
             if (!ModelState.IsValid)
-                return PartialView("AccountPartials/_PasswordChangeForm", viewModel);
-
-            PasswordChangeRequest dto = viewModel.ToPasswordChangeRequest();
-            var result = await _accountService.ChangePassword(dto);
+                return PartialView("AccountPartials/_PasswordChangeForm", request);
+            
+            var result = await _accountService.ChangePassword(request);
 
             if(result.IsFailure)
                 return Json(new JsonResponseModel() { Success = false, Message = $"Error: {result.Error.Description}" });

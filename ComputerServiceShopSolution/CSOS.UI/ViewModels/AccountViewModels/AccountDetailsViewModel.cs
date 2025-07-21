@@ -1,4 +1,5 @@
-﻿using CSOS.UI.ViewModels.AddressViewModels;
+﻿using CSOS.Core.DTO.AccountDto;
+using CSOS.UI.ViewModels.AddressViewModels;
 
 namespace CSOS.UI.ViewModels.AccountViewModels
 {
@@ -6,6 +7,6 @@ namespace CSOS.UI.ViewModels.AccountViewModels
     {
         public UserDetailsViewModel UserDetails { get; set; } = null!;
         public EditAddressViewModel EditAddress { get; set; } = null!;
-        public PasswordChangeViewModel PasswordChange { get; set; } = null!;
+        public PasswordChangeRequest PasswordChangeRequest { get; set; } = null!;
     }
 }

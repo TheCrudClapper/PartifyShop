@@ -200,7 +200,7 @@ namespace CSOS.Tests.ControllerTests
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
             viewResult.Model.Should().BeEquivalentTo(request);
             _accountController.ModelState.IsValid.Should().BeFalse();
-            _accountController.ModelState["Login"]!.Errors.Should().NotBeNull();
+            _accountController.ModelState[""]!.Errors.Should().NotBeNull();
         }
         #endregion
 
@@ -332,7 +332,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task ChangePassword_InvalidModelState_ReturnsPartial()
         {
             //Arrange
-            PasswordChangeViewModel viewModel = _fixture.Create<PasswordChangeViewModel>();
+            PasswordChangeRequest viewModel = _fixture.Create<PasswordChangeRequest>();
             _accountController = CreateController();
             _accountController.ModelState.AddModelError("test", "test");
             
@@ -348,7 +348,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task ChangePassword_FailureServiceResult_ReturnsErrorJson()
         {
             //Arrange
-            PasswordChangeViewModel viewModel = _fixture.Create<PasswordChangeViewModel>();
+            PasswordChangeRequest viewModel = _fixture.Create<PasswordChangeRequest>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.ChangePassword(It.IsAny<PasswordChangeRequest>()))
                 .ReturnsAsync(Result.Failure(AccountErrors.PasswordChangeFailed));
@@ -367,7 +367,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task ChangePassword_SuccessServiceResult_ReturnsErrorJson()
         {
             //Arrange
-            PasswordChangeViewModel viewModel = _fixture.Create<PasswordChangeViewModel>();
+            PasswordChangeRequest viewModel = _fixture.Create<PasswordChangeRequest>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.ChangePassword(It.IsAny<PasswordChangeRequest>()))
                 .ReturnsAsync(Result.Success);

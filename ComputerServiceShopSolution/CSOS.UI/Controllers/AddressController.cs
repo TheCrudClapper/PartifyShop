@@ -67,7 +67,7 @@ namespace CSOS.UI.Controllers
 
             if (result.IsFailure)
             {
-                _logger.LogError("Failed to edit address for {UserName}, Error: {Error}", User.Identity!.Name, result.Error.Description);
+                _logger.LogError("Failed to edit address for {UserName}, Error: {Error}", User.Identity?.Name, result.Error.Description);
                 return Json(new JsonResponseModel() { Message = result.Error.Description, Success = false });
             }
                 

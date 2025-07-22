@@ -1,4 +1,5 @@
-﻿using CSOS.Core.DTO.AccountDto;
+﻿using Azure.Core;
+using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToDto;
@@ -29,8 +30,7 @@ namespace CSOS.UI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register()
         {
-            _logger.LogInformation("GET Register Method called at time {Time}", DateTime.UtcNow); 
-            
+            _logger.LogInformation("AccountController - GET Register method called.");
             var response = await _countriesGetterService.GetCountriesSelectionList();
             RegisterViewModel viewModel = new RegisterViewModel();
             viewModel.CountriesSelectionList = response.ToSelectListItem();
@@ -42,14 +42,17 @@ namespace CSOS.UI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel viewModel)
         {
-            _logger.LogInformation("POST Register Method called at time {Time}", DateTime.UtcNow);
-            
+            _logger.LogInformation("AccountController - POST Register method called for {Email}", viewModel.Email);
+
             var response = await _countriesGetterService.GetCountriesSelectionList();
             viewModel.CountriesSelectionList = response.ToSelectListItem();
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Invalid model state during registration for {Email}", viewModel.Email);
+                _logger.LogWarning("Invalid model state during registration for {Email}. Errors: {Errors}",
+                viewModel.Email,
+                string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+
                 return View(viewModel);
             }
 
@@ -58,7 +61,10 @@ namespace CSOS.UI.Controllers
             
             if (!result.Succeeded)
             {
-                _logger.LogError("Registration failed for {Email}.", viewModel.Email);
+                _logger.LogError("Registration failed for {Email}. Errors: {Errors}",
+                   viewModel.Email,
+                   string.Join(", ", result.Errors.Select(e => e.Description)));
+
                 foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -74,7 +80,7 @@ namespace CSOS.UI.Controllers
         [AllowAnonymous]
         public IActionResult Login()
         {
-            _logger.LogInformation("GET Login Method called at time {Time}", DateTime.UtcNow);
+            _logger.LogInformation("AccountController - GET Login method called.");
             return View();
         }
 
@@ -85,26 +91,29 @@ namespace CSOS.UI.Controllers
             _logger.LogInformation("POST Login Method called at time {Time}", DateTime.UtcNow);
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Invalid model state during logging in for User {Email}", request.Email);
+                _logger.LogWarning("Invalid model state during login for {Email}. Errors: {Errors}",
+                   request.Email,
+                   string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+
                 return View(request);
             }
 
             var result = await _accountService.Login(request);
             if (!result.Succeeded)
             {
-                _logger.LogError("Login Failed for {Email}.", request.Email);
+                _logger.LogError("Login failed for {Email}.", request.Email);
                 ModelState.AddModelError("", "Invalid email or password");
                 return View(request);
             }
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
-                _logger.LogInformation("User {Email} logged in successfully. Redirection to {Url}",  request.Email, returnUrl);
+                _logger.LogInformation("User {Email} logged in successfully. Redirecting to {ReturnUrl}", request.Email, returnUrl); ;
                 return LocalRedirect(returnUrl);
             }
-                
-            
-            _logger.LogInformation("User {Email} logged in successfully.",  request.Email);
+
+
+            _logger.LogInformation("User {Email} logged in successfully.", request.Email);
             return RedirectToAction("Index", "Home");
         }
 
@@ -112,19 +121,21 @@ namespace CSOS.UI.Controllers
         public async Task<IActionResult> Logout()
         {
             await _accountService.Logout();
-            _logger.LogInformation("User logged out at time {Time}", DateTime.UtcNow);
+            _logger.LogInformation("User {UserName} logged out.", User.Identity?.Name);
             return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
         public async Task<IActionResult> AccountDetails()
         {
-            _logger.LogInformation("GET AccountDetails Method called at {Time}",  DateTime.UtcNow);
+            _logger.LogInformation("AccountController - GET AccountDetails method called for {UserName}", User.Identity?.Name);
             var result = await _accountService.GetAccountDetailsAsync();
 
             if (result.IsFailure)
             {
-                _logger.LogError("Failed to fetch Account Details for {UserName}", User.Identity!.Name);
+                _logger.LogError("Failed to fetch account details for {UserName}. Error: {Error}",
+                    User.Identity?.Name, result.Error.Description);
+
                 return View("Error", result.Error.Description);
             }
             
@@ -136,16 +147,21 @@ namespace CSOS.UI.Controllers
 
             viewModel.EditAddress.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
 
-            _logger.LogInformation("Returning AccountDetails View");
+            _logger.LogInformation("Account details returned successfully for {UserName}", User.Identity?.Name);
             return View(viewModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(UserDetailsViewModel viewModel)
         {
+            _logger.LogInformation("AccountController - POST Edit method called for {UserName}", User.Identity?.Name);
+
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Invalid Model State for {UserName}",  User.Identity!.Name);
+                _logger.LogWarning("Invalid model state during account edit for {UserName}. Errors: {Errors}",
+                  User.Identity?.Name,
+                  string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+
                 return PartialView("AccountPartials/_UserDetailsForm", viewModel);
             }
             
@@ -154,21 +170,24 @@ namespace CSOS.UI.Controllers
 
             if (result.IsFailure)
             {
-                _logger.LogError("Failed to update user details for {UserName}", User.Identity!.Name);
+                _logger.LogError("Failed to update user details for {UserName}. Error: {Error}", User.Identity?.Name, result.Error.Description);
                 return Json(new JsonResponseModel() { Success = false, Message = $"Error: {result.Error.Description}" });
             }
-                
-            _logger.LogInformation("User details for {UserName} updated successfully",  User.Identity!.Name);
+
+            _logger.LogInformation("User details updated successfully for {UserName}", User.Identity?.Name);
             return Json(new JsonResponseModel() { Success = true, Message = "User details updated successfully !" });
         }
 
         [HttpPost]
         public async Task<IActionResult> ChangePassword(PasswordChangeRequest request)
         {
-            _logger.LogInformation("POST ChangePassword Method called at {Time}",  DateTime.UtcNow);
+            _logger.LogInformation("AccountController - POST ChangePassword method called for {UserName}", User.Identity?.Name);
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Invalid Model State for PasswordChangeRequest");
+                _logger.LogWarning("Invalid model state during password change for {UserName}. Errors: {Errors}",
+                   User.Identity?.Name,
+                   string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+
                 return PartialView("AccountPartials/_PasswordChangeForm", request);
             }
             
@@ -176,11 +195,11 @@ namespace CSOS.UI.Controllers
 
             if (result.IsFailure)
             {
-                _logger.LogError("Failed to change password for {UserName}", User.Identity!.Name);
+                _logger.LogError("Failed to change password for {UserName}. Error: {Error}", User.Identity?.Name, result.Error.Description);
                 return Json(new JsonResponseModel() { Success = false, Message = $"Error: {result.Error.Description}" });
             }
-            
-            _logger.LogInformation("Successfully changed password for {UserName}", User.Identity!.Name);
+
+            _logger.LogInformation("Password changed successfully for {UserName}", User.Identity?.Name);
             return Json(new JsonResponseModel() { Success = true, Message = "Password changed successfully !" });
         }
     }

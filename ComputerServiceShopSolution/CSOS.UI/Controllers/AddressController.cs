@@ -14,19 +14,28 @@ namespace CSOS.UI.Controllers
     {
         private readonly IAddressService _addressService;
         private readonly ICountriesGetterService _countriesGetterService;
-        public AddressController(IAddressService addressService, ICountriesGetterService countriesGetterService)
+        private readonly ILogger<AddressController> _logger;
+        public AddressController(IAddressService addressService, ICountriesGetterService countriesGetterService, ILogger<AddressController> logger)
         {
             _addressService = addressService;
             _countriesGetterService = countriesGetterService;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id)
         {
+            _logger.LogInformation("AddressController - GET Edit Method called with ID: {Id}", id);
             var result = await _addressService.GetUserAddressForEdit();
 
             if (result.IsFailure)
+            {
+                _logger.LogError("Failed to fetch Address for {UserName}, Errors: {Error}",
+                    User.Identity!.Name, result.Error.Description);
+
                 return View("Error", result.Error.Description);
+            }
+                
 
             EditAddressViewModel viewModel = result.Value.ToEditAddressViewModel();
             viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
@@ -36,11 +45,15 @@ namespace CSOS.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditAddressViewModel viewModel)
         {
+            _logger.LogInformation("AddressController - POST Edit Method called");
             if (!ModelState.IsValid)
             {
                 viewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList())
                     .ToSelectListItem();
-                
+
+                _logger.LogWarning("Invalid model state: {Errors}", string
+                    .Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+
                 return viewModel.Source switch
                 {
                     "AddOrder" => PartialView("_EditAddressPartial", viewModel),
@@ -53,10 +66,14 @@ namespace CSOS.UI.Controllers
             var result = await _addressService.EditUserAddress(updateRequest);
 
             if (result.IsFailure)
+            {
+                _logger.LogError("Failed to edit address for {UserName}, Error: {Error}", User.Identity!.Name, result.Error.Description);
                 return Json(new JsonResponseModel() { Message = result.Error.Description, Success = false });
-
+            }
+                
+            _logger.LogInformation("Successfully edited address for {UserName}", User.Identity!.Name);
             return Json(new JsonResponseModel() { Message = "Address updated successfully !", Success = true });
         }
 
     }
-}
+}   

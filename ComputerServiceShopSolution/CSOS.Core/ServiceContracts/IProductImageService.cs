@@ -5,6 +5,7 @@ using CSOS.Core.ResultTypes;
 
 namespace CSOS.Core.ServiceContracts
 {
+
     public interface IProductImageService
     {
         /// <summary>

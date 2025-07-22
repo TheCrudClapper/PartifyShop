@@ -7,17 +7,27 @@ namespace CSOS.Core.ServiceContracts
     public interface IAccountService
     {
         /// <summary>
-        /// Registers a new user in the system.
+        /// Registers a new user based on the provided registration details.
         /// </summary>
-        /// <param name="request">Registration data.</param>
-        /// <returns>An <see cref="IdentityResult"/> indicating success or failure.</returns>
+        /// <remarks>This method performs user registration and returns an <see cref="IdentityResult"/>
+        /// that provides  details about the success or failure of the operation. Ensure that all required fields in the
+        /// <paramref name="request"/> object are populated before calling this method.</remarks>
+        /// <param name="request">The registration details for the new user. This includes information such as username, password,  and other
+        /// required fields. Cannot be null.</param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. The result contains an  <see
+        /// cref="IdentityResult"/> indicating whether the registration was successful.</returns>
         Task<IdentityResult> Register(RegisterRequest? request);
 
         /// <summary>
-        /// Authenticates the user with the provided credentials.
+        /// Attempts to sign in a user using the provided login request.
         /// </summary>
-        /// <param name="request">Login credentials.</param>
-        /// <returns>A <see cref="SignInResult"/> indicating the result of the login attempt.</returns>
+        /// <remarks>Ensure that the <paramref name="request"/> contains valid credentials and any
+        /// required fields before calling this method. The behavior of the method may vary depending on the
+        /// implementation of the login process, such as handling multi-factor authentication or account lockout
+        /// scenarios.</remarks>
+        /// <param name="request">The login request containing user credentials and other sign-in details. This parameter can be null.</param>
+        /// <returns>A <see cref="SignInResult"/> object representing the outcome of the login attempt.  The result indicates
+        /// whether the sign-in was successful and may include additional information about the sign-in process.</returns>
         Task<SignInResult> Login(LoginRequest? request);
 
         /// <summary>

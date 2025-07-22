@@ -1,6 +1,5 @@
 using Moq;
 using AutoFixture;
-using CSOS.Core.DTO;
 using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.DTO.UniversalDto;
 using FluentAssertions;
@@ -12,9 +11,9 @@ using CSOS.UI.ViewModels.AccountViewModels;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
 using CSOS.Core.ServiceContracts;
-using CSOS.UI;
 using CSOS.UI.Controllers;
 using CSOS.UI.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace CSOS.Tests.ControllerTests
 {
@@ -26,6 +25,7 @@ namespace CSOS.Tests.ControllerTests
         private readonly Mock<IAccountService> _accountServiceMock;
         private readonly Mock<ICountriesGetterService> _countriesGetterServiceMock;
         private readonly Mock<IAddressService> _addressServiceMock;
+        private readonly ILogger<AccountController> _logger;
         private readonly IFixture _fixture;
         private AccountController _accountController;
 
@@ -37,12 +37,13 @@ namespace CSOS.Tests.ControllerTests
             _accountService = _accountServiceMock.Object;
             _countriesGetterService = _countriesGetterServiceMock.Object;
             _addressService = _addressServiceMock.Object;
+            _logger = Mock.Of<ILogger<AccountController>>();
             _fixture = new Fixture();
         }
 
         private AccountController CreateController()
         {
-            return new AccountController(_accountService, _countriesGetterService);
+            return new AccountController(_accountService, _countriesGetterService, _logger);
         }
 
         #region Register GET Method Tests

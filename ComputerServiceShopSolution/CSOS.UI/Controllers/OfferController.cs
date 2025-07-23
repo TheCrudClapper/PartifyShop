@@ -9,6 +9,7 @@ using CSOS.UI.Mappings.Universal;
 using CSOS.UI.ViewModels.OfferViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace CSOS.UI.Controllers
 {
@@ -22,13 +23,15 @@ namespace CSOS.UI.Controllers
         private readonly IProductImageService _productImageService;
         private readonly IConfigurationReader _configurationReader;
         private readonly ISortingOptionService _sortingOptionService;
+        private readonly ILogger<OfferController> _logger;
         public OfferController(IOfferService offerService,
             IDeliveryTypeGetterService deliveryTypeGetterService,
             IPictureHandlerService pictureHandlerService,
             OfferViewModelInitializer offerViewModelInitializer,
             IProductImageService productImageService,
             ISortingOptionService sortingOptionService,
-            IConfigurationReader configurationReader)
+            IConfigurationReader configurationReader,
+            ILogger<OfferController> logger)
         {
             _offerService = offerService;
             _pictureHandlerService = pictureHandlerService;
@@ -37,11 +40,13 @@ namespace CSOS.UI.Controllers
             _sortingOptionService = sortingOptionService;
             _configurationReader = configurationReader;
             _deliveryTypeGetterService = deliveryTypeGetterService;
+            _logger = logger;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            _logger.LogInformation("OfferControler - GET Create Method called");
             var viewModel = new AddOfferViewModel();
             await _offerViewModelInitializer.InitializeAllAsync(viewModel);
             return View(viewModel);
@@ -50,32 +55,52 @@ namespace CSOS.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(AddOfferViewModel viewModel)
         {
+            _logger.LogInformation("OfferControler - POST Create Method called");
             var pictureValidationResponse = PicturesValidatorHelper.ValidatePictureExtensions(viewModel.UploadedImages, _pictureHandlerService);
-            if(pictureValidationResponse != null)
+            if (pictureValidationResponse != null)
+            {
+                _logger.LogError("Error while validating pictures submitted by {UserName}. Error {Error}",
+                    User.Identity?.Name, pictureValidationResponse);
                 ModelState.AddModelError("WrongFileType", pictureValidationResponse);
+            }
+
 
             if (!ModelState.IsValid)
             {
                 await _offerViewModelInitializer.InitializeAllAsync(viewModel);
+
+                _logger.LogWarning("Invalid Model state. Errors {Errors}",
+                    string.Join(", ", ModelState.Values.SelectMany(item => item.Errors).Select(item => item.ErrorMessage)));
+
                 return View(viewModel);
             }
 
             OfferAddRequest dto = viewModel.ToAddOfferDto();
             var result = await _offerService.Add(dto);
 
-            if(result.IsFailure)
+            if (result.IsFailure)
+            {
+                _logger.LogError("Error while adding offer for {UserName}. Error {Error}.",
+                    User.Identity?.Name, result.Error.Description);
+
                 return View("Error", result.Error.Description);
+            }
 
             return RedirectToAction(nameof(UserOffers));
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id)
         {
+            _logger.LogInformation("OfferControler - GET Edit Method called with parameters {OfferId}", id);
             var response = await _offerService.GetOfferForEdit(id);
 
-            if(response.IsFailure)
+            if (response.IsFailure)
+            {
+                _logger.LogError("Error while fetching Offer for edit. Error: {Error}", response.Error.Description);
                 return View("Error", response.Error.Description);
+            }
+
 
             var viewModel = response.Value.ToEditOfferViewModel();
             await _offerViewModelInitializer.InitializeAllAsync(viewModel);
@@ -85,12 +110,16 @@ namespace CSOS.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(EditOfferViewModel viewModel)
         {
+            _logger.LogInformation("POST Edit called by user {User} with view model {@ViewModel}", User.Identity?.Name, viewModel);
             var pictureValidationResponse = PicturesValidatorHelper.ValidatePictureExtensions(viewModel.UploadedImages, _pictureHandlerService);
             if (pictureValidationResponse != null)
                 ModelState.AddModelError("WrongFileType", pictureValidationResponse);
 
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning("Invalid model state. Errors: {Errors}",
+                    string.Join(", ", ModelState.Values.SelectMany(item => item.Errors).Select(item => item.ErrorMessage)));
+
                 var images = await _productImageService.GetOfferPicturesAsync(viewModel.Id);
                 viewModel.ExistingImagesUrls = images.ToSelectListItem();
                 await _offerViewModelInitializer.InitializeAllAsync(viewModel);
@@ -98,53 +127,71 @@ namespace CSOS.UI.Controllers
             }
 
             var dto = viewModel.ToEditOfferDto();
-            var result =  await _offerService.Edit(dto);
+            var result = await _offerService.Edit(dto);
 
             if (result.IsFailure)
-                return View("Error", result.Error.Description);
+            {
+                _logger.LogError("Error while editing {UserName}'s offer. Error: {Error}",
+                     User.Identity?.Name, result.Error.Description);
 
+                return View("Error", result.Error.Description);
+            }
+               
             return RedirectToAction(nameof(UserOffers));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete([FromRoute]int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            _logger.LogInformation("OfferControler - POST Delete Method called with parameter: OfferId: {Param}", id);
             var result = await _offerService.DeleteOffer(id);
 
             if (result.IsFailure)
+            {
+                _logger.LogError("Error while deleting offer for {UserName}. Error: {Error}",
+                     User.Identity?.Name, result.Error.Description);
                 return Json(new JsonResponseModel() { Message = result.Error.Description, Success = false });
+            }
 
+            _logger.LogInformation("Successfully deleted offer of Id: {OfferId} for user {UserName}",
+                id, User.Identity?.Name);
             return Json(new JsonResponseModel() { Message = "Deleted Offer Successfully !", Success = true });
         }
 
         [HttpGet]
         public async Task<IActionResult> UserOffers(string? title)
         {
+            _logger.LogInformation("OfferControler - GET UserOffers Method called with parameters: Title: {Title}", title);
             IEnumerable<UserOfferResponse> response = await _offerService.GetFilteredUserOffers(title);
             IEnumerable<UserOffersViewModel> userOffers = response
                 .Select(item => item.ToUserOffersViewModel(_configurationReader));
-            
+
             return View(userOffers);
         }
 
         [HttpGet]
         public async Task<IActionResult> FilterUserOffers(string? title)
         {
+            _logger.LogInformation("OfferControler - GET FilterUserOffers Method called with parameters: Title: {Title}", title);
             IEnumerable<UserOfferResponse> response = await _offerService.GetFilteredUserOffers(title);
-            IEnumerable<UserOffersViewModel> viewModel =  response
-                .Select(item  => item.ToUserOffersViewModel(_configurationReader));
-            return PartialView("OfferPartials/_UserOfferListPartial",  viewModel);
+            IEnumerable<UserOffersViewModel> viewModel = response
+                .Select(item => item.ToUserOffersViewModel(_configurationReader));
+            return PartialView("OfferPartials/_UserOfferListPartial", viewModel);
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Details([FromRoute] int id)
         {
+            _logger.LogInformation("OfferControler - GET Details Method called with parameters: OfferId: {OfferId}", id);
             var response = await _offerService.GetOffer(id);
 
-            if(response.IsFailure)
+            if (response.IsFailure)
+            {
+                _logger.LogError("Error while fetching offert to display. Error: {Error}", response.Error.Description);
                 return View("Error", response.Error.Description);
-
+            }
+               
             var viewModel = response.Value.ToOfferDetailsViewModel(_configurationReader);
             return View(viewModel);
         }
@@ -153,19 +200,20 @@ namespace CSOS.UI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index([FromQuery] OfferFilter filter)
         {
+            _logger.LogInformation("OfferControler - GET Index Method called with parameters: {@OfferFilter}", filter);
             IEnumerable<OfferIndexResponse> filteredOffers = await _offerService.GetFilteredOffers(filter);
             OfferIndexViewModel viewModel = new OfferIndexViewModel()
             {
                 Items = filteredOffers.Select(item => item.ToOfferIndexItemViewModel(_configurationReader))
                     .ToList(),
-                
+
                 DeliveryOptions = (await _deliveryTypeGetterService.GetAllDeliveryTypesAsSelectionList())
                     .ToSelectListItem(),
-                
+
                 SortingOptions = _sortingOptionService.GetSortingOptions()
                     .ToSelectListItem(),
-                
-                Filter = filter,  
+
+                Filter = filter,
             };
             return View(viewModel);
         }
@@ -174,6 +222,7 @@ namespace CSOS.UI.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> FilterOffers([FromQuery] OfferFilter filter)
         {
+            _logger.LogInformation("OfferControler - GET FilterOffers Method called with parameters: {@OfferFilter}", filter);
             IEnumerable<OfferIndexResponse> filteredOffers = await _offerService.GetFilteredOffers(filter);
             var viewModel = filteredOffers.Select(item => item.ToOfferIndexItemViewModel(_configurationReader));
             return PartialView("OfferPartials/_OfferListPartial", viewModel);

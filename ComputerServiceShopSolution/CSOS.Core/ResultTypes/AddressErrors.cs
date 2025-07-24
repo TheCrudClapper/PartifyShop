@@ -10,5 +10,8 @@
         
         public static readonly Error MissingAddressUpdateRequest = new Error (
             "Address.MissingAddressUpdateRequest", "User's address update request not found");
+
+        public static readonly Error AddressAddRequestIsNull = new Error(
+            "Address.AddressAddRequestIsNull", "Address add request is null");
     }
 }

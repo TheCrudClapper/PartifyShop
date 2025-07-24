@@ -1,9 +1,9 @@
-﻿using CSOS.UI.ViewModels.AddressViewModels;
+﻿using CSOS.Core.DTO.AddressDto;
 
 namespace CSOS.UI.ViewModels.OrderViewModels
 {
     public class AddOrderViewModel
     {
-        public UserAddressDetailsViewModel UserAddressDetails { get; set; } = null!;
+        public UserAddressDetailsResponse? UserAddressDetails { get; set; }
     }
 }

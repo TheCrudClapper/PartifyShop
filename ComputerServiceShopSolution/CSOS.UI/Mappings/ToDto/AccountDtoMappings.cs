@@ -5,26 +5,6 @@ namespace CSOS.UI.Mappings.ToDto
 {
     public static class AccountDtoMappings
     {
-        public static RegisterRequest ToRegisterRequest(this RegisterViewModel viewModel)
-        {
-            return new RegisterRequest()
-            {
-                FirstName = viewModel.FirstName,
-                Surname = viewModel.Surname,
-                Email = viewModel.Email,
-                HouseNumber = viewModel.HouseNumber,
-                NIP = viewModel.NIP,
-                Password = viewModel.Password,
-                PhoneNumber = viewModel.PhoneNumber,
-                Place = viewModel.Place,
-                PostalCity = viewModel.PostalCity,
-                PostalCode = viewModel.PostalCode,
-                SelectedCountry = int.Parse(viewModel.SelectedCountry),
-                Street = viewModel.Street,
-                Title = viewModel.Title,
-            };
-        }
-
         public static AccountUpdateRequest ToAccountUpdateRequest(this UserDetailsViewModel viewModel)
         {
             return new AccountUpdateRequest()

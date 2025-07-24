@@ -5,7 +5,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/registration-style.css"/>
+    <link rel="stylesheet" href="~/css/registration-style.css" />
 }
 
 <div class="bg-white shadow py-3 mb-4 rounded-2">
@@ -22,8 +22,20 @@
 <div class="bg-white shadow py-3 mb-4 rounded-2">
     <h4 class="fw-bold px-3">Address Details</h4>
 
-    <div id="addres-change-form-container">
-        @await Html.PartialAsync("AccountPartials/_AddressChangeForm", Model.EditAddress)
+    <div id="address-form-container">
+        @if (Model.EditAddress == null)
+        {
+            @await Html.PartialAsync("AccountPartials/_AddressAddForm", Model.AddAddressViewModel)
+            ;
+        }
+        else if (Model.AddAddressViewModel == null)
+        {
+            @await Html.PartialAsync("AccountPartials/_AddressChangeForm", Model.EditAddress)
+        }
+        else
+        {
+            <p class="text-danger">Address form is not available.</p>
+        }
     </div>
 
 </div>
@@ -54,8 +66,9 @@
     </div>
 </div>
 
-@section Scripts{
+@section Scripts {
     <script>
+
         $(document).ready(function () {
             $('#user-details-form-container').on('submit', '#userDetailsForm', function (e) {
                 e.preventDefault();
@@ -78,7 +91,30 @@
         });
 
         $(document).ready(function () {
-            $("#addres-change-form-container").on("submit", "#addresChangeForm", function (e) {
+            $('#address-form-container').on('submit', '#addressAddForm', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function (response) {
+                        $("#address-form-container").html(response);
+                        showToast("Address added successfully", true);
+                    },
+                    error: function () {
+                        showToast("Something went wrong", false);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $("#address-form-container").on("submit", "#addresChangeForm", function (e) {
                 e.preventDefault();
                 var form = $(this);
                 var addressId = form.find("#update-address-button").data("id");

@@ -6,6 +6,7 @@ using CSOS.UI.Mappings.ToDto;
 using CSOS.UI.Mappings.ToViewModel;
 using CSOS.UI.Mappings.Universal;
 using CSOS.UI.ViewModels.AccountViewModels;
+using CSOS.UI.ViewModels.AddressViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,51 +29,44 @@ namespace CSOS.UI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
             _logger.LogInformation("AccountController - GET Register method called.");
-            var response = await _countriesGetterService.GetCountriesSelectionList();
-            RegisterViewModel viewModel = new RegisterViewModel();
-            viewModel.CountriesSelectionList = response.ToSelectListItem();
-            return View(viewModel);
+            return View();
         }
 
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterViewModel viewModel)
+        public async Task<IActionResult> Register(RegisterRequest registerRequest)
         {
-            _logger.LogInformation("AccountController - POST Register method called for {Email}", viewModel.Email);
-
-            var response = await _countriesGetterService.GetCountriesSelectionList();
-            viewModel.CountriesSelectionList = response.ToSelectListItem();
+            _logger.LogInformation("AccountController - POST Register method called for {Email}", registerRequest.Email);
 
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Invalid model state during registration for {Email}. Errors: {Errors}",
-                viewModel.Email,
+                registerRequest.Email,
                 string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
 
-                return View(viewModel);
+                return View(registerRequest);
             }
 
-            RegisterRequest request = viewModel.ToRegisterRequest();
-            IdentityResult result = await _accountService.Register(request);
-            
+            IdentityResult result = await _accountService.Register(registerRequest);
+
             if (!result.Succeeded)
             {
                 _logger.LogError("Registration failed for {Email}. Errors: {Errors}",
-                   viewModel.Email,
+                   registerRequest.Email,
                    string.Join(", ", result.Errors.Select(e => e.Description)));
 
                 foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-                return View(viewModel);
-                
+                return View(registerRequest);
+
             }
-            _logger.LogInformation("User {Email} registered successfully", viewModel.Email);
+            _logger.LogInformation("User {Email} registered successfully", registerRequest.Email);
             return RedirectToAction("Index", "Home");
         }
 
@@ -129,23 +123,35 @@ namespace CSOS.UI.Controllers
         public async Task<IActionResult> AccountDetails()
         {
             _logger.LogInformation("AccountController - GET AccountDetails method called for {UserName}", User.Identity?.Name);
-            var result = await _accountService.GetAccountDetailsAsync();
+            AccountDetailsViewModel viewModel = new AccountDetailsViewModel();
+            var userHasAddress = await _accountService.DoesCurrentUserHaveAddress();
+            var countries = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
 
-            if (result.IsFailure)
+            if (userHasAddress)
             {
-                _logger.LogError("Failed to fetch account details for {UserName}. Error: {Error}",
-                    User.Identity?.Name, result.Error.Description);
+                var result = await _accountService.GetAccountDetailsAsync();
+                if (result.IsFailure)
+                {
+                    _logger.LogError("Failed to fetch account details for {UserName}. Error: {Error}",
+                        User.Identity?.Name, result.Error.Description);
 
-                return View("Error", result.Error.Description);
+                    return View("Error", result.Error.Description);
+                }
+                viewModel.EditAddress = result.Value.AddressResponse.ToEditAddressViewModel();
+                viewModel.EditAddress.CountriesSelectionList = countries;
+                viewModel.UserDetails = result.Value.AccountResponse.ToUserDetailsViewModel();
             }
-            
-            var viewModel = new AccountDetailsViewModel
+            else
             {
-                EditAddress = result.Value.AddressResponse.ToEditAddressViewModel(),
-                UserDetails = result.Value.AccountResponse.ToUserDetailsViewModel(),
-            };
+                var result = await _accountService.GetAccount();
+                if (result.IsFailure)
+                    return View("Error", result.Error.Description);
 
-            viewModel.EditAddress.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
+                viewModel.UserDetails = result.Value.ToUserDetailsViewModel();
+                viewModel.AddAddressViewModel = new AddAddressViewModel();
+                viewModel.AddAddressViewModel.CountriesSelectionList = countries;
+
+            }
 
             _logger.LogInformation("Account details returned successfully for {UserName}", User.Identity?.Name);
             return View(viewModel);
@@ -164,7 +170,7 @@ namespace CSOS.UI.Controllers
 
                 return PartialView("AccountPartials/_UserDetailsForm", viewModel);
             }
-            
+
             AccountUpdateRequest request = viewModel.ToAccountUpdateRequest();
             var result = await _accountService.Edit(request);
 
@@ -190,7 +196,7 @@ namespace CSOS.UI.Controllers
 
                 return PartialView("AccountPartials/_PasswordChangeForm", request);
             }
-            
+
             var result = await _accountService.ChangePassword(request);
 
             if (result.IsFailure)

@@ -22,6 +22,27 @@ namespace CSOS.UI.Controllers
             _logger = logger;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create(AddAddressViewModel viewModel)
+        {
+            var request = viewModel.ToAddressAddRequest();
+
+            var result = await _addressService.AddAddress(request);
+
+            if(result.IsFailure)
+                return Json( new JsonResponseModel { Message = result.Error.Description, Success = false });
+
+            var editResult = await _addressService.GetUserAddressForEdit();
+
+            if (editResult.IsFailure)
+                return Json(new JsonResponseModel { Message = "Address added, but failed to load edit form", Success = false });
+
+            var editViewModel = editResult.Value.ToEditAddressViewModel();
+            editViewModel.CountriesSelectionList = (await _countriesGetterService.GetCountriesSelectionList()).ToSelectListItem();
+
+            return PartialView("AccountPartials/_AddressChangeForm", editViewModel);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id)
         {

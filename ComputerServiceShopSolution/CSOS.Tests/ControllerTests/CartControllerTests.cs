@@ -3,12 +3,12 @@ using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.DTO.CartDto;
 using CSOS.Core.ResultTypes;
 using CSOS.Core.ServiceContracts;
-using CSOS.UI;
 using CSOS.UI.Controllers;
 using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToViewModel;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace CSOS.Tests.ControllerTests
@@ -21,6 +21,7 @@ namespace CSOS.Tests.ControllerTests
         private readonly Mock<ICartService> _cartServiceMock;
         private readonly Mock<IConfigurationReader> _configurationReaderMock;
         private readonly IFixture _fixture;
+        private readonly ILogger<CartController> _logger;
 
         public CartControllerTests()
         {
@@ -28,7 +29,8 @@ namespace CSOS.Tests.ControllerTests
             _configurationReaderMock = new Mock<IConfigurationReader>();
             _cartService = _cartServiceMock.Object;
             _configurationReader = _configurationReaderMock.Object;
-            _cartController = new CartController(_cartService, _configurationReader);
+            _logger = Mock.Of<ILogger<CartController>>();
+            _cartController = new CartController(_cartService, _configurationReader, _logger);
             _fixture = new Fixture();
         }
 

@@ -5,12 +5,12 @@ namespace CSOS.UI.Mappings.ToViewModel
 {
     public static class AddressViewModelMappings
     {
-        public static UserAddressDetailsViewModel ToUserAddressDetailsViewModel(this UserAddressDetailsResponseDto dto)
+        public static UserAddressDetailsViewModel ToUserAddressDetailsViewModel(this UserAddressDetailsResponse dto)
         {
             return new UserAddressDetailsViewModel()
             {
                 Address = dto.Address,
-                AddressId = dto.AddressId,
+                AddressId = dto.Id,
                 CustomerName = dto.CustomerName,
                 PhoneNumber = dto.PhoneNumber,
                 PostalInfo = dto.PostalInfo,

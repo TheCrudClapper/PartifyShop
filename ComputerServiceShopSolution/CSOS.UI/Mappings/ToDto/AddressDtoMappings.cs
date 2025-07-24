@@ -18,5 +18,18 @@ namespace CSOS.UI.Mappings.ToDto
                 Street = viewModel.Street,
             };
         }
+
+        public static AddressAddRequest ToAddressAddRequest(this AddAddressViewModel viewModel)
+        {
+            return new AddressAddRequest()
+            {
+                CountryId = int.Parse(viewModel.SelectedCountry),
+                HouseNumber = viewModel.HouseNumber,
+                Place = viewModel.Place,
+                PostalCity = viewModel.PostalCity,
+                PostalCode = viewModel.PostalCode,
+                Street = viewModel.Street,
+            };
+        }
     }
 }

@@ -36,10 +36,13 @@ namespace CSOS.Core.ServiceContracts
         Task Logout();
 
         /// <summary>
-        /// Retrieves account data of the currently logged-in user for editing purposes.
+        /// Retrieves account details for editing purposes.
         /// </summary>
-        /// <returns>A <see cref="Result{T}"/> containing <see cref="AccountDto"/> with user data.</returns>
-        Task<Result<AccountResponse>> GetAccountForEdit();
+        /// <remarks>The returned account details are intended to be used for editing operations. Ensure
+        /// that the caller has appropriate permissions to edit the account.</remarks>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="Result{T}"/> object
+        /// wrapping an <see cref="AccountResponse"/> with the account details.</returns>
+        Task<Result<AccountResponse>> GetAccount();
 
         /// <summary>
         /// Updates the currently logged-in user's account details.
@@ -60,5 +63,15 @@ namespace CSOS.Core.ServiceContracts
         /// </summary>
         /// <returns>A <see cref="Result{T}"/> containing <see cref="AccountDetailsResponse"/> if successful.</returns>
         Task<Result<AccountDetailsResponse>> GetAccountDetailsAsync();
+
+        /// <summary>
+        /// Determines whether the current user has an associated address.
+        /// </summary>
+        /// <remarks>This method performs an asynchronous check to determine if the current user has an
+        /// address  associated with their profile. The result can be used to conditionally display or enable 
+        /// address-related functionality.</remarks>
+        /// <returns>A task that represents the asynchronous operation. The task result contains <see langword="true"/>  if the
+        /// current user has an address; otherwise, <see langword="false"/>.</returns>
+        Task<bool> DoesCurrentUserHaveAddress();
     }
 }

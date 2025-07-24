@@ -40,11 +40,9 @@ namespace CSOS.Core.Services
             if(request == null)
                 return IdentityResult.Failed();
             
-            Address address = request.ToAddressEntity();
-
             Cart cart = new Cart() { IsActive = true, DateCreated = DateTime.UtcNow };
 
-            ApplicationUser user = request.ToApplicationUserEntity(address, cart);
+            ApplicationUser user = request.ToApplicationUserEntity(cart);
             var result = await _userManager.CreateAsync(user, request.Password);
             
             await _unitOfWork.SaveChangesAsync();
@@ -73,7 +71,7 @@ namespace CSOS.Core.Services
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<Result<AccountResponse>> GetAccountForEdit()
+        public async Task<Result<AccountResponse>> GetAccount()
         {
             var userResult = await _currentUserService.GetCurrentUserAsync();
 
@@ -135,7 +133,7 @@ namespace CSOS.Core.Services
             if (addressResult.IsFailure)
                 return Result.Failure<AccountDetailsResponse>(AddressErrors.AddressNotFound);
 
-            var accountResult = await GetAccountForEdit();
+            var accountResult = await GetAccount();
             if (accountResult.IsFailure)
                 return Result.Failure<AccountDetailsResponse>(AccountErrors.AccountNotFound);
             
@@ -150,5 +148,16 @@ namespace CSOS.Core.Services
             };
         }
 
+        public async Task<bool> DoesCurrentUserHaveAddress()
+        {
+            Guid userId = _currentUserService.GetUserId();
+            var result = await _accountRepo.GetUserWithAddressAsync(userId);
+
+            if(result == null || result.Address == null)
+                return false;
+
+            return true;
+
+        }
     }
 }

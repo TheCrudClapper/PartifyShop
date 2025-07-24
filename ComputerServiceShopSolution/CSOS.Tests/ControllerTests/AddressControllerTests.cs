@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Castle.Core.Logging;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.DTO.AddressDto;
@@ -11,6 +12,7 @@ using CSOS.UI.Helpers;
 using CSOS.UI.ViewModels.AddressViewModels;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace CSOS.Tests.ControllerTests
@@ -23,6 +25,7 @@ namespace CSOS.Tests.ControllerTests
         private readonly Mock<IAddressService> _addressServiceMock;
         private readonly Mock<ICountriesGetterService> _countriesGetterServiceMock;
         private readonly AddressController _addressController;
+        private readonly ILogger<AddressController> _logger;
         public AddressControllerTests()
         {
             _fixture = new Fixture();
@@ -30,7 +33,8 @@ namespace CSOS.Tests.ControllerTests
             _addressServiceMock = new Mock<IAddressService>();
             _addressService = _addressServiceMock.Object;
             _countriesGetterService = _countriesGetterServiceMock.Object;
-            _addressController = new AddressController(_addressService, _countriesGetterService);
+            _logger = Mock.Of<ILogger<AddressController>>();
+            _addressController = new AddressController(_addressService, _countriesGetterService, _logger);
         }
         #region EditUserAddress GET Method Tests
 

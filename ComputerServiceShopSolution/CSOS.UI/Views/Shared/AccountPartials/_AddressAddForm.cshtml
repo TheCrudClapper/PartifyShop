@@ -1,10 +1,8 @@
-﻿@model CSOS.UI.ViewModels.AddressViewModels.EditAddressViewModel
+﻿@model CSOS.UI.ViewModels.AddressViewModels.AddAddressViewModel
 
 @* Address fields *@
-<form asp-controller="Address" asp-action="Edit" id="addresChangeForm" class="pt-3" method="post">
+<form asp-controller="Address" asp-action="Create" id="addressAddForm" class="pt-3" method="post">
     @Html.AntiForgeryToken()
-    <input asp-for="Id" type="hidden" />
-    <input type="hidden" name="Source" value="AccountDetails" />
     <div class="mb-4 px-3">
         <label asp-for="Place" class="form-label">Place</label>
         <input asp-for="Place" type="text" class="form-control" placeholder="Enter Place">
@@ -38,6 +36,6 @@
         <span class="text-danger" asp-validation-for="SelectedCountry"></span>
     </div>
     <div class="mb-4">
-        <button type="submit" id="update-address-button" data-id="@Model.Id" class="btn purple-background text-white ms-3 mt-2">Update</button>
+        <button  type ="submit" class="btn purple-background text-white ms-3 mt-2">Add Address</button>
     </div>
 </form>

@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Castle.Core.Logging;
 using CSOS.Core.Domain.InfrastructureServiceContracts;
 using CSOS.Core.DTO;
 using CSOS.Core.DTO.OfferDto;
@@ -10,6 +11,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace CSOS.Tests.ControllerTests
@@ -24,7 +26,7 @@ namespace CSOS.Tests.ControllerTests
         private readonly Mock<IConfigurationReader> _configuartionReaderMock;
         private readonly HomeController homeController;
         private readonly IFixture _fixture;
-
+        private readonly ILogger<HomeController> _logger;
         public HomeControllerTests()
         {
             _fixture = new Fixture();
@@ -34,10 +36,11 @@ namespace CSOS.Tests.ControllerTests
             _categoryGetterService = _categoryGetterServiceMock.Object;
             _offerService = _offerServiceMock.Object;
             _configurationReader = _configuartionReaderMock.Object;
+            _logger = Mock.Of<ILogger<HomeController>>();
         }
         private HomeController CreateController()
         {
-            return new HomeController(_offerService, _categoryGetterService, _configurationReader);
+            return new HomeController(_offerService, _categoryGetterService, _configurationReader, _logger);
         }
         #region Index Method Tests
         [Fact]

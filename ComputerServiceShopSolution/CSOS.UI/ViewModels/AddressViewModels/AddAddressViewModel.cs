@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace CSOS.UI.ViewModels.AddressViewModels
 {
-    public class EditAddressViewModel
+    public class AddAddressViewModel
     {
-        [Required]
-        public int Id { get; set; }
         [Required(ErrorMessage = "Place is required")]
         public string Place { get; set; } = null!;
 
@@ -26,7 +24,5 @@ namespace CSOS.UI.ViewModels.AddressViewModels
         [Required(ErrorMessage = "Country is required")]
         public string SelectedCountry { get; set; } = null!;
         public List<SelectListItem>? CountriesSelectionList { get; set; }
-
-        public string? Source { get; set; }
     }
 }

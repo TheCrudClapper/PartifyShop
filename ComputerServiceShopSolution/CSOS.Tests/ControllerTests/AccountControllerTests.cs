@@ -73,8 +73,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Register_SuccededRegister_RedirectToIndex()
         {
             //Arrange
-            RegisterViewModel viewModel = _fixture.Build<RegisterViewModel>()
-                .With(item => item.SelectedCountry, "1")
+            RegisterRequest request = _fixture.Build<RegisterRequest>()
                 .Create();
 
             _accountServiceMock.Setup(item => item.Register(It.IsAny<RegisterRequest>())).ReturnsAsync(IdentityResult.Success);
@@ -82,7 +81,7 @@ namespace CSOS.Tests.ControllerTests
             _accountController = CreateController();
 
             //Act
-            IActionResult result = await _accountController.Register(viewModel);
+            IActionResult result = await _accountController.Register(request);
 
             //Assert
             RedirectToActionResult redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
@@ -94,16 +93,16 @@ namespace CSOS.Tests.ControllerTests
         public async Task Register_FailedRegister_ReturnView()
         {
             //Arrange
-            RegisterViewModel viewModel = _fixture.Build<RegisterViewModel>()
-                .With(item => item.SelectedCountry, "1")
-                .Create();
+            RegisterRequest request = _fixture.Build<RegisterRequest>()
+              .Create();
+
 
             _accountServiceMock.Setup(item => item.Register(It.IsAny<RegisterRequest>())).ReturnsAsync(IdentityResult.Failed());
 
             _accountController = CreateController();
 
             //Act
-            IActionResult result = await _accountController.Register(viewModel);
+            IActionResult result = await _accountController.Register(request);
 
             //Assert
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;

@@ -10,10 +10,12 @@ namespace CSOS.UI.Controllers
     public class OrderController : Controller
     {
         private readonly IAddressService _addressService;
+        private readonly IAccountService _accountService;
         private readonly ILogger<OrderController> _logger;
-        public OrderController(IAddressService addressService, ILogger<OrderController> logger)
+        public OrderController(IAddressService addressService, IAccountService accountService, ILogger<OrderController> logger)
         {
             _addressService = addressService;
+            _accountService = accountService;
             _logger = logger;
         }
 
@@ -21,20 +23,23 @@ namespace CSOS.UI.Controllers
         public async Task<IActionResult> AddOrder()
         {
             _logger.LogInformation("Order Controller - GET AddOrder Method Called");
-            var response = await _addressService.GetUserAddressDetails();
+            var userHasAddress = await _accountService.DoesCurrentUserHaveAddress();
+            var viewModel = new AddOrderViewModel();
 
-            if (response.IsFailure)
+            if (userHasAddress)
             {
-                _logger.LogError("Error while fetching {UserName} address. Error {Error}.",
-                    User.Identity?.Name, response.Error.Description);
-                return View("Error", response.Error.Description);
+                var response = await _addressService.GetUserAddressDetails();
+
+                if (response.IsFailure)
+                {
+                    _logger.LogError("Error while fetching {UserName} address. Error {Error}.",
+                        User.Identity?.Name, response.Error.Description);
+                    return View("Error", response.Error.Description);
+                }
+
+                viewModel.UserAddressDetails = response.Value;
             }
-                
 
-            var viewModel = new AddOrderViewModel()
-            {
-                UserAddressDetails = response.Value.ToUserAddressDetailsViewModel()
-            };
             return View(viewModel);
         }
     }

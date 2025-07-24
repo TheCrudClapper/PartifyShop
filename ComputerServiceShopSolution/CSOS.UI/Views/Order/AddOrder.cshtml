@@ -32,41 +32,61 @@
                 </div>
             </div>
 
-            <div class="mb-3 midesection-style shadow">
+            @if (Model.UserAddressDetails == null)
+            {
                 <div class="row">
-                    <div class="col-auto mt-2">
-                        <h4 class="fw-bold">
-                            Details of the buyer
-                        </h4>
+                    <div class="col-12">
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading fw-bold">
+                                Address Info Missing 😔
+                            </h4>
+                            <p>
+                                You doing great buddy ! To proceed further with your order please fill out additional info about your address
+                                <a href="/Account/AccountDetails/#addressAddForm" class="alert-link">here</a>. Thanks !
+                            </p>
+                            <hr>
+                        </div>
                     </div>
-                    <hr class="mt-2" />
                 </div>
 
-                <div class="row">
-                    <div class="col-auto" id="addressInfo">
-                        <ul class="list-unstyled">
-                            <li>
-                                <span class="fw-bold">Customer: </span>
-                                @Model.UserAddressDetails.CustomerName
-                            </li>
-                            <li>
-                                <span class="fw-bold">Address: </span>
-                                @Model.UserAddressDetails.Address
-                            </li>
-                            <li>
-                                <span class="fw-bold">Postal Info: </span>
-                                @Model.UserAddressDetails.PostalInfo
-                            </li>
-                            <li>
-                                <span class="fw-bold">Phone: </span>
-                                @Model.UserAddressDetails.PhoneNumber
-                            </li>
-                        </ul>
-                        <button type="submit" class="btn text-white edit-address-btn purple-background" data-id="@Model.UserAddressDetails.AddressId">Edit Address</button>
+            }
+            else
+            {
+                <div class="mb-3 midesection-style shadow">
+                    <div class="row">
+                        <div class="col-auto mt-2">
+                            <h4 class="fw-bold">
+                                Details of the buyer
+                            </h4>
+                        </div>
+                        <hr class="mt-2" />
                     </div>
-
+                    <div class="row">
+                        <div class="col-auto" id="addressInfo">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <span class="fw-bold">Customer: </span>
+                                    @Model.UserAddressDetails.CustomerName
+                                </li>
+                                <li>
+                                    <span class="fw-bold">Address: </span>
+                                    @Model.UserAddressDetails.Address
+                                </li>
+                                <li>
+                                    <span class="fw-bold">Postal Info: </span>
+                                    @Model.UserAddressDetails.PostalInfo
+                                </li>
+                                <li>
+                                    <span class="fw-bold">Phone: </span>
+                                    @Model.UserAddressDetails.PhoneNumber
+                                </li>
+                            </ul>
+                            <button type="submit" class="btn text-white edit-address-btn purple-background" data-id="@Model.UserAddressDetails.Id">Edit Address</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
+
 
             <div class="mb-3 midesection-style shadow">
                 <div class="row">

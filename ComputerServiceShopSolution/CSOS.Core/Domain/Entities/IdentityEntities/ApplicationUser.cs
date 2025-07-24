@@ -11,9 +11,7 @@ namespace ComputerServiceOnlineShop.Entities.Models.IdentityEntities
         public string? NIP { get; set; }
         public string? Title { get; set; }
         public Cart Cart { get; set; } = null!;
-        public int AdressId { get; set; }
-        [ForeignKey("AdressId")]
-        public Address Address { get; set; } = null!;
+        public Address? Address { get; set; }
         public bool IsActive { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateEdited { get; set; }

@@ -10,6 +10,7 @@ namespace CSOS.Core.Mappings.ToDto
         {
             return new AccountResponse()
             {
+                Id = account.Id,
                 FirstName = account.FirstName,
                 NIP = account.NIP,
                 PhoneNumber = account.PhoneNumber,
@@ -17,13 +18,12 @@ namespace CSOS.Core.Mappings.ToDto
                 Title = account.Title,
             };
         }
-        public static UserAddressDetailsResponseDto ToUserAddressDetailsResponse(this ApplicationUser account)
+        public static UserAddressDetailsResponse ToUserAddressDetailsResponse(this ApplicationUser account)
         {
-            return new UserAddressDetailsResponseDto()
+            return new UserAddressDetailsResponse()
             {
                 CustomerName = account.FirstName + " " + account.Surname,
                 PostalInfo = account.Address.PostalCode + " " + account.Address.PostalCity,
-                AddressId = account.AdressId,
                 Address = account.Address.Place + ",  " + account.Address.Street + " " + account.Address.HouseNumber,
                 PhoneNumber = account?.PhoneNumber,
             };
@@ -33,7 +33,7 @@ namespace CSOS.Core.Mappings.ToDto
         {
             return new AddressResponse()
             {
-                Id = account.AdressId,
+                Id = account.Address.Id,
                 HouseNumber = account.Address.HouseNumber,
                 Place = account.Address.Place,
                 PostalCity = account.Address.PostalCity,

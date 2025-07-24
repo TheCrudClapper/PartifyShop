@@ -67,7 +67,7 @@ namespace CSOS.Tests.ServiceTests
             _currentUserServiceMock.Setup(item => item.GetCurrentUserAsync()).ReturnsAsync(Result.Failure<ApplicationUser>(AccountErrors.AccountNotFound));
 
             //Act
-            var result = await _accountService.GetAccountForEdit();
+            var result = await _accountService.GetAccount();
 
             //Assert
             result.Should().BeOfType<Result<AccountResponse>>();
@@ -89,7 +89,7 @@ namespace CSOS.Tests.ServiceTests
             _currentUserServiceMock.Setup(item => item.GetCurrentUserAsync()).ReturnsAsync(applicationUser);
 
             //Act
-            var result = await _accountService.GetAccountForEdit();
+            var result = await _accountService.GetAccount();
 
             //Assert
             result.Value.Should().NotBeNull();

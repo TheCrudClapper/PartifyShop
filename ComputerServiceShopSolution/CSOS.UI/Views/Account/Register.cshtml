@@ -1,116 +1,91 @@
-﻿@model RegisterViewModel
+﻿@model CSOS.Core.DTO.AccountDto.RegisterRequest
 @{
     ViewBag.Title = "Register";
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/registration-style.css" asp-append-version="true" />
 }
-<div class="container login-page-container">
-    <div class="text-center mb-3 midesection-style ms-1 me-1">
-        <i class="fa-solid fa-store fa-10x"></i> <br />
-        <h1 class="fw-bold">Marketplace</h1>
-        <h6>Place for your electronics</h6>
+
+<div class="container login-page-container midesection-style">
+
+    @* Logo and slogan here *@
+    <div class="text-center mt-2 mb-4">
+        <img src="~/images/partify-copy.png" height="100">
     </div>
-    <h3 class="fw-bold ms-1">Base Info</h3>
-    <form asp-action="Register" method="post">
+
+
+    @* Register form *@
+    <form asp-action="Register" class="d-inline" method="post">
         @Html.AntiForgeryToken()
-        <div class="row midesection-style shadow p-3 mb-3 ms-1 me-1 shadow">
-            <div class="col-sm-6">
+        <div class="row p-3 mb-3 ms-1 me-1">
+
+            @*Spacer Column*@
+            <div class="col-1 col-sm-2 col-md-3"></div>
+
+            <div class="col-10 col-sm-8 col-md-6">
+
                 <div class="mb-3">
-                    <label class="form-label">First Name*</label>
-                    <input asp-for="FirstName" type="text" class="form-control">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Surname*</label>
-                    <input asp-for="Surname" type="text" class="form-control">
+
+                 <div class="mb-3">
+                    <label asp-for="Surname" class="form-label"></label>
+                    <input asp-for="Surname" class="form-control" />
                     <span asp-validation-for="Surname" class="text-danger"></span>
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label">Password*</label>
-                    <input asp-for="Password" class="form-control">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" class="form-control" type="password">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label">Email address*</label>
-                    <input asp-for="Email" class="form-control">
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div> 
-            </div>
-            <div class="col-sm-6">
-                <div class="mb-3">
-                    <label class="form-label">NIP</label>
-                    <input asp-for="NIP" type="text" class="form-control">
-                    <span asp-validation-for="NIP" class="text-danger"></span>
+                    <button type="submit" class="btn btn-outline-dark btn-dark text-white fw-bold w-100">Register</button>
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label">Title</label>
-                    <input asp-for="Title" type="text" class="form-control">
-                    <span asp-validation-for="Title" class="text-danger"></span>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label">Phone Number</label>
-                    <input asp-for="PhoneNumber" class="form-control">
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    <div class="separator">
+                        <span>Or join us with</span>
+                    </div>
                 </div>
-                <div class="mb-3">
+
+                <div class="mb-3 d-flex justify-content-between">
+
+                    <button class="btn third-parties-button me-1 disabled">
+                        <i class="fa-brands fa-facebook"></i>
+                        <span>Facebook</span>
+                    </button>
+
+                    <button class="btn third-parties-button ms-1 disabled">
+                        <i class="fa-brands fa-google"></i>
+                        <span>Google</span>
+                    </button>
+
                 </div>
-            </div>
-        </div>
-        <h3 class="fw-bold ms-1">Address Info</h3>
-        <div class="row midesection-style shadow p-3 ms-1 me-1">
-            <div class="col-sm-6">
-                <div class="mb-3">
-                    <label class="form-label">Place*</label>
-                    <input asp-for="Place" type="text" class="form-control">
-                    <span asp-validation-for="Place" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Street*</label>
-                    <input asp-for="Street" type="text" class="form-control">
-                    <span asp-validation-for="Street" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">House Number*</label>
-                    <input asp-for="HouseNumber" type="text" class="form-control">
-                    <span asp-validation-for="HouseNumber" class="text-danger"></span>
+
+                <div class="mb-3 d-flex justify-content-between">
+                    <button class="btn third-parties-button ms-1 disabled">
+                        <i class="fa-brands fa-github"></i>
+                        <span>Register using GitHub</span>
+                    </button>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="mb-3">
-                    <label class="form-label">Postal City*</label>
-                    <input asp-for="PostalCity" type="text" class="form-control">
-                    <span asp-validation-for="PostalCity" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Postal Code*</label>
-                    <input asp-for="PostalCode" class="form-control">
-                    <span asp-validation-for="PostalCode" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Country*</label>
-                    <select class="form-select" asp-for="SelectedCountry" asp-items="Model.CountriesSelectionList">
-                        <option selected disabled>Select Country</option>
-                    </select>
-                    <span asp-validation-for="SelectedCountry" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-sm-12 text-center">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger list-unstyled d-inline-block" })
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-12 text-center">
-                <button type="submit" class="btn btn-outline-dark btn-dark text-white w-50">Register</button>
-            </div>
+
+            @*Spacer Column*@
+            <div class="col-1 col-sm-2 col-md-3"></div>
         </div>
     </form>
-        @if (!string.IsNullOrEmpty(ViewData["userExists"]?.ToString()))
-        {
-            <script type="text/javascript">
-                window.onload = function () {
-                alert("@Html.Raw(ViewData["userExists"]?.ToString())");
-                };
-            </script>
-        }
 </div>

@@ -1,11 +1,12 @@
 ﻿using CSOS.Core.Domain.Entities;
 using CSOS.Core.DTO.AccountDto;
+using CSOS.Core.DTO.AddressDto;
 
 namespace CSOS.Core.Mappings.ToDomainEntity.AddressMappings
 {
     public static class AddressMappings
     {
-        public static Address ToAddressEntity(this RegisterRequest request)
+        public static Address ToAddressEntity(this AddressAddRequest request, Guid? userId)
         {
             return new Address()
             {
@@ -14,7 +15,8 @@ namespace CSOS.Core.Mappings.ToDomainEntity.AddressMappings
                 PostalCity = request.PostalCity,
                 PostalCode = request.PostalCode,
                 HouseNumber = request.HouseNumber,
-                CountryId = request.SelectedCountry,
+                CountryId = request.CountryId,
+                UserId = userId,
                 IsActive = true,
                 DateCreated = DateTime.UtcNow,
             };

@@ -1,0 +1,34 @@
+﻿@model UserDetailsViewModel
+
+@* Account Details Form Fields *@
+<form asp-controller="Account" id="userDetailsForm" asp-action="Edit" class="pt-3" method="post">
+    @Html.AntiForgeryToken()
+    <div class="mb-4 px-3">
+        <label asp-for="FirstName" class="form-label">First Name</label>
+        <input asp-for="FirstName" type="text" class="form-control" placeholder="Enter First Name">
+        <span class="text-danger" asp-validation-for="FirstName"></span>
+    </div>
+    <div class="mb-4 px-3">
+        <label asp-for="Surname" class="form-label">Surname</label>
+        <input asp-for="Surname" type="text" class="form-control" placeholder="Enter Surname">
+        <span class="text-danger" asp-validation-for="Surname"></span>
+    </div>
+    <div class="mb-4 px-3">
+        <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+        <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="Enter Phone Number">
+        <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+    </div>
+    <div class="mb-4 px-3">
+        <label asp-for="Title" class="form-label">Title</label>
+        <input asp-for="Title" type="text" class="form-control" placeholder="Enter Title of Company">
+        <span class="text-danger" asp-validation-for="Title"></span>
+    </div>
+    <div class="mb-4 px-3">
+        <label asp-for="NIP" class="form-label">NIP</label>
+        <input asp-for="NIP" type="text" class="form-control" placeholder="Enter NIP">
+        <span class="text-danger" asp-validation-for="NIP"></span>
+    </div>
+    <div class="mb-4">
+        <button type="submit" class="btn purple-background text-white ms-3 mt-2">Update</button>
+    </div>
+</form>

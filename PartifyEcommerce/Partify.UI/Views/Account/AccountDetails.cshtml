@@ -1,0 +1,161 @@
+﻿@model AccountDetailsViewModel
+@{
+    Layout = "_AccountSettingsLayout";
+    ViewBag.Title = "Account Settings";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/registration-style.css" />
+}
+
+<div class="bg-white shadow py-3 mb-4 rounded-2">
+    <h4 class="fw-bold px-3">Account Details</h4>
+
+    @* Form for user details *@
+    <div id="user-details-form-container">
+        @await Html.PartialAsync("AccountPartials/_UserDetailsForm", Model.UserDetails)
+    </div>
+
+</div>
+
+
+<div class="bg-white shadow py-3 mb-4 rounded-2">
+    <h4 class="fw-bold px-3">Address Details</h4>
+
+    <div id="address-form-container">
+        @if (Model.EditAddress == null)
+        {
+            @await Html.PartialAsync("AccountPartials/_AddressAddForm", Model.AddAddressViewModel)
+            ;
+        }
+        else if (Model.AddAddressViewModel == null)
+        {
+            @await Html.PartialAsync("AccountPartials/_AddressChangeForm", Model.EditAddress)
+        }
+        else
+        {
+            <p class="text-danger">Address form is not available.</p>
+        }
+    </div>
+
+</div>
+
+
+@* Password Change Fields *@
+<div class="bg-white shadow py-3 mb-4 rounded-2">
+    <h4 class="fw-bold px-3">Password Change</h4>
+
+    @* Form for password change *@
+    <div id="password-change-form-container">
+        @await Html.PartialAsync("AccountPartials/_PasswordChangeForm", Model.PasswordChangeRequest)
+    </div>
+
+</div>
+
+@* Account Deletion Option  *@
+<div class="bg-white shadow py-3 mb-4 rounded-2">
+    <h4 class="fw-bold px-3">Delete Account</h4>
+    <div class="mb-4 px-3">
+        <span class="text-secondary">
+            Deleting Account means your account will become <b>inactive</b> any sent applications or post application will be also invalidated.
+            You can always reactivate your account if you wish.
+        </span>
+    </div>
+    <div class="mb-4">
+        <a href="/account/deleteAccount" class="btn btn-danger text-white ms-3 mt-2 disabled">Delete Account</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            $('#user-details-form-container').on('submit', '#userDetailsForm', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function (response) {
+                        showToast(response.message, response.success);
+                    },
+                    error: function () {
+                        showToast("Something went wrong", false);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#address-form-container').on('submit', '#addressAddForm', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function (response) {
+                        $("#address-form-container").html(response);
+                        showToast("Address added successfully", true);
+                    },
+                    error: function () {
+                        showToast("Something went wrong", false);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $("#address-form-container").on("submit", "#addresChangeForm", function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var addressId = form.find("#update-address-button").data("id");
+                var url = form.attr('action') + "/" + addressId;
+                var formData = form.serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function (response) {
+                        showToast(response.message, response.success);
+                    },
+                    error: function () {
+                        showToast("Something went wrong", false);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#password-change-form-container').on('submit', '#passwordChangeForm', function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData,
+                    success: function (response) {
+                        showToast(response.message, response.success);
+                    },
+                    error: function () {
+                        showToast("Something went wrong", false);
+                    }
+                });
+            });
+        });
+
+
+    </script>
+}

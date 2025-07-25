@@ -1,8 +1,5 @@
 ﻿using AutoFixture;
-using Castle.Core.Logging;
 using CSOS.Core.Domain.InfrastructureServiceContracts;
-using CSOS.Core.DTO;
-using CSOS.Core.DTO.OfferDto;
 using CSOS.Core.DTO.UniversalDto;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Controllers;
@@ -24,7 +21,7 @@ namespace CSOS.Tests.ControllerTests
         private readonly Mock<ICategoryGetterService> _categoryGetterServiceMock;
         private readonly IConfigurationReader _configurationReader;
         private readonly Mock<IConfigurationReader> _configuartionReaderMock;
-        private readonly HomeController homeController;
+        private HomeController _homeController = null!;
         private readonly IFixture _fixture;
         private readonly ILogger<HomeController> _logger;
         public HomeControllerTests()
@@ -58,10 +55,10 @@ namespace CSOS.Tests.ControllerTests
 
             _offerServiceMock.Setup(item => item.GetDealsOfTheDay()).ReturnsAsync(offers);
 
-            var homeController = CreateController();
+            _homeController = CreateController();
 
             //Act
-            var result = await homeController.Index();
+            var result = await _homeController.Index();
 
             //Assert
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
@@ -83,10 +80,10 @@ namespace CSOS.Tests.ControllerTests
         public void Privacy_ReturnsView()
         {
             //Arrange
-            var controller = CreateController();
+            _homeController = CreateController();
 
             //Act
-            IActionResult result = controller.Privacy();
+            IActionResult result = _homeController.Privacy();
 
             //Assert
             result.Should().BeOfType<ViewResult>();
@@ -98,10 +95,10 @@ namespace CSOS.Tests.ControllerTests
         public void AboutUs_ReturnsView()
         {
             //Arrange
-            var controller = CreateController();
+            _homeController  = CreateController();
 
             //Act
-            IActionResult result = controller.AboutUs();
+            IActionResult result = _homeController.AboutUs();
 
             //Assert
             result.Should().BeOfType<ViewResult>();
@@ -113,7 +110,7 @@ namespace CSOS.Tests.ControllerTests
         public void Error_WithExceptionHandler_SetsViewBagError()
         {
             // Arrange
-            var controller = CreateController();
+            var _homeController = CreateController();
 
             var exceptionFeature = new Mock<IExceptionHandlerPathFeature>();
             exceptionFeature.Setup(f => f.Error).Returns(new Exception("Test exception message"));
@@ -121,34 +118,34 @@ namespace CSOS.Tests.ControllerTests
             var httpContext = new DefaultHttpContext();
             httpContext.Features.Set(exceptionFeature.Object);
 
-            controller.ControllerContext = new ControllerContext()
+            _homeController.ControllerContext = new ControllerContext()
             {
                 HttpContext = httpContext
             };
 
             // Act
-            var result = controller.Error();
+            var result = _homeController.Error();
 
             // Assert
-            Assert.Equal("Test exception message", controller.ViewBag.Error);
+            Assert.Equal("Test exception message", _homeController.ViewBag.Error);
         }
 
         [Fact]
         public void Error_WithoutExceptionHandler_ReturnsViewWithoutError()
         {
             // Arrange
-            var homeController = CreateController();
-            homeController.ControllerContext = new ControllerContext
+            var _homeController = CreateController();
+            _homeController.ControllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext() 
             };
 
             // Act
-            var result = homeController.Error();
+            var result = _homeController.Error();
 
             // Assert
             result.Should().BeOfType<ViewResult>();
-            Assert.Null(homeController.ViewBag.Error);
+            Assert.Null(_homeController.ViewBag.Error);
         }
         #endregion
     }

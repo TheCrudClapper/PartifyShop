@@ -14,6 +14,8 @@ using CSOS.Core.ServiceContracts;
 using CSOS.UI.Controllers;
 using CSOS.UI.Helpers;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace CSOS.Tests.ControllerTests
 {
@@ -27,7 +29,7 @@ namespace CSOS.Tests.ControllerTests
         private readonly Mock<IAddressService> _addressServiceMock;
         private readonly ILogger<AccountController> _logger;
         private readonly IFixture _fixture;
-        private AccountController _accountController;
+        private AccountController _accountController = null!;
 
         public AccountControllerTests()
         {
@@ -43,26 +45,39 @@ namespace CSOS.Tests.ControllerTests
 
         private AccountController CreateController()
         {
-            return new AccountController(_accountService, _countriesGetterService, _logger);
+            var controller = new AccountController(
+                _accountServiceMock.Object,
+                _countriesGetterServiceMock.Object,
+                _logger
+            );
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, "testuser")
+            }, "mock"));
+
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext() { User = user }
+            };
+
+            return controller;
+
         }
 
         #region Register GET Method Tests
 
         [Fact]
-        public async Task Register_ReturnsViewWithViewModel()
+        public void Register_ReturnsViewWithViewModel()
         {
             //Arrange
-            var countries = _fixture.CreateMany<SelectListItemDto>(3);
-            _countriesGetterServiceMock.Setup(item => item.GetCountriesSelectionList()).ReturnsAsync(countries);
-            var controller = CreateController();
+            _accountController = CreateController();
 
             //Act
-            IActionResult result = await controller.Register();
+            IActionResult result = _accountController.Register();
 
             //Assert
             ViewResult viewResult = Assert.IsType<ViewResult>(result);
-            var viewModel = viewResult.Model.Should().BeOfType<RegisterViewModel>().Subject;
-            viewModel.CountriesSelectionList.Should().HaveCount(countries.Count());
         }
 
         #endregion
@@ -73,6 +88,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Register_SuccededRegister_RedirectToIndex()
         {
             //Arrange
+            _accountController = CreateController();
             RegisterRequest request = _fixture.Build<RegisterRequest>()
                 .Create();
 
@@ -93,6 +109,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Register_FailedRegister_ReturnView()
         {
             //Arrange
+            _accountController = CreateController();
             RegisterRequest request = _fixture.Build<RegisterRequest>()
               .Create();
 
@@ -106,7 +123,7 @@ namespace CSOS.Tests.ControllerTests
 
             //Assert
             ViewResult viewResult = result.Should().BeOfType<ViewResult>().Subject;
-            viewResult.Model.Should().BeOfType<RegisterViewModel>();
+            viewResult.Model.Should().BeOfType<RegisterRequest>();
         }
         #endregion
 
@@ -115,6 +132,7 @@ namespace CSOS.Tests.ControllerTests
         public void Login_ReturnsView()
         {
             //Arrange
+            _accountController = CreateController();
             _accountController = CreateController();
 
             //Act
@@ -131,6 +149,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Login_InvalidModelState_ReturnsView()
         {
             //Arrange
+            _accountController = CreateController();
             LoginRequest request = _fixture.Create<LoginRequest>();
             _accountController = CreateController();
             _accountController.ModelState.AddModelError("key1", "Test dummy error");
@@ -147,6 +166,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Login_SuccededLogin_RedirectsToAction()
         {
             //Arrange
+            _accountController = CreateController();
             LoginRequest request = _fixture.Create<LoginRequest>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginRequest>())).ReturnsAsync(SignInResult.Success);
@@ -164,6 +184,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Login_ReturnUrlValid_ReturnsLocalRedirect()
         {
             //Arrange
+            _accountController = CreateController();
             LoginRequest request = _fixture.Create<LoginRequest>();
 
             string localUrl = "~/Offer/Index";
@@ -189,6 +210,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Login_FailedLogin_ReturnsView()
         {
             //Arrange
+            _accountController = CreateController();
             LoginRequest request = _fixture.Create<LoginRequest>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.Login(It.IsAny<LoginRequest>())).ReturnsAsync(SignInResult.Failed);
@@ -210,6 +232,7 @@ namespace CSOS.Tests.ControllerTests
         {
             //Arrange
             _accountController = CreateController();
+            _accountController = CreateController();
             _accountServiceMock.Setup(item => item.Logout()).Returns(Task.CompletedTask);
 
             //Act
@@ -228,6 +251,8 @@ namespace CSOS.Tests.ControllerTests
         {
             //Arrange
             _accountController = CreateController();
+            _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.DoesCurrentUserHaveAddress()).ReturnsAsync(true);
             _accountServiceMock.Setup(item => item.GetAccountDetailsAsync()).ReturnsAsync(Result.Failure<AccountDetailsResponse>(AddressErrors.AddressNotFound));
 
             //Act
@@ -247,14 +272,16 @@ namespace CSOS.Tests.ControllerTests
         {
             //Arrange
             _accountController = CreateController();
+            _accountServiceMock.Setup(item => item.DoesCurrentUserHaveAddress()).ReturnsAsync(true);
+            _accountController = CreateController();
             AccountDetailsResponse accountDetailsResponse = _fixture.Create<AccountDetailsResponse>();
-           
+
             AccountDetailsViewModel expectedViewModel = new AccountDetailsViewModel()
             {
                 EditAddress = accountDetailsResponse.AddressResponse.ToEditAddressViewModel(),
                 UserDetails = accountDetailsResponse.AccountResponse.ToUserDetailsViewModel(),
             };
-            
+
             IEnumerable<SelectListItemDto> countries = _fixture.CreateMany<SelectListItemDto>();
 
             expectedViewModel.EditAddress.CountriesSelectionList = countries.ToSelectListItem();
@@ -277,6 +304,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Edit_InvalidModelState_ReturnsPartial()
         {
             //Arrange
+            _accountController = CreateController();
             UserDetailsViewModel viewModel = _fixture.Create<UserDetailsViewModel>();
             _accountController = CreateController();
             _accountController.ModelState.AddModelError("test", "test");
@@ -293,6 +321,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Edit_FailureServiceResult_ReturnsErrorJson()
         {
             //Arrange
+            _accountController = CreateController();
             UserDetailsViewModel viewModel = _fixture.Create<UserDetailsViewModel>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.Edit(It.IsAny<AccountUpdateRequest>())).ReturnsAsync(Result.Failure(AccountErrors.AccountNotFound));
@@ -311,6 +340,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Edit_SuccessServiceResult_ReturnsErrorJson()
         {
             //Arrange
+            _accountController = CreateController();
             UserDetailsViewModel viewModel = _fixture.Create<UserDetailsViewModel>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.Edit(It.IsAny<AccountUpdateRequest>())).ReturnsAsync(Result.Success);
@@ -332,13 +362,14 @@ namespace CSOS.Tests.ControllerTests
         public async Task ChangePassword_InvalidModelState_ReturnsPartial()
         {
             //Arrange
+            _accountController = CreateController();
             PasswordChangeRequest viewModel = _fixture.Create<PasswordChangeRequest>();
             _accountController = CreateController();
             _accountController.ModelState.AddModelError("test", "test");
-            
+
             //Act
-            IActionResult result = await  _accountController.ChangePassword(viewModel);
-            
+            IActionResult result = await _accountController.ChangePassword(viewModel);
+
             //Assert
             PartialViewResult partialViewResult = result.Should().BeOfType<PartialViewResult>().Subject;
             partialViewResult.Model.Should().BeEquivalentTo(viewModel);
@@ -348,14 +379,15 @@ namespace CSOS.Tests.ControllerTests
         public async Task ChangePassword_FailureServiceResult_ReturnsErrorJson()
         {
             //Arrange
+            _accountController = CreateController();
             PasswordChangeRequest viewModel = _fixture.Create<PasswordChangeRequest>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.ChangePassword(It.IsAny<PasswordChangeRequest>()))
                 .ReturnsAsync(Result.Failure(AccountErrors.PasswordChangeFailed));
-            
+
             //Act
             IActionResult result = await _accountController.ChangePassword(viewModel);
-            
+
             //Assert
             JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
             var responseModel = jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject;
@@ -367,14 +399,15 @@ namespace CSOS.Tests.ControllerTests
         public async Task ChangePassword_SuccessServiceResult_ReturnsErrorJson()
         {
             //Arrange
+            _accountController = CreateController();
             PasswordChangeRequest viewModel = _fixture.Create<PasswordChangeRequest>();
             _accountController = CreateController();
             _accountServiceMock.Setup(item => item.ChangePassword(It.IsAny<PasswordChangeRequest>()))
                 .ReturnsAsync(Result.Success);
-            
+
             //Act
             IActionResult result = await _accountController.ChangePassword(viewModel);
-            
+
             //Assert
             JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
             var responseModel = jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject;

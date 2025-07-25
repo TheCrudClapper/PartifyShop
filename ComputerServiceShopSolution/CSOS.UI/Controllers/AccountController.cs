@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using CSOS.Core.DTO.AccountDto;
+﻿using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToDto;
@@ -129,31 +128,31 @@ namespace CSOS.UI.Controllers
 
             if (userHasAddress)
             {
-                var result = await _accountService.GetAccountDetailsAsync();
-                if (result.IsFailure)
+                var accountDetailsResponse = await _accountService.GetAccountDetailsAsync();
+                if (accountDetailsResponse.IsFailure)
                 {
                     _logger.LogError("Failed to fetch account details for {UserName}. Error: {Error}",
-                        User.Identity?.Name, result.Error.Description);
+                        User.Identity?.Name, accountDetailsResponse.Error.Description);
 
-                    return View("Error", result.Error.Description);
+                    return View("Error", accountDetailsResponse.Error.Description);
                 }
-                viewModel.EditAddress = result.Value.AddressResponse.ToEditAddressViewModel();
+                viewModel.EditAddress = accountDetailsResponse.Value.AddressResponse.ToEditAddressViewModel();
                 viewModel.EditAddress.CountriesSelectionList = countries;
-                viewModel.UserDetails = result.Value.AccountResponse.ToUserDetailsViewModel();
+                viewModel.UserDetails = accountDetailsResponse.Value.AccountResponse.ToUserDetailsViewModel();
             }
             else
             {
-                var result = await _accountService.GetAccount();
-                if (result.IsFailure)
-                    return View("Error", result.Error.Description);
+                var accountResponse = await _accountService.GetAccount();
+                if (accountResponse.IsFailure)
+                    return View("Error", accountResponse.Error.Description);
 
-                viewModel.UserDetails = result.Value.ToUserDetailsViewModel();
+                viewModel.UserDetails = accountResponse.Value.ToUserDetailsViewModel();
                 viewModel.AddAddressViewModel = new AddAddressViewModel();
                 viewModel.AddAddressViewModel.CountriesSelectionList = countries;
 
             }
 
-            _logger.LogInformation("Account details returned successfully for {UserName}", User.Identity?.Name);
+            _logger.LogInformation("Account details returned successfully for {UserName}", User.Identity?.Name ?? "");
             return View(viewModel);
         }
 

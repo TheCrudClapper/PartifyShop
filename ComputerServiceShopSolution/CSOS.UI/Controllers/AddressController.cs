@@ -52,7 +52,7 @@ namespace CSOS.UI.Controllers
             if (result.IsFailure)
             {
                 _logger.LogError("Failed to fetch Address for {UserName}, Errors: {Error}",
-                    User.Identity!.Name, result.Error.Description);
+                    User.Identity?.Name, result.Error.Description);
 
                 return View("Error", result.Error.Description);
             }

@@ -7,16 +7,18 @@ using CSOS.UI.Controllers;
 using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToViewModel;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Security.Claims;
 
 namespace CSOS.Tests.ControllerTests
 {
     public class CartControllerTests
     {
         private readonly ICartService _cartService;
-        private readonly CartController _cartController;
+        private CartController _cartController = null!;
         private readonly IConfigurationReader _configurationReader;
         private readonly Mock<ICartService> _cartServiceMock;
         private readonly Mock<IConfigurationReader> _configurationReaderMock;
@@ -30,16 +32,32 @@ namespace CSOS.Tests.ControllerTests
             _cartService = _cartServiceMock.Object;
             _configurationReader = _configurationReaderMock.Object;
             _logger = Mock.Of<ILogger<CartController>>();
-            _cartController = new CartController(_cartService, _configurationReader, _logger);
             _fixture = new Fixture();
         }
 
-        #region Index Method Tests
+        public CartController CreateController()
+        {
+            var controller = new CartController(_cartService, _configurationReader, _logger);
 
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, "testuser")
+            }, "mock"));
+
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext() { User = user }
+            };
+
+            return controller;
+        }
+
+        #region Index Method Tests
         [Fact]
         public async Task Cart_CartResultFailure_ReturnsErrorView()
         {
             //Arrange
+            _cartController = CreateController();
             _cartServiceMock.Setup(item => item.GetLoggedUserCart())
                 .ReturnsAsync(Result.Failure<CartResponseDto>(CartErrors.CartDoesNotExists));
 
@@ -55,6 +73,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Cart_CartResultSuccess_ReturnsView()
         {
             //Arrange
+            _cartController = CreateController();
             CartResponseDto cartResponseDto =
                 _fixture.Build<CartResponseDto>().Without(item => item.CartItems).Create();
             _cartServiceMock.Setup(item => item.GetLoggedUserCart()).ReturnsAsync(Result.Success(cartResponseDto));
@@ -75,6 +94,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task AddToCart_AddingToCartFailure_ReturnsErrorJson()
         {
             //Arrange
+            _cartController = CreateController();
             var error = OfferErrors.OfferDoesNotExist;
             _cartServiceMock.Setup(item => item.AddToCart(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(Result.Failure(error));
@@ -96,6 +116,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task AddToCart_AddingToCartSuccess_ReturnsSuccessJson()
         {
             //Arrange
+            _cartController = CreateController();
             _cartServiceMock.Setup(item => item.AddToCart(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(Result.Success);
 
@@ -120,6 +141,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task DeleteFromCart_DeleteFromCartFailure_ReturnsErrorJson()
         {
             //Arrange
+            _cartController = CreateController();
             var error = CartItemErrors.CartItemDoesNotExists;
             _cartServiceMock.Setup(item => item.DeleteFromCart(It.IsAny<int>())).ReturnsAsync(Result.Failure(error));
 
@@ -140,6 +162,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task DeleteFromCart_DeleteFromCartSuccess_ReturnsSuccessJson()
         {
             //Arrange
+            _cartController = CreateController();
             _cartServiceMock.Setup(item => item.DeleteFromCart(It.IsAny<int>())).ReturnsAsync(Result.Success);
             
             //Act
@@ -161,6 +184,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task UpdateQuantityInCart_UpdateCartItemQuantityFailure_ReturnErrorJson()
         {
             //Arrange
+            _cartController = CreateController();
             var error = CartItemErrors.CartItemDoesNotExists;
             _cartServiceMock.Setup(item => item.UpdateCartItemQuantity(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(Result.Failure(error));
 
@@ -181,6 +205,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task UpdateQuantityInCart_UpdateCartItemQuantitySuccess_ReturnSuccessJson()
         {
             //Arrange
+            _cartController = CreateController();
             _cartServiceMock.Setup(item => item.UpdateCartItemQuantity(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(Result.Success);
 
             //Act
@@ -202,6 +227,7 @@ namespace CSOS.Tests.ControllerTests
         public void GetCartItemsCount_ReturnViewComponent()
         {
             //Act
+            _cartController = CreateController();
             IActionResult result = _cartController.GetCartItemsCount();
 
             //Assert

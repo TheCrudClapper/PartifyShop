@@ -1,19 +1,17 @@
 ﻿using AutoFixture;
-using Castle.Core.Logging;
-using CSOS.Core.DTO;
-using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.DTO.AddressDto;
 using CSOS.Core.DTO.UniversalDto;
 using CSOS.Core.ResultTypes;
 using CSOS.Core.ServiceContracts;
-using CSOS.UI;
 using CSOS.UI.Controllers;
 using CSOS.UI.Helpers;
 using CSOS.UI.ViewModels.AddressViewModels;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Security.Claims;
 
 namespace CSOS.Tests.ControllerTests
 {
@@ -24,7 +22,7 @@ namespace CSOS.Tests.ControllerTests
         private readonly ICountriesGetterService _countriesGetterService;
         private readonly Mock<IAddressService> _addressServiceMock;
         private readonly Mock<ICountriesGetterService> _countriesGetterServiceMock;
-        private readonly AddressController _addressController;
+        private AddressController _addressController = null!;
         private readonly ILogger<AddressController> _logger;
         public AddressControllerTests()
         {
@@ -34,14 +32,31 @@ namespace CSOS.Tests.ControllerTests
             _addressService = _addressServiceMock.Object;
             _countriesGetterService = _countriesGetterServiceMock.Object;
             _logger = Mock.Of<ILogger<AddressController>>();
-            _addressController = new AddressController(_addressService, _countriesGetterService, _logger);
         }
         #region EditUserAddress GET Method Tests
+
+        public AddressController CreateController()
+        {
+            var controller = new AddressController(_addressService, _countriesGetterService, _logger);
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Name, "testuser")
+            }, "mock"));
+
+            controller.ControllerContext = new ControllerContext()
+            {
+                HttpContext = new DefaultHttpContext() { User = user }
+            };
+
+            return controller;
+        }
 
         [Fact]
         public async Task Edit_AddressResultFailure_ReturnErrorView()
         {
             //Arrange
+            _addressController = CreateController();
             _addressServiceMock.Setup(item => item.GetUserAddressForEdit()).ReturnsAsync(Result.Failure<AddressResponse>(AddressErrors.AddressNotFound));
 
             //Act
@@ -56,6 +71,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Edit_AddressFound_ReturnPartialView()
         {
             //Arrange
+            _addressController = CreateController();
             List<SelectListItemDto> countries = _fixture.CreateMany<SelectListItemDto>().ToList();
             AddressResponse dto = _fixture.Create<AddressResponse>();
             _addressServiceMock.Setup(item => item.GetUserAddressForEdit()).ReturnsAsync(dto);
@@ -76,6 +92,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Edit_EditAddresSuccessResult_ReturnSuccessJson()
         {
             //Arrange
+            _addressController = CreateController();
             EditAddressViewModel viewModel = _fixture.Build<EditAddressViewModel>()
                 .With(item => item.SelectedCountry, "21")
                 .Create();
@@ -96,6 +113,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Edit_EditAddressFailureResult_ReturnErrorJson()
         {
             //Arrange
+            _addressController = CreateController();
             EditAddressViewModel viewModel = _fixture.Build<EditAddressViewModel>()
                 .With(item => item.SelectedCountry, "21")
                 .Create();
@@ -116,6 +134,7 @@ namespace CSOS.Tests.ControllerTests
         public async Task Edit_ModelStateInvalidSourceAddOrder_ReturnPartialView()
         {
             //Arrange
+            _addressController = CreateController();
             List<SelectListItemDto> countries = _fixture.CreateMany<SelectListItemDto>().ToList();
             EditAddressViewModel viewModel = _fixture.Build<EditAddressViewModel>()
                .With(item => item.SelectedCountry, "21")
@@ -138,6 +157,8 @@ namespace CSOS.Tests.ControllerTests
         [Fact]
         public async Task Edit_ModelStateInvalidSorceAccountDetails_ReturnsPartialView()
         {
+            //Arrange
+            _addressController = CreateController();
             List<SelectListItemDto> countries = _fixture.CreateMany<SelectListItemDto>().ToList();
             EditAddressViewModel viewModel = _fixture.Build<EditAddressViewModel>()
                .With(item => item.SelectedCountry, "21")

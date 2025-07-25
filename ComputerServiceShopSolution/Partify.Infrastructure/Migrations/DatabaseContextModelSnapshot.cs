@@ -4,7 +4,6 @@ using CSOS.Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerServiceOnlineShop.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250723183457_AddressDecoupleMigration")]
-    partial class AddressDecoupleMigration
+    partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +22,7 @@ namespace ComputerServiceOnlineShop.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Address", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,7 +79,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Cart", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Cart", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,7 +119,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.CartItem", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.CartItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,7 +157,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("CartItems");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Condition", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Condition", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,7 +190,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("Conditions");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Country", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Country", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,7 +219,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.DeliveryType", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.DeliveryType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -258,7 +255,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("DeliveryTypes");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Offer", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Offer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,7 +294,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("Offers");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.OfferDeliveryType", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.OfferDeliveryType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -332,7 +329,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("OfferDeliveryTypes");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Product", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -381,7 +378,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.ProductCategory", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.ProductCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -418,7 +415,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("ProductCategories");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.ProductImage", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.ProductImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -675,9 +672,9 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Address", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Address", b =>
                 {
-                    b.HasOne("CSOS.Core.Domain.Entities.Country", "Country")
+                    b.HasOne("Partify.Core.Domain.Entities.Country", "Country")
                         .WithMany("Addresses")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -685,33 +682,33 @@ namespace ComputerServiceOnlineShop.Migrations
 
                     b.HasOne("ComputerServiceOnlineShop.Entities.Models.IdentityEntities.ApplicationUser", "User")
                         .WithOne("Address")
-                        .HasForeignKey("CSOS.Core.Domain.Entities.Address", "UserId");
+                        .HasForeignKey("Partify.Core.Domain.Entities.Address", "UserId");
 
                     b.Navigation("Country");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Cart", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Cart", b =>
                 {
                     b.HasOne("ComputerServiceOnlineShop.Entities.Models.IdentityEntities.ApplicationUser", "User")
                         .WithOne("Cart")
-                        .HasForeignKey("CSOS.Core.Domain.Entities.Cart", "UserId")
+                        .HasForeignKey("Partify.Core.Domain.Entities.Cart", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.CartItem", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.CartItem", b =>
                 {
-                    b.HasOne("CSOS.Core.Domain.Entities.Cart", "Cart")
+                    b.HasOne("Partify.Core.Domain.Entities.Cart", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CSOS.Core.Domain.Entities.Offer", "Offer")
+                    b.HasOne("Partify.Core.Domain.Entities.Offer", "Offer")
                         .WithMany("CartItems")
                         .HasForeignKey("OfferId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -722,7 +719,7 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Navigation("Offer");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Offer", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Offer", b =>
                 {
                     b.HasOne("ComputerServiceOnlineShop.Entities.Models.IdentityEntities.ApplicationUser", "Seller")
                         .WithMany("Offers")
@@ -733,15 +730,15 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.OfferDeliveryType", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.OfferDeliveryType", b =>
                 {
-                    b.HasOne("CSOS.Core.Domain.Entities.DeliveryType", "DeliveryType")
+                    b.HasOne("Partify.Core.Domain.Entities.DeliveryType", "DeliveryType")
                         .WithMany("OfferDeliveryTypes")
                         .HasForeignKey("DeliveryTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CSOS.Core.Domain.Entities.Offer", "Offer")
+                    b.HasOne("Partify.Core.Domain.Entities.Offer", "Offer")
                         .WithMany("OfferDeliveryTypes")
                         .HasForeignKey("OfferId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -752,21 +749,21 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Navigation("Offer");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Product", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("CSOS.Core.Domain.Entities.Condition", "Condition")
+                    b.HasOne("Partify.Core.Domain.Entities.Condition", "Condition")
                         .WithMany("Products")
                         .HasForeignKey("ConditionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CSOS.Core.Domain.Entities.Offer", "Offer")
+                    b.HasOne("Partify.Core.Domain.Entities.Offer", "Offer")
                         .WithOne("Product")
-                        .HasForeignKey("CSOS.Core.Domain.Entities.Product", "OfferId")
+                        .HasForeignKey("Partify.Core.Domain.Entities.Product", "OfferId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CSOS.Core.Domain.Entities.ProductCategory", "ProductCategory")
+                    b.HasOne("Partify.Core.Domain.Entities.ProductCategory", "ProductCategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -779,9 +776,9 @@ namespace ComputerServiceOnlineShop.Migrations
                     b.Navigation("ProductCategory");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.ProductImage", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.ProductImage", b =>
                 {
-                    b.HasOne("CSOS.Core.Domain.Entities.Product", "Product")
+                    b.HasOne("Partify.Core.Domain.Entities.Product", "Product")
                         .WithMany("ProductImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -841,27 +838,27 @@ namespace ComputerServiceOnlineShop.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Cart", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Cart", b =>
                 {
                     b.Navigation("CartItems");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Condition", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Condition", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Country", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Country", b =>
                 {
                     b.Navigation("Addresses");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.DeliveryType", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.DeliveryType", b =>
                 {
                     b.Navigation("OfferDeliveryTypes");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Offer", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Offer", b =>
                 {
                     b.Navigation("CartItems");
 
@@ -871,12 +868,12 @@ namespace ComputerServiceOnlineShop.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.Product", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.Product", b =>
                 {
                     b.Navigation("ProductImages");
                 });
 
-            modelBuilder.Entity("CSOS.Core.Domain.Entities.ProductCategory", b =>
+            modelBuilder.Entity("Partify.Core.Domain.Entities.ProductCategory", b =>
                 {
                     b.Navigation("Products");
                 });

@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSOS.UI", "CSOS.UI\CSOS.UI.csproj", "{B6D63733-DA9E-4B25-922A-CF789ABC362B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Partify.UI", "Partify.UI\Partify.UI.csproj", "{B6D63733-DA9E-4B25-922A-CF789ABC362B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{48F8D270-774F-4FAA-BC2E-DE7F9254B946}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSOS.Core", "CSOS.Core\CSOS.Core.csproj", "{C5150471-6711-4B37-A1DC-4E5ED77677FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Partify.Core", "Partify.Core\Partify.Core.csproj", "{C5150471-6711-4B37-A1DC-4E5ED77677FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSOS.Infrastructure", "CSOS.Infrastructure\CSOS.Infrastructure.csproj", "{F106157F-0D96-4840-8740-35D91CD1F898}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Partify.Infrastructure", "Partify.Infrastructure\Partify.Infrastructure.csproj", "{F106157F-0D96-4840-8740-35D91CD1F898}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSOS.Tests", "CSOS.Tests\CSOS.Tests.csproj", "{ED0C1796-333E-439C-BDC3-3FA1588B9824}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Partify.Tests", "Partify.Tests\Partify.Tests.csproj", "{ED0C1796-333E-439C-BDC3-3FA1588B9824}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

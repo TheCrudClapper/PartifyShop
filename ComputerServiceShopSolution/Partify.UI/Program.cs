@@ -31,7 +31,7 @@ builder.Services.AddHttpLogging(options =>
 // Add DbContext
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ComputerServiceOnlineShop"),
-        migrations => migrations.MigrationsAssembly("CSOS.Infrastructure")));
+        migrations => migrations.MigrationsAssembly("Partify.Infrastructure")));
 
 // Add Business-Logic Services to the container.
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();

@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>CSOS.UI</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CSOS.Core\CSOS.Core.csproj" />
-    <ProjectReference Include="..\CSOS.Infrastructure\CSOS.Infrastructure.csproj" />
+    <ProjectReference Include="..\Partify.Core\Partify.Core.csproj" />
+    <ProjectReference Include="..\Partify.Infrastructure\Partify.Infrastructure.csproj" />
   </ItemGroup>
 	
   <ItemGroup>

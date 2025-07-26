@@ -196,3 +196,13 @@ body {
     width: 17px;
     accent-color: #863cb0;
 }
+
+.purple-link {
+    color: black;
+    font-weight: 700;
+}
+
+.purple-link :hover {
+    color: #863cb0;
+    text-decoration: underline;
+}

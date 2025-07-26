@@ -9,7 +9,6 @@ using CSOS.UI.Mappings.Universal;
 using CSOS.UI.ViewModels.OfferViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace CSOS.UI.Controllers
 {
@@ -24,6 +23,7 @@ namespace CSOS.UI.Controllers
         private readonly IConfigurationReader _configurationReader;
         private readonly ISortingOptionService _sortingOptionService;
         private readonly ILogger<OfferController> _logger;
+        private readonly IAccountService _accountService;
         public OfferController(IOfferService offerService,
             IDeliveryTypeGetterService deliveryTypeGetterService,
             IPictureHandlerService pictureHandlerService,
@@ -31,7 +31,8 @@ namespace CSOS.UI.Controllers
             IProductImageService productImageService,
             ISortingOptionService sortingOptionService,
             IConfigurationReader configurationReader,
-            ILogger<OfferController> logger)
+            ILogger<OfferController> logger,
+            IAccountService accountService)
         {
             _offerService = offerService;
             _pictureHandlerService = pictureHandlerService;
@@ -41,12 +42,14 @@ namespace CSOS.UI.Controllers
             _configurationReader = configurationReader;
             _deliveryTypeGetterService = deliveryTypeGetterService;
             _logger = logger;
+            _accountService = accountService;   
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
             _logger.LogInformation("OfferControler - GET Create Method called");
+            ViewBag.HasAddress = await _accountService.DoesCurrentUserHaveAddress();
             var viewModel = new AddOfferViewModel();
             await _offerViewModelInitializer.InitializeAllAsync(viewModel);
             return View(viewModel);
@@ -56,6 +59,16 @@ namespace CSOS.UI.Controllers
         public async Task<IActionResult> Create(AddOfferViewModel viewModel)
         {
             _logger.LogInformation("OfferControler - POST Create Method called");
+            var userHasAddress = await _accountService.DoesCurrentUserHaveAddress();
+            ViewBag.HasAddress = userHasAddress;
+
+            if (!userHasAddress)
+            {
+                ModelState.AddModelError(string.Empty, "You must add your address before creating an offer.");
+                await _offerViewModelInitializer.InitializeAllAsync(viewModel);
+                return View(viewModel);
+            }
+
             var pictureValidationResponse = PicturesValidatorHelper.ValidatePictureExtensions(viewModel.UploadedImages, _pictureHandlerService);
             if (pictureValidationResponse != null)
             {

@@ -139,7 +139,7 @@ namespace CSOS.Core.Services
         public async Task<IEnumerable<OfferIndexResponse>> GetFilteredOffers(OfferFilter filter)
         {
             var offers = await _offerRepo.GetFilteredOffersAsync(filter);
-            return offers.Select(item => item.ToOfferIndexResponse());
+            return offers.Items.Select(item => item.ToOfferIndexResponse());
         }
 
         public async Task<IEnumerable<CardResponse>> GetIndexPageOffers()

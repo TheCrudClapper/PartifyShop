@@ -87,7 +87,7 @@ namespace CSOS.Infrastructure.Repositories
                 .ThenInclude(o => o.DeliveryType)
             .FirstOrDefaultAsync();
         }
-        public async Task<IEnumerable<Offer>> GetFilteredOffersAsync(OfferFilter filter)
+        public async Task<PaginatedList<Offer>> GetFilteredOffersAsync(OfferFilter filter)
         {
             var query = _dbContext.Offers
             .Where(o => o.IsActive && !o.IsOfferPrivate)
@@ -137,7 +137,7 @@ namespace CSOS.Infrastructure.Repositories
                 query = query.OrderByDescending(o => o.Price);
             }
 
-            return await query.ToListAsync();
+            return await PaginatedList<Offer>.CreateAsync(query, filter.pageNumber, filter.pageSize);
         }
         public async Task<int> GetNonPrivateOfferCount()
         {

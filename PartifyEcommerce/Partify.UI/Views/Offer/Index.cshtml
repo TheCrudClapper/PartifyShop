@@ -4,7 +4,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/offer-browser-styles.css"/>
+    <link rel="stylesheet" href="~/css/offer-browser-styles.css" />
 }
 
 <div class="container mt-3">
@@ -23,8 +23,8 @@
                 @* Form for Filters *@
                 <form method="get" id="filterForm">
 
-                    <input type="hidden" name="SearchPhrase" value="@Model.Filter.SearchPhrase"/>
-                    <input type="hidden" name="CategoryId" value="@Model.Filter.CategoryId"/>
+                    <input type="hidden" name="SearchPhrase" value="@Model.Filter.SearchPhrase" />
+                    <input type="hidden" name="CategoryId" value="@Model.Filter.CategoryId" />
 
                     <div class="row">
                         <div class="col-12 col-sm-4 mb-3 mb-sm-0">
@@ -41,8 +41,7 @@
                                        type="text"
                                        value="@Model.Filter.PriceFrom"
                                        data-original-value="@Model.Filter.PriceFrom"
-                                       class="form-control text-center border-secondary-subtle"
-                                />
+                                       class="form-control text-center border-secondary-subtle" />
 
                                 <span class="ms-2 me-2">__</span>
 
@@ -50,8 +49,7 @@
                                        type="text"
                                        value="@Model.Filter.PriceTo"
                                        data-original-value="@Model.Filter.PriceTo"
-                                       class="form-control text-center border-secondary-subtle"
-                                />
+                                       class="form-control text-center border-secondary-subtle" />
                             </div>
                         </div>
                         <div class="col-12 col-sm-4">
@@ -71,13 +69,20 @@
             </div>
         </div>
     </div>
+    <div class="row g-3">
+        @* Paging *@
+        <div class="col-6">
+        </div>
+        <div class="col-md-6">
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
             $('#filterForm').on('change', function (e) {
-                
+
                 const query = $('#filterForm').serialize();
 
                 $.ajax({

@@ -8,7 +8,8 @@
         public string? SortOption { get; set; }
         public string? SearchPhrase { get; set; }
         public int? CategoryId { get; set; }
-
+        public int pageNumber { get; set; }
+        public int pageSize { get; set; }
         public override string ToString()
         {
             return $"Price From: {PriceFrom}\nPrice To: {PriceTo}\n" +

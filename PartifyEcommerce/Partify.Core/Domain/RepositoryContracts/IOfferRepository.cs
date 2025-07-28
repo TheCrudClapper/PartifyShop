@@ -50,7 +50,7 @@ namespace CSOS.Core.Domain.RepositoryContracts
         /// </summary>
         /// <param name="filter">The filter parameters including category, price range, search phrase, etc.</param>
         /// <returns>A collection of matching public offers.</returns>
-        Task<PaginatedList<Offer>> GetFilteredOffersAsync(OfferFilter filter);
+        Task<IEnumerable<Offer>> GetFilteredOffersAsync(OfferFilter filter);
 
         /// <summary>
         /// Retrieves a user's specific active offer by ID.

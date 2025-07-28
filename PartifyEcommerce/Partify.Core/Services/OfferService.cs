@@ -86,7 +86,7 @@ namespace CSOS.Core.Services
             //deletes images checked by user
             if (updateRequest.ImagesToDelete?.Count > 0)
             {
-                var result =  _productImageService.DeleteImagesFromOffer(product.ProductImages, updateRequest.ImagesToDelete);
+                var result = _productImageService.DeleteImagesFromOffer(product.ProductImages, updateRequest.ImagesToDelete);
 
                 if (result.IsFailure)
                     return Result.Failure(result.Error);
@@ -139,7 +139,7 @@ namespace CSOS.Core.Services
         public async Task<IEnumerable<OfferIndexResponse>> GetFilteredOffers(OfferFilter filter)
         {
             var offers = await _offerRepo.GetFilteredOffersAsync(filter);
-            return offers.Items.Select(item => item.ToOfferIndexResponse());
+            return offers.Select(item => item.ToOfferIndexResponse());
         }
 
         public async Task<IEnumerable<CardResponse>> GetIndexPageOffers()
@@ -191,11 +191,11 @@ namespace CSOS.Core.Services
 
                 foreach (var image in newImages)
                 {
-                    product.ProductImages.Add(image); 
+                    product.ProductImages.Add(image);
                 }
             }
         }
-        
+
         private async Task AddDeliveryTypesAsync(IOfferDeliveryDto dto, Offer offer)
         {
             if (dto.SelectedParcelLocker.HasValue)

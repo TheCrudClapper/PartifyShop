@@ -62,18 +62,12 @@
 
                 </form>
 
-
+                
             </div>
+            @* Offer Lists *@
             <div class="row" id="offerResults">
                 @await Html.PartialAsync("OfferPartials/_OfferListPartial", Model.Items)
             </div>
-        </div>
-    </div>
-    <div class="row g-3">
-        @* Paging *@
-        <div class="col-6">
-        </div>
-        <div class="col-md-6">
         </div>
     </div>
 </div>

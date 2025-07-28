@@ -32,7 +32,7 @@ namespace CSOS.Infrastructure.Repositories
             return await _dbContext.Offers
                 .FirstOrDefaultAsync(item => item.Id == id && item.IsActive);
         }
-        
+
         public async Task<Offer?> GetUserOffersByIdAsync(int offerId, Guid userId)
         {
             return await _dbContext.Offers
@@ -50,7 +50,7 @@ namespace CSOS.Infrastructure.Repositories
             .Include(item => item.OfferDeliveryTypes)
                 .ThenInclude(item => item.DeliveryType)
             .FirstOrDefaultAsync();
-            
+
         }
         public async Task<bool> IsOfferInDbAsync(int id)
         {
@@ -87,7 +87,7 @@ namespace CSOS.Infrastructure.Repositories
                 .ThenInclude(o => o.DeliveryType)
             .FirstOrDefaultAsync();
         }
-        public async Task<PaginatedList<Offer>> GetFilteredOffersAsync(OfferFilter filter)
+        public async Task<IEnumerable<Offer>> GetFilteredOffersAsync(OfferFilter filter)
         {
             var query = _dbContext.Offers
             .Where(o => o.IsActive && !o.IsOfferPrivate)
@@ -137,7 +137,7 @@ namespace CSOS.Infrastructure.Repositories
                 query = query.OrderByDescending(o => o.Price);
             }
 
-            return await PaginatedList<Offer>.CreateAsync(query, filter.pageNumber, filter.pageSize);
+            return await query.ToListAsync();
         }
         public async Task<int> GetNonPrivateOfferCount()
         {
@@ -154,6 +154,6 @@ namespace CSOS.Infrastructure.Repositories
                .OrderBy(item => item.DateCreated)
                .Take(take)
                .ToListAsync();
-        }   
+        }
     }
 }

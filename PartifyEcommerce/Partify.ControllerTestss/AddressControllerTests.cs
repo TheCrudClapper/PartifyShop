@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 
 namespace CSOS.Tests
@@ -33,6 +34,86 @@ namespace CSOS.Tests
             _countriesGetterService = _countriesGetterServiceMock.Object;
             _logger = Mock.Of<ILogger<AddressController>>();
         }
+        #region Create POST Method Tests
+        [Fact]
+        public async Task Create_AddAddressFailure_ReturnsErrorJson()
+        {
+            //Arrange
+            var addAddressViewModel = _fixture.Build<AddAddressViewModel>()
+                .With(item => item.SelectedCountry, "12")
+                .Create();
+
+            _addressController = CreateController();
+            _addressServiceMock.Setup(item => item.AddAddress(It.IsAny<AddressAddRequest>())).ReturnsAsync(Result.Failure(AddressErrors.AddressAddRequestIsNull));
+
+            //Act
+            IActionResult result = await _addressController.Create(addAddressViewModel);
+
+            //Assert
+            JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
+            var responseModel = jsonResult.Value.Should().BeOfType<JsonResponseModel>();
+            responseModel.Subject.Message.Should().Be(AddressErrors.AddressAddRequestIsNull.Description);
+            responseModel.Subject.Success.Should().Be(false);
+        }
+
+        [Fact]
+        public async Task Create_EditAddressFailure_ReturnsErrorJson()
+        {
+            //Arrange
+            var addAddressViewModel = _fixture.Build<AddAddressViewModel>()
+               .With(item => item.SelectedCountry, "12")
+               .Create();
+
+            _addressController = CreateController();
+            _addressServiceMock.Setup(item => item.AddAddress(It.IsAny<AddressAddRequest>())).ReturnsAsync(Result.Success());
+            _addressServiceMock.Setup(item => item.GetUserAddressForEdit()).ReturnsAsync(Result.Failure<AddressResponse>(AddressErrors.AddressNotFound));
+
+            //Act
+            IActionResult result = await _addressController.Create(addAddressViewModel);
+
+            //Assert
+            JsonResult jsonResult = result.Should().BeOfType<JsonResult>().Subject;
+            var responseModel = jsonResult.Value.Should().BeOfType<JsonResponseModel>().Subject;
+            responseModel.Success.Should().Be(false);
+            responseModel.Message.Should().Be("Address added, but failed to load edit form");
+        }
+
+        [Fact]
+        public async Task Create_ValidDetails_ReturnsPartailView()
+        {
+            //Arrange
+            var addAddressViewModel = _fixture.Build<AddAddressViewModel>()
+               .With(item => item.SelectedCountry, "12")
+               .Create();
+
+            var accountResponse = _fixture.Build<AddressResponse>()
+                .With(item => item.SelectedCountry, 12)
+                .Create();
+
+            var countries = _fixture.CreateMany<SelectListItemDto>(3);
+
+            _addressController = CreateController();
+            _addressServiceMock.Setup(item => item.AddAddress(It.IsAny<AddressAddRequest>())).ReturnsAsync(Result.Success());
+            _addressServiceMock.Setup(item => item.GetUserAddressForEdit()).ReturnsAsync(Result.Success<AddressResponse>(accountResponse));
+            _countriesGetterServiceMock.Setup(item => item.GetCountriesSelectionList()).ReturnsAsync(countries);
+
+            //Act
+            IActionResult result = await _addressController.Create(addAddressViewModel);
+
+            //Assert
+            PartialViewResult viewResult = result.Should().BeOfType<PartialViewResult>().Subject;
+            EditAddressViewModel editViewModel = viewResult.Model.Should().BeOfType<EditAddressViewModel>().Subject;
+            editViewModel.Id.Should().Be(accountResponse.Id);
+            editViewModel.HouseNumber.Should().Be(accountResponse.HouseNumber);
+            editViewModel.Street.Should().Be(accountResponse.Street);
+            editViewModel.CountriesSelectionList.Should().HaveCount(countries.Count());
+            editViewModel.PostalCity = accountResponse.PostalCity;
+            editViewModel.PostalCode = accountResponse.PostalCode;
+            editViewModel.Place = accountResponse.Place;
+            editViewModel.SelectedCountry.Should().Be(12 + ""); 
+        }
+        #endregion
+
         #region EditUserAddress GET Method Tests
 
         public AddressController CreateController()

@@ -177,7 +177,12 @@ namespace CSOS.Core.Services
             if (!IsAllowedRole(roleOption))
                 return IdentityResult.Failed(new IdentityError { Description = "Given Role is not valid one" });
 
-            return await _roleManager.CreateAsync(new ApplicationRole { Name = roleOption.ToString() });
+            return await _roleManager.CreateAsync(new ApplicationRole { Name = roleOption.ToRoleName() });
+        }
+
+        public Task<bool> IsEmailAlreadyTaken(string email)
+        {
+            return _accountRepo.IsEmailTakenAsync(email);
         }
     }
 }

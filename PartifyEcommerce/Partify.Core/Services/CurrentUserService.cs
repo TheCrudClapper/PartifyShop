@@ -4,6 +4,7 @@ using CSOS.Core.ServiceContracts;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using CSOS.Core.ResultTypes;
+using Microsoft.AspNetCore.Identity;
 
 namespace CSOS.Core.Services
 {
@@ -11,19 +12,21 @@ namespace CSOS.Core.Services
     {
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAccountRepository _accountRepo;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CurrentUserService(IHttpContextAccessor httpContextAccessor,
-            IAccountRepository accountRepo)
+        public CurrentUserService(
+            IHttpContextAccessor httpContextAccessor,
+            UserManager<ApplicationUser> userManager
+            )
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _accountRepo = accountRepo;
+            _userManager = userManager;
         }
 
         public async Task<Result<ApplicationUser>> GetCurrentUserAsync()
         {
             var userId = GetUserId();
-            var user = await _accountRepo.GetUserByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
             return user != null ? Result.Success(user) : Result.Failure<ApplicationUser>(AccountErrors.AccountNotFound);
         }

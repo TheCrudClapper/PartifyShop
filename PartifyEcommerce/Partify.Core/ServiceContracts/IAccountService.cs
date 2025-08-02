@@ -73,5 +73,13 @@ namespace CSOS.Core.ServiceContracts
         /// <returns>A task that represents the asynchronous operation. The task result contains <see langword="true"/>  if the
         /// current user has an address; otherwise, <see langword="false"/>.</returns>
         Task<bool> DoesCurrentUserHaveAddress();
+
+        /// <summary>
+        /// Determines whether the specified email address is already in use.
+        /// </summary>
+        /// <param name="email">The email address to check. This value cannot be null or empty.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains  <see langword="true"/> if the
+        /// email address is already taken; otherwise, <see langword="false"/>.</returns>
+        Task<bool> IsEmailAlreadyTaken(string email);
     }
 }

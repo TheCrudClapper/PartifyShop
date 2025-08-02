@@ -34,5 +34,12 @@ namespace CSOS.Core.Domain.RepositoryContracts
         /// <param name="userId">The unique identifier of the user.</param>
         /// <returns>The matching <see cref="ApplicationUser"/> with address if found; otherwise, <c>null</c>.</returns>
         Task<ApplicationUser?> GetUserWithAddressAsync(Guid userId);
+
+        /// <summary>
+        /// Determines whether the specified email address is already in use.
+        /// </summary>
+        /// <param name="email">The email address to check. Must not be null or empty.</param>
+        /// <returns><see langword="true"/> if the email address is already taken; otherwise, <see langword="false"/>.</returns>
+        Task<bool> IsEmailTakenAsync(string email);
     }
 }

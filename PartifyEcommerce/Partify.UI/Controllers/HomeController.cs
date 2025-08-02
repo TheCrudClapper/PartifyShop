@@ -63,12 +63,6 @@ namespace CSOS.UI.Controllers
 
             return View();
         }
-
-        [HttpGet]
-        public IActionResult AccessDenied()
-        {
-            return View("Error", "Access for this resource is denied");
-        }
     }
 }
 

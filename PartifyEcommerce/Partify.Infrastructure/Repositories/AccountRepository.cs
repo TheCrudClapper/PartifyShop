@@ -33,10 +33,15 @@ namespace CSOS.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<bool> IsUserByEmailInDatabaseAsync(string Email)
+        public async Task<bool> IsUserByEmailInDatabaseAsync(string email)
         {
             return await _dbContext.Users
-                 .AnyAsync(item => item.UserName == Email && item.IsActive);
+                 .AnyAsync(item => item.UserName == email && item.IsActive);
+        }
+
+        public async Task<bool> IsEmailTakenAsync(string email)
+        {
+            return await _dbContext.Users.AnyAsync(item => item.Email == email);
         }
 
     }

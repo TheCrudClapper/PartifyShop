@@ -10,16 +10,19 @@
     <div class="row">
         <div class="col-12 col-lg-3 mb-4 mb-lg-0">
             <div class="bg-white shadow p-3 mb-4 text-center rounded-2">
-                <i class="fa-solid fa-user fa-6x mb-3 d-block"></i>
-                <span>@User.Identity!.Name</span>
                 @if (User.IsInRole("Admin"))
                 {
-                   <span class="badge purple-background">Admin</span>
+                    <i class="fa-solid fa-user-tie  fa-6x mb-3 d-block"></i>
+                    <span class="badge purple-background">Admin</span>
                 }
                 else if (User.IsInRole("User"))
                 {
+                    <i class="fa-solid fa-user fa-6x d-block mb-3"></i>
                     <span class="badge bg-secondary">User</span>
                 }
+                <br />
+                <span class="fw-bold" style="word-break: break-word">@User.Identity?.Name</span>
+               
             </div>
             <div class="bg-white shadow rounded-2">
                 <div class="px-3 py-3">

@@ -208,5 +208,19 @@ namespace CSOS.UI.Controllers
             _logger.LogInformation("Password changed successfully for {UserName}", User.Identity?.Name);
             return Json(new JsonResponseModel() { Success = true, Message = "Password changed successfully !" });
         }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View("Error", "Access for this resource is denied");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> IsEmailAlreadyTaken(string email)
+        {
+            var exists = await _accountService.IsEmailAlreadyTaken(email);
+            return Json(!exists);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CSOS.Core.DTO.AccountDto;
+﻿using ComputerServiceOnlineShop.Entities.Models.IdentityEntities;
+using CSOS.Core.DTO.AccountDto;
 using CSOS.Core.ServiceContracts;
 using CSOS.UI.Helpers;
 using CSOS.UI.Mappings.ToDto;
@@ -34,7 +35,6 @@ namespace CSOS.UI.Controllers
             return View();
         }
 
-
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterRequest registerRequest)
@@ -44,8 +44,7 @@ namespace CSOS.UI.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Invalid model state during registration for {Email}. Errors: {Errors}",
-                registerRequest.Email,
-                string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+                registerRequest.Email,string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
 
                 return View(registerRequest);
             }
@@ -66,6 +65,7 @@ namespace CSOS.UI.Controllers
 
             }
             _logger.LogInformation("User {Email} registered successfully", registerRequest.Email);
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -105,6 +105,8 @@ namespace CSOS.UI.Controllers
                 return LocalRedirect(returnUrl);
             }
 
+            if(User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home", new { area = "Admin"});
 
             _logger.LogInformation("User {Email} logged in successfully.", request.Email);
             return RedirectToAction("Index", "Home");

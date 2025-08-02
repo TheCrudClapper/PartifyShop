@@ -20,5 +20,8 @@ namespace CSOS.Core.Mappings.ToDomainEntity.ApplicationUserMappings
             };
            
         }
+
+        public static string ToRoleName(this UserRoleOption userRole)
+            => userRole.ToString();
     }
 }

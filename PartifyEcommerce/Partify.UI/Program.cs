@@ -137,6 +137,12 @@ app.UseAuthentication(); //reads auth cookie and can extract data from it
 app.UseAuthorization(); //validates access permissions of the user
 app.UseSession();
 
+//Controllers for Admin Role
+app.MapControllerRoute(
+    name: "areas",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+//Root controllers
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -12,10 +12,18 @@
             <div class="bg-white shadow p-3 mb-4 text-center rounded-2">
                 <i class="fa-solid fa-user fa-6x mb-3 d-block"></i>
                 <span>@User.Identity!.Name</span>
+                @if (User.IsInRole("Admin"))
+                {
+                   <span class="badge purple-background">Admin</span>
+                }
+                else if (User.IsInRole("User"))
+                {
+                    <span class="badge bg-secondary">User</span>
+                }
             </div>
             <div class="bg-white shadow rounded-2">
                 <div class="px-3 py-3">
-                    <a class="own-link-style" asp-controller="Account" asp-action="AccountDetails" >Account Settings</a>
+                    <a class="own-link-style" asp-controller="Account" asp-action="AccountDetails">Account Settings</a>
                 </div>
                 <hr class="w-100 p-0 m-0">
                 <div class="px-3 py-3">

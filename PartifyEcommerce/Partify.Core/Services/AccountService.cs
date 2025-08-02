@@ -2,7 +2,6 @@
 using CSOS.Core.Domain.Entities;
 using CSOS.Core.Domain.RepositoryContracts;
 using CSOS.Core.DTO.AccountDto;
-using CSOS.Core.Mappings.ToDomainEntity.AddressMappings;
 using CSOS.Core.Mappings.ToDomainEntity.ApplicationUserMappings;
 using CSOS.Core.Mappings.ToDto;
 using CSOS.Core.ResultTypes;
@@ -15,17 +14,19 @@ namespace CSOS.Core.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IAccountRepository _accountRepo;
         private readonly ICurrentUserService _currentUserService;
         private readonly IAddressService _addressService;
-        
+
         public AccountService
             (UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ICurrentUserService currentUserService,
             IAccountRepository accountRepository,
             IUnitOfWork unitOfWork,
-            IAddressService addressService)
+            IAddressService addressService,
+            RoleManager<ApplicationRole> roleManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -33,34 +34,43 @@ namespace CSOS.Core.Services
             _signInManager = signInManager;
             _addressService = addressService;
             _currentUserService = currentUserService;
+            _roleManager = roleManager;
         }
-        
+
         public async Task<IdentityResult> Register(RegisterRequest? request)
         {
-            if(request == null)
+            if (request == null)
                 return IdentityResult.Failed();
-            
+
             Cart cart = new Cart() { IsActive = true, DateCreated = DateTime.UtcNow };
 
             ApplicationUser user = request.ToApplicationUserEntity(cart);
-            var result = await _userManager.CreateAsync(user, request.Password);
-            
-            await _unitOfWork.SaveChangesAsync();
+            var createResult = await _userManager.CreateAsync(user, request.Password);
 
-            if (result.Succeeded)
-                await _signInManager.SignInAsync(user, isPersistent: false);
-            
-            return result;
+            if (!createResult.Succeeded)
+                return createResult;
+
+            if(!await _roleManager.RoleExistsAsync(UserRoleOption.User.ToRoleName()))
+            {
+                var roleResult = await CreateRole(UserRoleOption.User);
+                if (!roleResult.Succeeded)
+                    return roleResult;
+            }
+
+            await _userManager.AddToRoleAsync(user, UserRoleOption.User.ToRoleName());
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return IdentityResult.Success;
         }
 
         public async Task<SignInResult> Login(LoginRequest? request)
         {
-            if(request == null)
+            if (request == null)
                 return SignInResult.Failed;
-            
-            var response = await _accountRepo.IsUserByEmailInDatabaseAsync(request.Email);
 
-            if (!response)
+            var result = await _accountRepo.IsUserByEmailInDatabaseAsync(request.Email);
+
+            if (!result)
                 return SignInResult.Failed;
 
             return await _signInManager.PasswordSignInAsync(request.Email, request.Password, isPersistent: request.IsPersistent, lockoutOnFailure: false);
@@ -83,16 +93,15 @@ namespace CSOS.Core.Services
 
         public async Task<Result> Edit(AccountUpdateRequest? request)
         {
-            if(request == null)
+            if (request == null)
                 return Result.Failure(AccountErrors.MissingAccountUpdateRequest);
-                
-            var userResult = await _currentUserService.GetCurrentUserAsync();
 
+            var userResult = await _currentUserService.GetCurrentUserAsync();
             if (userResult.IsFailure)
                 return Result.Failure(userResult.Error);
 
             var user = userResult.Value;
-            
+
             user.Title = request.Title;
             user.PhoneNumber = request.PhoneNumber;
             user.NIP = request.NIP;
@@ -106,11 +115,11 @@ namespace CSOS.Core.Services
 
         public async Task<Result> ChangePassword(PasswordChangeRequest? request)
         {
-            if(request == null)
+            if (request == null)
                 return Result.Failure(AccountErrors.MissingPasswordChangeRequest);
-            
+
             var userResult = await _currentUserService.GetCurrentUserAsync();
-            if(userResult.IsFailure)
+            if (userResult.IsFailure)
                 return Result.Failure(AccountErrors.AccountNotFound);
 
             var user = userResult.Value;
@@ -120,7 +129,7 @@ namespace CSOS.Core.Services
 
             IdentityResult result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
                 return Result.Failure(AccountErrors.PasswordChangeFailed);
 
             return Result.Success();
@@ -136,7 +145,7 @@ namespace CSOS.Core.Services
             var accountResult = await GetAccount();
             if (accountResult.IsFailure)
                 return Result.Failure<AccountDetailsResponse>(AccountErrors.AccountNotFound);
-            
+
             var addressResponse = addressResult.Value;
 
             var accountResponse = accountResult.Value;
@@ -153,11 +162,22 @@ namespace CSOS.Core.Services
             Guid userId = _currentUserService.GetUserId();
             var result = await _accountRepo.GetUserWithAddressAsync(userId);
 
-            if(result == null || result.Address == null)
+            if (result == null || result.Address == null)
                 return false;
 
             return true;
 
+        }
+
+        private bool IsAllowedRole(UserRoleOption role) =>
+                role == UserRoleOption.User || role == UserRoleOption.Admin;
+
+        private async Task<IdentityResult> CreateRole(UserRoleOption roleOption)
+        {
+            if (!IsAllowedRole(roleOption))
+                return IdentityResult.Failed(new IdentityError { Description = "Given Role is not valid one" });
+
+            return await _roleManager.CreateAsync(new ApplicationRole { Name = roleOption.ToString() });
         }
     }
 }

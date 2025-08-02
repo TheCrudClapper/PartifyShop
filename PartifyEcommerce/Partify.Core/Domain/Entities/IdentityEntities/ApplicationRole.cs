@@ -2,8 +2,5 @@
 
 namespace ComputerServiceOnlineShop.Entities.Models.IdentityEntities
 {
-    public class ApplicationRole : IdentityRole<Guid>
-    {
-
-    }
+    public class ApplicationRole : IdentityRole<Guid> {}
 }

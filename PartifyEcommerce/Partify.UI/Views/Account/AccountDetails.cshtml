@@ -26,7 +26,6 @@
         @if (Model.EditAddress == null)
         {
             @await Html.PartialAsync("AccountPartials/_AddressAddForm", Model.AddAddressViewModel)
-            ;
         }
         else if (Model.AddAddressViewModel == null)
         {

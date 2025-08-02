@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CSOS.UI.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class ContactController : Controller
     {
         public IActionResult Index()

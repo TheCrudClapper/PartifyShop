@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace CSOS.UI.Controllers
 {
-    [Authorize]
     public class AddressController : Controller
     {
         private readonly IAddressService _addressService;

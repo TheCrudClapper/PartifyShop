@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CSOS.UI.Controllers
 {
-    [Authorize]
     public class OfferController : Controller
     {
         private readonly IOfferService _offerService;

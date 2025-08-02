@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CSOS.UI.Controllers
 {
-    [Authorize]
     public class OrderController : Controller
     {
         private readonly IAddressService _addressService;

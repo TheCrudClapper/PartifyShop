@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CSOS.UI.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
@@ -28,7 +27,7 @@ namespace CSOS.UI.Controllers
 
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize("NotAuthorized")]
         public IActionResult Register()
         {
             _logger.LogInformation("AccountController - GET Register method called.");
@@ -36,7 +35,7 @@ namespace CSOS.UI.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize("NotAuthorized")]
         public async Task<IActionResult> Register(RegisterRequest registerRequest)
         {
             _logger.LogInformation("AccountController - POST Register method called for {Email}", registerRequest.Email);
@@ -70,7 +69,7 @@ namespace CSOS.UI.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize("NotAuthorized")]
         public IActionResult Login()
         {
             _logger.LogInformation("AccountController - GET Login method called.");
@@ -78,7 +77,7 @@ namespace CSOS.UI.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize("NotAuthorized")]
         public async Task<IActionResult> Login(LoginRequest request, string? returnUrl)
         {
             _logger.LogInformation("POST Login Method called at time {Time}", DateTime.UtcNow);

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CSOS.UI.Controllers
 {
-    [Authorize]
     public class CartController : Controller
     {
         private readonly ICartService _cartService;

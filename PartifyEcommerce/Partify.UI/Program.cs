@@ -33,6 +33,13 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ComputerServiceOnlineShop"),
         migrations => migrations.MigrationsAssembly("Partify.Infrastructure")));
 
+
+//Enabling identity
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddEntityFrameworkStores<DatabaseContext>()
+    .AddDefaultTokenProviders();
+
+
 // Add Business-Logic Services to the container.
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -69,22 +76,28 @@ builder.Services.AddScoped<IDeliveryTypeRepository, DeliveryTypeRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 
-//Enabling identity
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<DatabaseContext>()
-    .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication("Cookies")
-    .AddCookie("Cookies", options => { options.LoginPath = "/Account/Login"; });
 builder.Services.AddAuthorization(options =>
 {
-    //enforces authorization policy
+    //enforces authorization policy (user must be authenticated)
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser().Build();
+
+    options.AddPolicy("NotAuthorized", policy =>
+    {
+        //when user is already logged in he cant access given method
+        policy.RequireAssertion(context =>
+        {
+            return !context.User.Identity.IsAuthenticated;
+        });
+    });
 });
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Home/AccessDenied";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.HttpOnly = true;

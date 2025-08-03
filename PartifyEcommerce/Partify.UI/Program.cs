@@ -128,22 +128,21 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseSerilogRequestLogging();
-app.UseHttpLogging();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseHsts();
 }
 else
 {
     app.UseExceptionHandler("/Error");
     app.UseExceptionHandlingMiddleware();
-    app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseHsts();
+app.UseHttpsRedirection();
+
+app.UseHttpLogging();
 
 app.UseRouting();
 app.UseAuthentication(); //reads auth cookie and can extract data from it
